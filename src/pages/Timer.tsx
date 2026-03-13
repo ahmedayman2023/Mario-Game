@@ -65,6 +65,14 @@ const TimerPage = () => {
     setTimeout(() => setShowCompletedMessage(false), 2000);
   }, []);
 
+  const onBreakComplete = useCallback(() => {
+    playChime('start');
+    toast({
+      title: "Break Finished!",
+      description: "Time to focus again. Mission resumes.",
+    });
+  }, [toast]);
+
   const onSessionComplete = useCallback(() => {
     playChime('complete');
     setFullCycles(prev => {
@@ -89,7 +97,7 @@ const TimerPage = () => {
     handleSkip,
     setTimeLeft,
     progress
-  } = useTimer(onIntervalComplete, onSessionComplete);
+  } = useTimer(onIntervalComplete, onSessionComplete, onBreakComplete);
 
   // Match Logic: Time gets points while paused
   useEffect(() => {

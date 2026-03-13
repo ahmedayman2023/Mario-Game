@@ -1,9 +1,15 @@
-export const playChime = (type: 'start' | 'complete' | 'mandatory') => {
+export const playChime = async (type: 'start' | 'complete' | 'mandatory') => {
   try {
     const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
     if (!AudioContext) return;
     
     const context = new AudioContext();
+    
+    // Resume context if suspended (browser restriction)
+    if (context.state === 'suspended') {
+      await context.resume();
+    }
+
     const oscillator = context.createOscillator();
     const gainNode = context.createGain();
 

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { INTERVALS, BREAK_DURATION, STORAGE_KEYS } from "../constants";
 import { TimerState } from "../types";
 
-export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () => void) => {
+export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () => void, onBreakComplete: () => void) => {
   // Persistence Helper
   const getSavedState = () => {
     try {
@@ -76,6 +76,7 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
 
   const handleSkip = useCallback(() => {
     if (isBreakTime) {
+      onBreakComplete();
       if (currentIntervalIndex < INTERVALS.length - 1) {
         const nextIndex = currentIntervalIndex + 1;
         setCurrentIntervalIndex(nextIndex);
@@ -97,7 +98,7 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
         onSessionComplete();
       }
     }
-  }, [isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete]);
+  }, [isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete]);
 
   useEffect(() => {
     if (isActive) {
@@ -108,6 +109,7 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
             
             if (isBreakTime) {
               // Break finished, go to next interval
+              onBreakComplete();
               if (currentIntervalIndex < INTERVALS.length - 1) {
                 const nextIndex = currentIntervalIndex + 1;
                 setCurrentIntervalIndex(nextIndex);
@@ -144,7 +146,7 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isActive, isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete]);
+  }, [isActive, isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete]);
 
   const handleTimeEdit = useCallback((newTime: number) => {
     setTimeLeft(newTime);
