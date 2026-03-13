@@ -3,15 +3,50 @@ import { INTERVALS, BREAK_DURATION, STORAGE_KEYS } from "../constants";
 import { TimerState } from "../types";
 
 export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () => void) => {
-  const [timeLeft, setTimeLeft] = useState(INTERVALS[0] * 60);
-  const [isActive, setIsActive] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [currentIntervalIndex, setCurrentIntervalIndex] = useState(0);
-  const [isBreakTime, setIsBreakTime] = useState(false);
-  const [isSessionComplete, setIsSessionComplete] = useState(false);
+  // Persistence Helper
+  const getSavedState = () => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.TIMER_STATE);
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const savedState = getSavedState();
+
+  const [timeLeft, setTimeLeft] = useState(() => {
+    if (savedState && savedState.isActive && savedState.lastUpdated) {
+      const passed = Math.floor((Date.now() - savedState.lastUpdated) / 1000);
+      return Math.max(0, savedState.timeLeft - passed);
+    }
+    return savedState?.timeLeft ?? INTERVALS[0] * 60;
+  });
+
+  const [isActive, setIsActive] = useState(savedState?.isActive ?? false);
+  const [isPaused, setIsPaused] = useState(savedState?.isPaused ?? false);
+  const [currentIntervalIndex, setCurrentIntervalIndex] = useState(savedState?.currentIntervalIndex ?? 0);
+  const [isBreakTime, setIsBreakTime] = useState(savedState?.isBreakTime ?? false);
+  const [isSessionComplete, setIsSessionComplete] = useState(savedState?.isSessionComplete ?? false);
   const [selectedStartingInterval, setSelectedStartingInterval] = useState(0);
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Save state whenever it changes
+  useEffect(() => {
+    const existing = getSavedState() || {};
+    const state = {
+      ...existing,
+      timeLeft,
+      currentIntervalIndex,
+      isBreakTime,
+      isSessionComplete,
+      isPaused,
+      isActive,
+      lastUpdated: Date.now()
+    };
+    localStorage.setItem(STORAGE_KEYS.TIMER_STATE, JSON.stringify(state));
+  }, [timeLeft, currentIntervalIndex, isBreakTime, isSessionComplete, isPaused, isActive]);
 
   const handleReset = useCallback(() => {
     setSelectedStartingInterval(0);
@@ -21,7 +56,6 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
     setIsSessionComplete(false);
     setIsActive(false);
     setIsPaused(false);
-    try { localStorage.removeItem(STORAGE_KEYS.TIMER_STATE); } catch {}
   }, []);
 
   const handleStart = useCallback(() => {

@@ -114,6 +114,10 @@ const TimerPage = () => {
 
   const handleTopicSave = async () => {
     try {
+      const existing = localStorage.getItem(STORAGE_KEYS.TIMER_STATE);
+      const state = existing ? JSON.parse(existing) : {};
+      localStorage.setItem(STORAGE_KEYS.TIMER_STATE, JSON.stringify({ ...state, currentTopic }));
+      
       await User.updateMyUserData({ current_study_topic: currentTopic });
       toast({ title: "Topic Saved!", description: `Your topic "${currentTopic}" has been saved.` });
     } catch (error) {
