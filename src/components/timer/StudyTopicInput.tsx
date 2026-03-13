@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { BookOpen, Save } from 'lucide-react';
 
-export default function StudyTopicInput({ topic, onTopicChange, onTopicSave, isActive, isPaused }: any) {
+interface StudyTopicInputProps {
+  topic: string;
+  onTopicChange: (topic: string) => void;
+  onTopicSave: () => void;
+  isActive: boolean;
+  isPaused: boolean;
+}
+
+const StudyTopicInput = memo(function StudyTopicInput({ 
+  topic, 
+  onTopicChange, 
+  onTopicSave, 
+  isActive, 
+  isPaused 
+}: StudyTopicInputProps) {
   return (
-    <div className="mb-8 relative group">
+    <div className="relative group">
       <div className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500/50 group-focus-within:text-emerald-500 transition-colors">
         <BookOpen size={20} />
       </div>
@@ -23,4 +37,6 @@ export default function StudyTopicInput({ topic, onTopicChange, onTopicSave, isA
       </button>
     </div>
   );
-}
+});
+
+export default StudyTopicInput;

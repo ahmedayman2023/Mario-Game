@@ -1,30 +1,58 @@
-import React from 'react';
-import { Trophy } from 'lucide-react';
+import React, { memo } from 'react';
+import { Trophy, Clock, User, RotateCcw } from 'lucide-react';
+import { motion } from 'motion/react';
 
-export default function ScoreBar({ me, time }: any) {
+const ScoreBar = memo(function ScoreBar({ me, time, onReset }: { me: number; time: number; onReset: () => void }) {
   return (
-    <div className="flex justify-between items-center bg-black/40 backdrop-blur-md border border-white/5 rounded-2xl px-6 py-3 mb-6">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center text-emerald-500">
-          <Trophy size={16} />
-        </div>
-        <div>
-          <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Player</div>
-          <div className="text-xl font-black text-white leading-none">{me}</div>
+    <motion.div 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col md:flex-row justify-between items-center gap-4 glass rounded-2xl px-8 py-6 mb-4 text-white shadow-2xl border border-white/10"
+    >
+      <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
+        <div className="flex flex-col items-start">
+          <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+            <Clock size={12} className="text-mario-red" />
+            <span>Time Penalty</span>
+          </div>
+          <div className="text-4xl font-mono font-black text-mario-red drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]">
+            {String(time).padStart(2, '0')}
+          </div>
         </div>
       </div>
       
-      <div className="h-8 w-[1px] bg-white/10" />
-      
-      <div className="flex items-center gap-3 text-right">
-        <div>
-          <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Time</div>
-          <div className="text-xl font-black text-white leading-none">{time}</div>
+      <div className="flex flex-col items-center gap-2">
+        <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Match Status</div>
+        <div className="flex items-center gap-4">
+          <div className="px-4 py-1 bg-white/5 rounded-lg border border-white/10 text-[10px] font-black uppercase tracking-widest text-slate-400">
+            {me > time ? "Winning" : me < time ? "Losing" : "Draw"}
+          </div>
         </div>
-        <div className="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center text-amber-500">
-          <Trophy size={16} />
+        <motion.button
+          whileHover={{ scale: 1.05, rotate: 180 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onReset}
+          className="flex items-center gap-2 mt-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+          title="Reset Match Score"
+        >
+          <RotateCcw size={10} />
+          <span>Reset Match</span>
+        </motion.button>
+      </div>
+      
+      <div className="flex items-center gap-4 text-right w-full md:w-auto justify-between md:justify-end">
+        <div className="flex flex-col items-end">
+          <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+            <span>My Score</span>
+            <User size={12} className="text-mario-emerald" />
+          </div>
+          <div className="text-4xl font-mono font-black text-mario-emerald drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
+            {String(me).padStart(2, '0')}
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
-}
+});
+
+export default ScoreBar;

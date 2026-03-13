@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
-import { CheckCircle2, Circle, Plus } from 'lucide-react';
+import React, { useState, memo } from 'react';
+import { Plus, CheckCircle2, Circle, Trash2, Target } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Todo } from '../../types';
 
-export default function TodoList() {
-  const [todos, setTodos] = useState([
-    { id: 1, text: 'Focus on the task', completed: false },
-    { id: 2, text: 'Stay hydrated', completed: false },
-  ]);
+const TodoList = memo(function TodoList() {
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState('');
-
-  const toggleTodo = (id: number) => {
-    setTodos(todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-  };
 
   const addTodo = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,41 +14,87 @@ export default function TodoList() {
     setNewTodo('');
   };
 
+  const toggleTodo = (id: number) => {
+    setTodos(todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+  };
+
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter(t => t.id !== id));
+  };
+
   return (
-    <div className="bg-slate-800/30 rounded-3xl p-6 border border-white/5">
-      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <CheckCircle2 size={20} className="text-emerald-500" />
-        Tasks
-      </h3>
-      <div className="space-y-3 mb-4 max-h-48 overflow-y-auto pr-2">
-        {todos.map(todo => (
-          <div 
-            key={todo.id} 
-            onClick={() => toggleTodo(todo.id)}
-            className="flex items-center gap-3 cursor-pointer group"
-          >
-            {todo.completed ? 
-              <CheckCircle2 size={18} className="text-emerald-500" /> : 
-              <Circle size={18} className="text-slate-600 group-hover:text-slate-400" />
-            }
-            <span className={todo.completed ? 'line-through text-slate-500' : 'text-slate-200'}>
-              {todo.text}
-            </span>
-          </div>
-        ))}
+    <div className="w-full glass rounded-3xl p-6 mb-8 border-white/5">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <Target size={14} className="text-mario-red" />
+          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Mission Objectives</h3>
+        </div>
+        <div className="text-[10px] font-black text-mario-emerald uppercase tracking-widest">
+          {todos.filter((t) => t.completed).length} / {todos.length} Secured
+        </div>
       </div>
-      <form onSubmit={addTodo} className="flex gap-2">
+
+      <form onSubmit={addTodo} className="flex gap-2 mb-6">
         <input 
           type="text" 
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="New task..."
-          className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-500/50"
+          placeholder="New Objective..."
+          className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-mario-emerald/50 transition-colors"
         />
-        <button type="submit" className="p-2 bg-emerald-600 rounded-xl hover:bg-emerald-500 transition-colors">
-          <Plus size={18} />
-        </button>
+        <motion.button 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="submit" 
+          className="bg-mario-emerald text-black p-3 rounded-2xl shadow-lg shadow-mario-emerald/20"
+        >
+          <Plus size={20} />
+        </motion.button>
       </form>
+      
+      <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 scrollbar-hide">
+        <AnimatePresence mode="popLayout">
+          {todos.map(todo => (
+            <motion.div 
+              key={todo.id} 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className={`group flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 ${
+                todo.completed ? 'bg-mario-emerald/5 border-mario-emerald/20 opacity-60' : 'bg-white/5 border-white/5 hover:border-white/20'
+              }`}
+            >
+              <div 
+                className="flex items-center gap-4 flex-1 cursor-pointer"
+                onClick={() => toggleTodo(todo.id)}
+              >
+                {todo.completed ? (
+                  <CheckCircle2 size={20} className="text-mario-emerald" />
+                ) : (
+                  <Circle size={20} className="text-slate-600 group-hover:text-slate-400" />
+                )}
+                <span className={`text-sm font-medium transition-all ${todo.completed ? 'line-through text-slate-500' : 'text-slate-200'}`}>
+                  {todo.text}
+                </span>
+              </div>
+              <button
+                onClick={() => deleteTodo(todo.id)}
+                className="opacity-0 group-hover:opacity-100 p-2 text-slate-600 hover:text-mario-red transition-all"
+              >
+                <Trash2 size={16} />
+              </button>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+        
+        {todos.length === 0 && (
+          <div className="text-center py-8 text-slate-600 italic text-[10px] uppercase tracking-widest">
+            No active objectives. Add one to begin.
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+});
+
+export default TodoList;
