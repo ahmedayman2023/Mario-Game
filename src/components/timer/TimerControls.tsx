@@ -21,10 +21,10 @@ const TimerControls = memo(function TimerControls({
   onSkip, 
   isBreakTime 
 }: TimerControlsProps) {
-  const buttonBase = "flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all duration-300 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed";
+  const buttonBase = "flex items-center justify-center gap-2 px-4 py-2.5 md:px-6 md:py-3 rounded-2xl font-black uppercase tracking-widest text-[9px] md:text-[10px] transition-all duration-300 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed";
 
   return (
-    <div className="flex flex-wrap justify-center items-center gap-4 mb-12">
+    <div className="flex flex-wrap justify-center items-center gap-2 md:gap-4 mb-8 md:mb-12">
       <AnimatePresence mode="wait">
         {isActive ? (
           <motion.button 

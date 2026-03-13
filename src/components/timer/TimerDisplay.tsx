@@ -33,7 +33,7 @@ const TimerDisplay = memo(function TimerDisplay({
       </AnimatePresence>
 
       <motion.div 
-        className={`text-[10rem] md:text-[14rem] font-mono font-black tracking-tighter leading-none select-none cursor-pointer transition-colors ${isBreakTime ? 'text-emerald-400' : 'text-white'}`}
+        className={`text-[7rem] sm:text-[10rem] md:text-[14rem] font-mono font-black tracking-tighter leading-none select-none cursor-pointer transition-colors ${isBreakTime ? 'text-emerald-400' : 'text-white'}`}
         onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
         animate={isActive && !isBreakTime ? {
           scale: [1, 1.02, 1],

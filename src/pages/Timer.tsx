@@ -173,11 +173,11 @@ const TimerPage = () => {
       <div className="fixed top-1/4 -left-20 w-64 h-64 bg-mario-red/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="fixed bottom-1/4 -right-20 w-64 h-64 bg-mario-emerald/10 blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
         <div className="lg:col-span-8 flex flex-col">
           <ScoreBar me={score.me} time={score.time} onReset={handleReset} />
           
-          <div className="flex-1 flex flex-col items-center justify-center min-h-[400px]">
+          <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px]">
             <TimerDisplay 
               minutes={Math.floor(timeLeft / 60)} 
               seconds={timeLeft % 60} 
@@ -206,7 +206,7 @@ const TimerPage = () => {
           />
         </div>
 
-        <div className="lg:col-span-4 space-y-6">
+        <div className="lg:col-span-4 space-y-4 md:space-y-6">
           <LevelPanel level={fullCycles} cycles={fullCycles} />
           
           <div className="glass rounded-3xl p-6 border-white/5">
