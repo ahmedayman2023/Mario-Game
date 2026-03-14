@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useCallback, memo } from "react";
+import React, { useState, useEffect, useCallback, memo, useRef } from "react";
 import { motion, AnimatePresence } from 'motion/react';
+import ReactPlayer from 'react-player';
 import { StudySession } from "@/src/entities/StudySession";
+
+const Player = ReactPlayer as any;
 import { User } from "@/src/entities/User";
 import TimerDisplay from "../components/timer/TimerDisplay";
 import TodoList from "../components/timer/TodoList";
@@ -24,7 +27,11 @@ const TimerPage = () => {
   const [score, setScore] = useState<Score>({ me: 0, time: 0 });
   const [fullCycles, setFullCycles] = useState(0);
   const [volume, setVolume] = useState(0.5);
+  const [videoEnabled, setVideoEnabled] = useState(true);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [currentTopic, setCurrentTopic] = useState("");
+  const playerRef = useRef<any>(null);
   const [showCompletedMessage, setShowCompletedMessage] = useState(false);
 
   // Persistence Logic
@@ -38,6 +45,9 @@ const TimerPage = () => {
 
       const savedVolume = localStorage.getItem(STORAGE_KEYS.VOLUME);
       if (savedVolume) setVolume(parseFloat(savedVolume));
+
+      const savedVideoEnabled = localStorage.getItem('mario_video_enabled');
+      if (savedVideoEnabled !== null) setVideoEnabled(savedVideoEnabled === 'true');
 
       const savedState = localStorage.getItem(STORAGE_KEYS.TIMER_STATE);
       if (savedState) {
@@ -95,13 +105,18 @@ const TimerPage = () => {
     currentIntervalIndex,
     isBreakTime,
     isSessionComplete,
-    handleStart,
+    handleStart: baseStart,
     handlePause,
     handleReset: baseReset,
     handleSkip,
     setTimeLeft,
     progress
   } = useTimer(onIntervalComplete, onSessionComplete, onBreakComplete);
+
+  const handleStart = useCallback(() => {
+    setHasInteracted(true);
+    baseStart();
+  }, [baseStart]);
 
   // Match Logic: Time gets points while paused
   useEffect(() => {
@@ -230,6 +245,53 @@ const TimerPage = () => {
 
           <div className="lg:col-span-4 space-y-4 md:space-y-6">
             <LevelPanel level={fullCycles} cycles={fullCycles} />
+
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl overflow-hidden">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Sparkles size={14} className="text-broadcast-yellow" />
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Stadium Screen</h3>
+                </div>
+                <button 
+                  onClick={() => {
+                    const next = !videoEnabled;
+                    setVideoEnabled(next);
+                    localStorage.setItem('mario_video_enabled', next.toString());
+                  }}
+                  className={`text-[10px] font-black uppercase tracking-widest scoreboard-font px-2 py-1 rounded ${videoEnabled ? 'bg-mario-emerald text-black' : 'bg-white/10 text-slate-400'}`}
+                >
+                  {videoEnabled ? 'ON' : 'OFF'}
+                </button>
+              </div>
+              
+              <div className="aspect-video bg-black rounded-md overflow-hidden relative group">
+                <div className={videoEnabled ? "w-full h-full" : "hidden"}>
+                  <Player
+                    ref={playerRef}
+                    url="https://www.youtube.com/watch?v=74cOUSKXMz0"
+                    playing={isActive && !isPaused && hasInteracted && videoEnabled}
+                    volume={volume}
+                    muted={!hasInteracted} // Mute until interaction to bypass autoplay policy
+                    width="100%"
+                    height="100%"
+                    onReady={() => {
+                      setIsPlayerReady(true);
+                    }}
+                    config={{
+                      youtube: {
+                        playerVars: { modestbranding: 1, rel: 0, autoplay: 0 }
+                      }
+                    } as any}
+                  />
+                </div>
+                {!videoEnabled && (
+                  <div className="absolute inset-0 flex items-center justify-center text-slate-600 text-[10px] font-black uppercase tracking-widest">
+                    Screen Offline
+                  </div>
+                )}
+              </div>
+              <p className="text-[9px] text-slate-500 mt-2 italic scoreboard-font">Stadium ambience auto-syncs with match clock</p>
+            </div>
             
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
               <div className="flex items-center justify-between mb-4">
