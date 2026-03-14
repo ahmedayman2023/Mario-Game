@@ -11,6 +11,7 @@ import ScoreBar from "../components/timer/ScoreBar";
 import StudyTopicInput from "../components/timer/StudyTopicInput";
 import LevelPanel from "../components/timer/LevelPanel";
 import BoxBreathing from "../components/timer/BoxBreathing";
+import Modal from "../components/ui/Modal";
 import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
@@ -28,6 +29,7 @@ const TimerPage = () => {
   const [volume, setVolume] = useState(0.5);
   const [currentTopic, setCurrentTopic] = useState("");
   const [showCompletedMessage, setShowCompletedMessage] = useState(false);
+  const [isBreathingOpen, setIsBreathingOpen] = useState(false);
 
   // Persistence Logic
   const loadInitialData = useCallback(async () => {
@@ -69,7 +71,8 @@ const TimerPage = () => {
     });
     setShowCompletedMessage(true);
     setTimeout(() => setShowCompletedMessage(false), 2000);
-  }, []);
+    setIsBreathingOpen(true);
+  }, [volume]);
 
   const onBreakComplete = useCallback(() => {
     playChime('start', volume);
@@ -77,6 +80,7 @@ const TimerPage = () => {
       title: "Break Finished!",
       description: "Time to focus again. Mission resumes.",
     });
+    setIsBreathingOpen(false);
   }, [toast]);
 
   const onSessionComplete = useCallback(() => {
@@ -206,46 +210,26 @@ const TimerPage = () => {
             <ScoreBar me={score.me} time={score.time} onReset={handleReset} />
             
             <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px] bg-black/20 rounded-lg border border-white/5 shadow-inner mb-6 relative overflow-hidden">
-              <AnimatePresence mode="wait">
-                {isBreakTime && isActive && !isPaused ? (
-                  <motion.div
-                    key="breathing"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1.1 }}
-                    className="absolute inset-0 z-20 flex items-center justify-center bg-stadium-blue/90 backdrop-blur-sm p-4"
-                  >
-                    <BoxBreathing />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="timer"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex flex-col items-center justify-center w-full h-full"
-                  >
-                    <TimerDisplay 
-                      minutes={Math.floor(timeLeft / 60)} 
-                      seconds={timeLeft % 60} 
-                      isActive={isActive}
-                      currentInterval={isBreakTime ? "Break" : currentIntervalIndex + 1}
-                      onTimeEdit={handleTimeEdit}
-                      isBreakTime={isBreakTime}
-                    />
-                    
-                    <TimerControls 
-                      isActive={isActive}
-                      isPaused={isPaused}
-                      onStart={() => { playChime('start', volume); handleStart(); }}
-                      onPause={handlePause}
-                      onStop={handleReset}
-                      onSkip={() => { playChime('mandatory', volume); handleSkip(); }}
-                      isBreakTime={isBreakTime}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="flex flex-col items-center justify-center w-full h-full">
+                <TimerDisplay 
+                  minutes={Math.floor(timeLeft / 60)} 
+                  seconds={timeLeft % 60} 
+                  isActive={isActive}
+                  currentInterval={isBreakTime ? "Break" : currentIntervalIndex + 1}
+                  onTimeEdit={handleTimeEdit}
+                  isBreakTime={isBreakTime}
+                />
+                
+                <TimerControls 
+                  isActive={isActive}
+                  isPaused={isPaused}
+                  onStart={() => { playChime('start', volume); handleStart(); }}
+                  onPause={handlePause}
+                  onStop={handleReset}
+                  onSkip={() => { playChime('mandatory', volume); handleSkip(); }}
+                  isBreakTime={isBreakTime}
+                />
+              </div>
             </div>
 
             <IntervalProgress 
@@ -258,6 +242,24 @@ const TimerPage = () => {
 
           <div className="lg:col-span-4 space-y-4 md:space-y-6">
             <LevelPanel level={fullCycles} cycles={fullCycles} />
+
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Wind size={14} className="text-broadcast-yellow" />
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Recovery Tools</h3>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsBreathingOpen(true)}
+                className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
+              >
+                <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Wind size={20} className="text-emerald-400" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">Box Breathing</span>
+              </button>
+            </div>
 
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl overflow-hidden">
               <div className="flex items-center justify-between mb-4">
@@ -342,6 +344,14 @@ const TimerPage = () => {
           </div>
         </div>
       </div>
+
+      <Modal 
+        isOpen={isBreathingOpen} 
+        onClose={() => setIsBreathingOpen(false)}
+        title="Mindset Recovery"
+      >
+        <BoxBreathing />
+      </Modal>
 
       <AnimatePresence>
         {showCompletedMessage && (
