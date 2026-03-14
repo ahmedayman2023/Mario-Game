@@ -23,7 +23,7 @@ const StudyTopicInput = memo(function StudyTopicInput({
       </div>
       <input 
         type="text"
-        value={topic}
+        value={topic || ""}
         onChange={(e) => onTopicChange(e.target.value)}
         placeholder="What are we studying today?"
         className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pl-12 pr-16 text-lg font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/5 transition-all"

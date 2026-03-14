@@ -23,14 +23,14 @@ const TodoList = memo(function TodoList() {
   };
 
   return (
-    <div className="w-full glass rounded-3xl p-6 mb-8 border-white/5">
+    <div className="w-full bg-stadium-blue/80 border border-white/10 rounded-lg p-6 mb-8 shadow-xl">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <Target size={14} className="text-mario-red" />
-          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Mission Objectives</h3>
+          <Target size={14} className="text-broadcast-yellow" />
+          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Match Tactics</h3>
         </div>
-        <div className="text-[10px] font-black text-mario-emerald uppercase tracking-widest">
-          {todos.filter((t) => t.completed).length} / {todos.length} Secured
+        <div className="text-[10px] font-black text-mario-emerald uppercase tracking-widest scoreboard-font">
+          {todos.filter((t) => t.completed).length} / {todos.length} Goals
         </div>
       </div>
 
@@ -39,16 +39,16 @@ const TodoList = memo(function TodoList() {
           type="text" 
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="New Objective..."
-          className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-mario-emerald/50 transition-colors"
+          placeholder="New Tactic..."
+          className="flex-1 bg-black/40 border border-white/10 rounded-sm px-4 py-3 text-sm text-white focus:outline-none focus:border-broadcast-yellow/50 transition-colors"
         />
         <motion.button 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           type="submit" 
-          className="bg-mario-emerald text-black p-3 rounded-2xl shadow-lg shadow-mario-emerald/20"
+          className="bg-broadcast-yellow text-black px-4 rounded-sm shadow-lg font-black uppercase text-[10px] tracking-widest"
         >
-          <Plus size={20} />
+          Add
         </motion.button>
       </form>
       
@@ -60,7 +60,7 @@ const TodoList = memo(function TodoList() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className={`group flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 ${
+              className={`group flex items-center justify-between p-4 rounded-sm border transition-all duration-300 ${
                 todo.completed ? 'bg-mario-emerald/5 border-mario-emerald/20 opacity-60' : 'bg-white/5 border-white/5 hover:border-white/20'
               }`}
             >
@@ -73,7 +73,7 @@ const TodoList = memo(function TodoList() {
                 ) : (
                   <Circle size={20} className="text-slate-600 group-hover:text-slate-400" />
                 )}
-                <span className={`text-sm font-medium transition-all ${todo.completed ? 'line-through text-slate-500' : 'text-slate-200'}`}>
+                <span className={`text-sm font-medium transition-all scoreboard-font ${todo.completed ? 'line-through text-slate-500' : 'text-slate-200'}`}>
                   {todo.text}
                 </span>
               </div>
@@ -88,8 +88,8 @@ const TodoList = memo(function TodoList() {
         </AnimatePresence>
         
         {todos.length === 0 && (
-          <div className="text-center py-8 text-slate-600 italic text-[10px] uppercase tracking-widest">
-            No active objectives. Add one to begin.
+          <div className="text-center py-8 text-slate-600 italic text-[10px] uppercase tracking-widest scoreboard-font">
+            No active tactics. Plan your match.
           </div>
         )}
       </div>

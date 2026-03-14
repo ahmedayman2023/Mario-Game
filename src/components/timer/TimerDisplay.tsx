@@ -19,40 +19,48 @@ const TimerDisplay = memo(function TimerDisplay({
   isBreakTime 
 }: TimerDisplayProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-8 md:py-12">
+    <div className="flex flex-col items-center justify-center py-6 md:py-10">
       <AnimatePresence mode="wait">
         <motion.div
           key={isBreakTime ? 'break' : 'study'}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-slate-500 mb-2"
+          className="flex items-center gap-2 mb-4"
         >
-          {isBreakTime ? 'Break Session' : `Level Interval ${currentInterval}`}
+          <div className="px-3 py-1 bg-broadcast-yellow text-black text-[10px] font-black uppercase tracking-widest rounded-sm">
+            {isBreakTime ? 'Half Time' : `Period ${currentInterval}`}
+          </div>
+          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
+            {isBreakTime ? 'Recharging' : 'Match in Progress'}
+          </div>
         </motion.div>
       </AnimatePresence>
 
       <motion.div 
-        className={`text-[7rem] sm:text-[10rem] md:text-[14rem] font-mono font-black tracking-tighter leading-none select-none cursor-pointer transition-colors ${isBreakTime ? 'text-emerald-400' : 'text-white'}`}
+        className={`text-[8rem] sm:text-[12rem] md:text-[16rem] font-black scoreboard-font tracking-tighter leading-none select-none cursor-pointer transition-colors ${isBreakTime ? 'text-broadcast-yellow' : 'text-white'}`}
         onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
         animate={isActive && !isBreakTime ? {
-          scale: [1, 1.02, 1],
-          transition: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+          opacity: [1, 0.8, 1],
+          transition: { duration: 1, repeat: Infinity, ease: "linear" }
         } : {}}
       >
-        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+        {String(minutes).padStart(2, '0')}<span className="animate-pulse">:</span>{String(seconds).padStart(2, '0')}
       </motion.div>
 
-      {isBreakTime && (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-emerald-500 font-black uppercase tracking-[0.3em] mt-4 flex items-center gap-2"
-        >
-          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
-          Recharging Energy
-        </motion.div>
-      )}
+      <div className="mt-6 flex items-center gap-8">
+        <div className="flex flex-col items-center">
+          <div className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">Status</div>
+          <div className={`text-xs font-black uppercase tracking-widest ${isActive ? 'text-mario-emerald' : 'text-mario-red'}`}>
+            {isActive ? 'Playing' : 'Paused'}
+          </div>
+        </div>
+        <div className="w-px h-8 bg-white/10" />
+        <div className="flex flex-col items-center">
+          <div className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">Intensity</div>
+          <div className="text-xs font-black uppercase tracking-widest text-white">High</div>
+        </div>
+      </div>
     </div>
   );
 });

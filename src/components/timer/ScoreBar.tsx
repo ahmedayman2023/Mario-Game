@@ -7,49 +7,48 @@ const ScoreBar = memo(function ScoreBar({ me, time, onReset }: { me: number; tim
     <motion.div 
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col md:flex-row justify-between items-center gap-4 glass rounded-2xl px-4 py-4 md:px-8 md:py-6 mb-4 text-white shadow-2xl border border-white/10"
+      className="flex items-center justify-between scoreboard-panel rounded-lg px-4 py-3 md:px-6 md:py-4 mb-6 text-white shadow-2xl"
     >
-      <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
-        <div className="flex flex-col items-start">
-          <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
-            <Clock size={12} className="text-mario-red" />
-            <span>Time Penalty</span>
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-mario-emerald rounded-full flex items-center justify-center shadow-lg">
+            <User size={18} className="text-black" />
           </div>
-          <div className="text-3xl md:text-4xl font-mono font-black text-mario-red drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]">
-            {String(time).padStart(2, '0')}
+          <div className="hidden sm:block">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Home</div>
+            <div className="text-sm font-black uppercase tracking-tight">You</div>
+          </div>
+        </div>
+        
+        <div className="flex items-center bg-black/40 rounded px-4 py-2 border border-white/10">
+          <span className="text-2xl md:text-3xl font-black scoreboard-font text-white">{String(me).padStart(1, '0')}</span>
+          <span className="mx-3 text-slate-500 font-black">-</span>
+          <span className="text-2xl md:text-3xl font-black scoreboard-font text-mario-red">{String(time).padStart(1, '0')}</span>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:block text-right">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Away</div>
+            <div className="text-sm font-black uppercase tracking-tight">Time</div>
+          </div>
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-mario-red rounded-full flex items-center justify-center shadow-lg">
+            <Clock size={18} className="text-white" />
           </div>
         </div>
       </div>
-      
-      <div className="flex flex-col items-center gap-1 md:gap-2">
-        <div className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Match Status</div>
-        <div className="flex items-center gap-4">
-          <div className="px-3 py-0.5 md:px-4 md:py-1 bg-white/5 rounded-lg border border-white/10 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400">
-            {me > time ? "Winning" : me < time ? "Losing" : "Draw"}
-          </div>
+
+      <div className="flex flex-col items-end gap-1">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-mario-emerald rounded-full animate-pulse" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-broadcast-yellow">Live Match</span>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.05, rotate: 180 }}
-          whileTap={{ scale: 0.95 }}
+        <button
           onClick={onReset}
-          className="flex items-center gap-2 mt-1 md:mt-2 px-2 py-1 md:px-3 md:py-1.5 rounded-full bg-white/5 border border-white/10 text-[8px] md:text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-          title="Reset Match Score"
+          className="text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors flex items-center gap-1"
         >
           <RotateCcw size={10} />
-          <span>Reset Match</span>
-        </motion.button>
-      </div>
-      
-      <div className="flex items-center gap-4 text-right w-full md:w-auto justify-between md:justify-end">
-        <div className="flex flex-col items-end">
-          <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
-            <span>My Score</span>
-            <User size={12} className="text-mario-emerald" />
-          </div>
-          <div className="text-3xl md:text-4xl font-mono font-black text-mario-emerald drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
-            {String(me).padStart(2, '0')}
-          </div>
-        </div>
+          Restart
+        </button>
       </div>
     </motion.div>
   );

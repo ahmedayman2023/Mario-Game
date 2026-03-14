@@ -38,12 +38,12 @@ const TimerPage = () => {
       const savedState = localStorage.getItem(STORAGE_KEYS.TIMER_STATE);
       if (savedState) {
         const state: TimerState = JSON.parse(savedState);
-        setCurrentTopic(state.currentTopic);
+        setCurrentTopic(state.currentTopic || "");
       }
 
       const userData = await User.getMyUserData();
       if (userData?.current_study_topic) {
-        setCurrentTopic(userData.current_study_topic);
+        setCurrentTopic(userData.current_study_topic || "");
       }
     } catch (e) {
       console.error("Failed to load initial data", e);
@@ -175,71 +175,82 @@ const TimerPage = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 md:py-12 relative">
-      <Toaster />
-      
-      <div className="fixed top-1/4 -left-20 w-64 h-64 bg-mario-red/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="fixed bottom-1/4 -right-20 w-64 h-64 bg-mario-emerald/10 blur-[120px] rounded-full pointer-events-none" />
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-        <div className="lg:col-span-8 flex flex-col">
-          <ScoreBar me={score.me} time={score.time} onReset={handleReset} />
-          
-          <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px]">
-            <TimerDisplay 
-              minutes={Math.floor(timeLeft / 60)} 
-              seconds={timeLeft % 60} 
-              isActive={isActive}
-              currentInterval={isBreakTime ? "Break" : currentIntervalIndex + 1}
-              onTimeEdit={handleTimeEdit}
-              isBreakTime={isBreakTime}
-            />
-            
-            <TimerControls 
-              isActive={isActive}
-              isPaused={isPaused}
-              onStart={() => { playChime('start'); handleStart(); }}
-              onPause={handlePause}
-              onStop={handleReset}
-              onSkip={() => { playChime('mandatory'); handleSkip(); }}
-              isBreakTime={isBreakTime}
-            />
+    <div className="min-h-screen stadium-gradient">
+      <div className="max-w-5xl mx-auto px-4 py-6 md:py-10 relative">
+        <Toaster />
+        
+        <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">Live</div>
+            <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">European Study League</h1>
           </div>
-
-          <IntervalProgress 
-            currentIntervalIndex={currentIntervalIndex}
-            intervals={INTERVALS}
-            progress={progress}
-            isBreakTime={isBreakTime}
-          />
+          <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 scoreboard-font">
+            <span>Matchday 14</span>
+            <div className="w-1 h-1 bg-slate-600 rounded-full" />
+            <span>Group Stage</span>
+          </div>
         </div>
 
-        <div className="lg:col-span-4 space-y-4 md:space-y-6">
-          <LevelPanel level={fullCycles} cycles={fullCycles} />
-          
-          <div className="glass rounded-3xl p-6 border-white/5">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles size={14} className="text-mario-emerald" />
-              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Current Focus</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+          <div className="lg:col-span-8 flex flex-col">
+            <ScoreBar me={score.me} time={score.time} onReset={handleReset} />
+            
+            <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px] bg-black/20 rounded-lg border border-white/5 shadow-inner mb-6">
+              <TimerDisplay 
+                minutes={Math.floor(timeLeft / 60)} 
+                seconds={timeLeft % 60} 
+                isActive={isActive}
+                currentInterval={isBreakTime ? "Break" : currentIntervalIndex + 1}
+                onTimeEdit={handleTimeEdit}
+                isBreakTime={isBreakTime}
+              />
+              
+              <TimerControls 
+                isActive={isActive}
+                isPaused={isPaused}
+                onStart={() => { playChime('start'); handleStart(); }}
+                onPause={handlePause}
+                onStop={handleReset}
+                onSkip={() => { playChime('mandatory'); handleSkip(); }}
+                isBreakTime={isBreakTime}
+              />
             </div>
-            <StudyTopicInput
-              topic={currentTopic}
-              onTopicChange={setCurrentTopic}
-              onTopicSave={handleTopicSave}
-              isActive={isActive}
-              isPaused={isPaused} 
+
+            <IntervalProgress 
+              currentIntervalIndex={currentIntervalIndex}
+              intervals={INTERVALS}
+              progress={progress}
+              isBreakTime={isBreakTime}
             />
           </div>
 
-          <TodoList />
+          <div className="lg:col-span-4 space-y-4 md:space-y-6">
+            <LevelPanel level={fullCycles} cycles={fullCycles} />
+            
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles size={14} className="text-broadcast-yellow" />
+                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Current Focus</h3>
+              </div>
+              <StudyTopicInput
+                topic={currentTopic}
+                onTopicChange={setCurrentTopic}
+                onTopicSave={handleTopicSave}
+                isActive={isActive}
+                isPaused={isPaused} 
+              />
+            </div>
 
-          <div className="flex justify-center pt-4">
-            <button
-              onClick={handleReset}
-              className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-mario-red transition-colors disabled:opacity-30"
-              disabled={isActive}>
-              Reset Full Campaign
-            </button>
+            <TodoList />
+
+            <div className="flex justify-center pt-4">
+              <button
+                onClick={handleReset}
+                className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-mario-red transition-colors disabled:opacity-30 scoreboard-font"
+                disabled={isActive}>
+                Abandon Campaign
+              </button>
+            </div>
           </div>
         </div>
       </div>
