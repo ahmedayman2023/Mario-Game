@@ -9,7 +9,7 @@ import IntervalProgress from "../components/timer/IntervalProgress";
 import ScoreBar from "../components/timer/ScoreBar";
 import StudyTopicInput from "../components/timer/StudyTopicInput";
 import LevelPanel from "../components/timer/LevelPanel";
-import { Trophy, Sparkles } from 'lucide-react';
+import { Trophy, Sparkles, Volume2, VolumeX } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
@@ -23,6 +23,7 @@ const TimerPage = () => {
   // Stats State
   const [score, setScore] = useState<Score>({ me: 0, time: 0 });
   const [fullCycles, setFullCycles] = useState(0);
+  const [volume, setVolume] = useState(0.5);
   const [currentTopic, setCurrentTopic] = useState("");
   const [showCompletedMessage, setShowCompletedMessage] = useState(false);
 
@@ -34,6 +35,9 @@ const TimerPage = () => {
 
       const savedCycles = localStorage.getItem(STORAGE_KEYS.FULL_CYCLES);
       if (savedCycles) setFullCycles(parseInt(savedCycles));
+
+      const savedVolume = localStorage.getItem(STORAGE_KEYS.VOLUME);
+      if (savedVolume) setVolume(parseFloat(savedVolume));
 
       const savedState = localStorage.getItem(STORAGE_KEYS.TIMER_STATE);
       if (savedState) {
@@ -55,7 +59,7 @@ const TimerPage = () => {
   }, [loadInitialData]);
 
   const onIntervalComplete = useCallback(() => {
-    playChime('complete');
+    playChime('complete', volume);
     setScore(prev => {
       const next = { ...prev, me: prev.me + 1 };
       localStorage.setItem(STORAGE_KEYS.SCORE, JSON.stringify(next));
@@ -66,7 +70,7 @@ const TimerPage = () => {
   }, []);
 
   const onBreakComplete = useCallback(() => {
-    playChime('start');
+    playChime('start', volume);
     toast({
       title: "Break Finished!",
       description: "Time to focus again. Mission resumes.",
@@ -74,7 +78,7 @@ const TimerPage = () => {
   }, [toast]);
 
   const onSessionComplete = useCallback(() => {
-    playChime('complete');
+    playChime('complete', volume);
     setFullCycles(prev => {
       const next = prev + 1;
       localStorage.setItem(STORAGE_KEYS.FULL_CYCLES, next.toString());
@@ -208,10 +212,10 @@ const TimerPage = () => {
               <TimerControls 
                 isActive={isActive}
                 isPaused={isPaused}
-                onStart={() => { playChime('start'); handleStart(); }}
+                onStart={() => { playChime('start', volume); handleStart(); }}
                 onPause={handlePause}
                 onStop={handleReset}
-                onSkip={() => { playChime('mandatory'); handleSkip(); }}
+                onSkip={() => { playChime('mandatory', volume); handleSkip(); }}
                 isBreakTime={isBreakTime}
               />
             </div>
@@ -227,6 +231,32 @@ const TimerPage = () => {
           <div className="lg:col-span-4 space-y-4 md:space-y-6">
             <LevelPanel level={fullCycles} cycles={fullCycles} />
             
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Volume2 size={14} className="text-broadcast-yellow" />
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Volume Control</h3>
+                </div>
+                <span className="text-[10px] font-black text-white scoreboard-font">{Math.round(volume * 100)}%</span>
+              </div>
+              <div className="flex items-center gap-3">
+                {volume === 0 ? <VolumeX size={16} className="text-slate-500" /> : <Volume2 size={16} className="text-broadcast-yellow" />}
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value={volume}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value);
+                    setVolume(val);
+                    localStorage.setItem(STORAGE_KEYS.VOLUME, val.toString());
+                  }}
+                  className="flex-1 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-broadcast-yellow"
+                />
+              </div>
+            </div>
+
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles size={14} className="text-broadcast-yellow" />
