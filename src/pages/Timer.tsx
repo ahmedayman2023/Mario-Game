@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useCallback, memo, useRef } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import { motion, AnimatePresence } from 'motion/react';
-import ReactPlayer from 'react-player';
 import { StudySession } from "@/src/entities/StudySession";
 
-const Player = ReactPlayer as any;
 import { User } from "@/src/entities/User";
 import TimerDisplay from "../components/timer/TimerDisplay";
 import TodoList from "../components/timer/TodoList";
@@ -12,7 +10,7 @@ import IntervalProgress from "../components/timer/IntervalProgress";
 import ScoreBar from "../components/timer/ScoreBar";
 import StudyTopicInput from "../components/timer/StudyTopicInput";
 import LevelPanel from "../components/timer/LevelPanel";
-import { Trophy, Sparkles, Volume2, VolumeX } from 'lucide-react';
+import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
@@ -27,11 +25,7 @@ const TimerPage = () => {
   const [score, setScore] = useState<Score>({ me: 0, time: 0 });
   const [fullCycles, setFullCycles] = useState(0);
   const [volume, setVolume] = useState(0.5);
-  const [videoEnabled, setVideoEnabled] = useState(true);
-  const [hasInteracted, setHasInteracted] = useState(false);
-  const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [currentTopic, setCurrentTopic] = useState("");
-  const playerRef = useRef<any>(null);
   const [showCompletedMessage, setShowCompletedMessage] = useState(false);
 
   // Persistence Logic
@@ -45,9 +39,6 @@ const TimerPage = () => {
 
       const savedVolume = localStorage.getItem(STORAGE_KEYS.VOLUME);
       if (savedVolume) setVolume(parseFloat(savedVolume));
-
-      const savedVideoEnabled = localStorage.getItem('mario_video_enabled');
-      if (savedVideoEnabled !== null) setVideoEnabled(savedVideoEnabled === 'true');
 
       const savedState = localStorage.getItem(STORAGE_KEYS.TIMER_STATE);
       if (savedState) {
@@ -114,7 +105,6 @@ const TimerPage = () => {
   } = useTimer(onIntervalComplete, onSessionComplete, onBreakComplete);
 
   const handleStart = useCallback(() => {
-    setHasInteracted(true);
     baseStart();
   }, [baseStart]);
 
@@ -249,48 +239,31 @@ const TimerPage = () => {
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl overflow-hidden">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Sparkles size={14} className="text-broadcast-yellow" />
-                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Stadium Screen</h3>
+                  <ExternalLink size={14} className="text-broadcast-yellow" />
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Stadium Ambience</h3>
                 </div>
-                <button 
-                  onClick={() => {
-                    const next = !videoEnabled;
-                    setVideoEnabled(next);
-                    localStorage.setItem('mario_video_enabled', next.toString());
-                  }}
-                  className={`text-[10px] font-black uppercase tracking-widest scoreboard-font px-2 py-1 rounded ${videoEnabled ? 'bg-mario-emerald text-black' : 'bg-white/10 text-slate-400'}`}
-                >
-                  {videoEnabled ? 'ON' : 'OFF'}
-                </button>
               </div>
               
-              <div className="aspect-video bg-black rounded-md overflow-hidden relative group">
-                <div className={videoEnabled ? "w-full h-full" : "hidden"}>
-                  <Player
-                    ref={playerRef}
-                    url="https://www.youtube.com/watch?v=74cOUSKXMz0"
-                    playing={isActive && !isPaused && hasInteracted && videoEnabled}
-                    volume={volume}
-                    muted={!hasInteracted} // Mute until interaction to bypass autoplay policy
-                    width="100%"
-                    height="100%"
-                    onReady={() => {
-                      setIsPlayerReady(true);
-                    }}
-                    config={{
-                      youtube: {
-                        playerVars: { modestbranding: 1, rel: 0, autoplay: 0 }
-                      }
-                    } as any}
-                  />
-                </div>
-                {!videoEnabled && (
-                  <div className="absolute inset-0 flex items-center justify-center text-slate-600 text-[10px] font-black uppercase tracking-widest">
-                    Screen Offline
+              <a 
+                href="https://www.youtube.com/watch?v=74cOUSKXMz0" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group relative block aspect-video bg-black rounded-md overflow-hidden border border-white/5 hover:border-broadcast-yellow/50 transition-colors"
+              >
+                <img 
+                  src="https://img.youtube.com/vi/74cOUSKXMz0/maxresdefault.jpg" 
+                  alt="Stadium Video Thumbnail" 
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                  <div className="w-12 h-12 bg-mario-red rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <ExternalLink size={20} className="text-white ml-0.5" />
                   </div>
-                )}
-              </div>
-              <p className="text-[9px] text-slate-500 mt-2 italic scoreboard-font">Stadium ambience auto-syncs with match clock</p>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">Open Stadium</span>
+                </div>
+              </a>
+              <p className="text-[9px] text-slate-500 mt-3 italic scoreboard-font leading-relaxed">Click to open the stadium atmosphere in a new tab for the full match experience.</p>
             </div>
             
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
