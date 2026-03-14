@@ -1,12 +1,5 @@
 export const INTERVALS = [
-  // Phase Alpha (1-18)
-  1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 7, 10,
-  // Phase Beta (19-36)
-  1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 7, 10,
-  // Phase Gamma (37-54)
-  1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 7, 10,
-  // Phase Delta (55-72)
-  1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 7, 10
+  1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 5, 10, 10, 15
 ];
 
 export const BREAK_DURATION = 2; // 2 minutes break between intervals
