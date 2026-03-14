@@ -10,7 +10,8 @@ import IntervalProgress from "../components/timer/IntervalProgress";
 import ScoreBar from "../components/timer/ScoreBar";
 import StudyTopicInput from "../components/timer/StudyTopicInput";
 import LevelPanel from "../components/timer/LevelPanel";
-import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink } from 'lucide-react';
+import BoxBreathing from "../components/timer/BoxBreathing";
+import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
@@ -204,25 +205,47 @@ const TimerPage = () => {
           <div className="lg:col-span-8 flex flex-col">
             <ScoreBar me={score.me} time={score.time} onReset={handleReset} />
             
-            <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px] bg-black/20 rounded-lg border border-white/5 shadow-inner mb-6">
-              <TimerDisplay 
-                minutes={Math.floor(timeLeft / 60)} 
-                seconds={timeLeft % 60} 
-                isActive={isActive}
-                currentInterval={isBreakTime ? "Break" : currentIntervalIndex + 1}
-                onTimeEdit={handleTimeEdit}
-                isBreakTime={isBreakTime}
-              />
-              
-              <TimerControls 
-                isActive={isActive}
-                isPaused={isPaused}
-                onStart={() => { playChime('start', volume); handleStart(); }}
-                onPause={handlePause}
-                onStop={handleReset}
-                onSkip={() => { playChime('mandatory', volume); handleSkip(); }}
-                isBreakTime={isBreakTime}
-              />
+            <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px] bg-black/20 rounded-lg border border-white/5 shadow-inner mb-6 relative overflow-hidden">
+              <AnimatePresence mode="wait">
+                {isBreakTime && isActive && !isPaused ? (
+                  <motion.div
+                    key="breathing"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.1 }}
+                    className="absolute inset-0 z-20 flex items-center justify-center bg-stadium-blue/90 backdrop-blur-sm p-4"
+                  >
+                    <BoxBreathing />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="timer"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-col items-center justify-center w-full h-full"
+                  >
+                    <TimerDisplay 
+                      minutes={Math.floor(timeLeft / 60)} 
+                      seconds={timeLeft % 60} 
+                      isActive={isActive}
+                      currentInterval={isBreakTime ? "Break" : currentIntervalIndex + 1}
+                      onTimeEdit={handleTimeEdit}
+                      isBreakTime={isBreakTime}
+                    />
+                    
+                    <TimerControls 
+                      isActive={isActive}
+                      isPaused={isPaused}
+                      onStart={() => { playChime('start', volume); handleStart(); }}
+                      onPause={handlePause}
+                      onStop={handleReset}
+                      onSkip={() => { playChime('mandatory', volume); handleSkip(); }}
+                      isBreakTime={isBreakTime}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             <IntervalProgress 
