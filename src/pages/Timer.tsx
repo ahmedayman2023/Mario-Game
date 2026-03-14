@@ -11,6 +11,7 @@ import ScoreBar from "../components/timer/ScoreBar";
 import StudyTopicInput from "../components/timer/StudyTopicInput";
 import LevelPanel from "../components/timer/LevelPanel";
 import BoxBreathing from "../components/timer/BoxBreathing";
+import RecoveryVideos from "../components/timer/RecoveryVideos";
 import Modal from "../components/ui/Modal";
 import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
@@ -260,6 +261,8 @@ const TimerPage = () => {
                 <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">Box Breathing</span>
               </button>
             </div>
+
+            <RecoveryVideos />
 
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl overflow-hidden">
               <div className="flex items-center justify-between mb-4">

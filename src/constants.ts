@@ -13,3 +13,24 @@ export const STORAGE_KEYS = {
   TIMER_STATE: 'mario_timer_state',
   VOLUME: 'mario_timer_volume'
 };
+
+export const RECOVERY_VIDEOS = [
+  {
+    id: 'wnlcuZ0mJSU',
+    title: 'Shoulder Stretches',
+    duration: '1 Min',
+    thumbnail: 'https://img.youtube.com/vi/wnlcuZ0mJSU/mqdefault.jpg'
+  },
+  {
+    id: 'Re-h_rtttIE',
+    title: 'Neck Stretches',
+    duration: '1 Min',
+    thumbnail: 'https://img.youtube.com/vi/Re-h_rtttIE/mqdefault.jpg'
+  },
+  {
+    id: 'jvlztOtc4HI',
+    title: 'Yoga Practice',
+    duration: '1 Min',
+    thumbnail: 'https://img.youtube.com/vi/jvlztOtc4HI/mqdefault.jpg'
+  }
+];
