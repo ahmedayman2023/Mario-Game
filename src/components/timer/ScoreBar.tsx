@@ -21,7 +21,10 @@ const ScoreBar = memo(function ScoreBar({ me, time, onReset }: { me: number; tim
         </div>
         
         <div className="flex items-center bg-black/40 rounded px-4 py-2 border border-white/10">
-          <span className="text-2xl md:text-3xl font-black scoreboard-font text-white">{String(me).padStart(1, '0')}</span>
+          <div className="flex flex-col items-center">
+            <span className="text-2xl md:text-3xl font-black scoreboard-font text-white">{String(me).padStart(1, '0')}</span>
+            <span className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">MAX 32</span>
+          </div>
           <span className="mx-3 text-slate-500 font-black">-</span>
           <span className="text-2xl md:text-3xl font-black scoreboard-font text-mario-red">{String(time).padStart(1, '0')}</span>
         </div>

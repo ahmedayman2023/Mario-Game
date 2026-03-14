@@ -1,5 +1,8 @@
 export const INTERVALS = [
-  1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 5, 10, 10, 15
+  // الشوط الأول
+  1, 1, 1, 1, 2, 2, 2, 3, 3, 5, 5, 10, 15, 25, 30, 14,
+  // الشوط الثاني
+  1, 1, 1, 1, 2, 2, 2, 3, 3, 5, 5, 10, 15, 25, 30, 14
 ];
 
 export const BREAK_DURATION = 2; // 2 minutes break between intervals

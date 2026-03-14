@@ -117,7 +117,8 @@ const IntervalProgress = memo(function IntervalProgress({
       </div>
 
       <div ref={scrollRef} className="space-y-10">
-        {renderIntervals(intervals, 0, "Current Campaign")}
+        {renderIntervals(intervals.slice(0, 16), 0, "الشوط الأول (First Half)")}
+        {renderIntervals(intervals.slice(16, 32), 16, "الشوط الثاني (Second Half)")}
       </div>
     </div>
   );
