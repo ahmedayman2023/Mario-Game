@@ -30,14 +30,14 @@ const RecoveryVideos = () => {
                 {video.title}
               </div>
               <div className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
-                {video.duration} Drill
+                تمرين {video.duration}
               </div>
             </div>
           </a>
         ))}
       </div>
       <p className="text-[8px] text-slate-600 mt-4 italic scoreboard-font leading-relaxed">
-        Quick physical resets to maintain peak cognitive performance during breaks.
+        تمارين بدنية سريعة للحفاظ على ذروة الأداء الذهني خلال فترات الاستراحة.
       </p>
     </div>
   );

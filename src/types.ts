@@ -1,7 +1,9 @@
 export interface TimerState {
   timeLeft: number;
   currentIntervalIndex: number;
+  warmupIntervalIndex: number;
   isBreakTime: boolean;
+  isWarmup: boolean;
   isSessionComplete: boolean;
   totalStudyTime: number;
   completedIntervals: number;

@@ -27,10 +27,10 @@ const TodoList = memo(function TodoList() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Target size={14} className="text-broadcast-yellow" />
-          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Match Tactics</h3>
+          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">تكتيكات المباراة</h3>
         </div>
         <div className="text-[10px] font-black text-mario-emerald uppercase tracking-widest scoreboard-font">
-          {todos.filter((t) => t.completed).length} / {todos.length} Goals
+          {todos.filter((t) => t.completed).length} / {todos.length} أهداف
         </div>
       </div>
 
@@ -39,7 +39,7 @@ const TodoList = memo(function TodoList() {
           type="text" 
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="New Tactic..."
+          placeholder="تكتيك جديد..."
           className="flex-1 bg-black/40 border border-white/10 rounded-sm px-4 py-3 text-sm text-white focus:outline-none focus:border-broadcast-yellow/50 transition-colors"
         />
         <motion.button 
@@ -48,7 +48,7 @@ const TodoList = memo(function TodoList() {
           type="submit" 
           className="bg-broadcast-yellow text-black px-4 rounded-sm shadow-lg font-black uppercase text-[10px] tracking-widest"
         >
-          Add
+          إضافة
         </motion.button>
       </form>
       
@@ -89,7 +89,7 @@ const TodoList = memo(function TodoList() {
         
         {todos.length === 0 && (
           <div className="text-center py-8 text-slate-600 italic text-[10px] uppercase tracking-widest scoreboard-font">
-            No active tactics. Plan your match.
+            لا توجد تكتيكات نشطة. خطط لمباراتك.
           </div>
         )}
       </div>

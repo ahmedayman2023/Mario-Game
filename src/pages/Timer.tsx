@@ -32,6 +32,8 @@ const TimerPage = () => {
   const [showCompletedMessage, setShowCompletedMessage] = useState(false);
   const [isBreathingOpen, setIsBreathingOpen] = useState(false);
   const [isExercisesOpen, setIsExercisesOpen] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [winner, setWinner] = useState<'me' | 'time' | null>(null);
 
   // Persistence Logic
   const loadInitialData = useCallback(async () => {
@@ -69,18 +71,22 @@ const TimerPage = () => {
     setScore(prev => {
       const next = { ...prev, me: prev.me + 1 };
       localStorage.setItem(STORAGE_KEYS.SCORE, JSON.stringify(next));
+      if (next.me >= 10 && !isGameOver) {
+        setIsGameOver(true);
+        setWinner('me');
+      }
       return next;
     });
     setShowCompletedMessage(true);
     setTimeout(() => setShowCompletedMessage(false), 2000);
     setIsBreathingOpen(true);
-  }, [volume]);
+  }, [volume, isGameOver]);
 
   const onBreakComplete = useCallback(() => {
     playChime('start', volume);
     toast({
-      title: "Break Finished!",
-      description: "Time to focus again. Mission resumes.",
+      title: "انتهت الاستراحة!",
+      description: "حان وقت التركيز مرة أخرى. تستأنف المهمة.",
     });
     setIsBreathingOpen(false);
   }, [toast]);
@@ -96,20 +102,85 @@ const TimerPage = () => {
     setTimeout(() => setShowCompletedMessage(false), 2000);
   }, []);
 
+  const onWarmupComplete = useCallback(() => {
+    playChime('mandatory', volume);
+    toast({
+      title: "انتهى التسخين!",
+      description: "المباراة ستبدأ الآن. بالتوفيق!",
+    });
+  }, [volume, toast]);
+
+  const onWarmupIntervalComplete = useCallback(() => {
+    playChime('interval', volume);
+  }, [volume]);
+
   const {
     timeLeft,
     isActive,
     isPaused,
     currentIntervalIndex,
+    warmupIntervalIndex,
     isBreakTime,
+    isWarmup,
     isSessionComplete,
     handleStart: baseStart,
     handlePause,
     handleReset: baseReset,
     handleSkip,
+    skipAllWarmup,
     setTimeLeft,
     progress
-  } = useTimer(onIntervalComplete, onSessionComplete, onBreakComplete);
+  } = useTimer(onIntervalComplete, onSessionComplete, onBreakComplete, onWarmupComplete, onWarmupIntervalComplete);
+
+  // Warmup Steps Logic
+  useEffect(() => {
+    if (isWarmup && isActive && !isPaused) {
+      switch (warmupIntervalIndex) {
+        case 0: // YouTube
+          toast({
+            title: "الخطوة الأولى: قناة اليوتيوب",
+            description: "افتح القناة لتجهيز الأجواء.",
+            action: (
+              <button 
+                onClick={() => window.open('https://www.youtube.com/', '_blank')}
+                className="bg-white text-black px-3 py-1 rounded-md text-xs font-bold"
+              >
+                فتح يوتيوب
+              </button>
+            ),
+          });
+          break;
+        case 1: // Breathing
+          setIsBreathingOpen(true);
+          toast({
+            title: "الخطوة الثانية: التنفس",
+            description: "ركز على تنفسك لمدة 5 دقائق.",
+          });
+          break;
+        case 2: // Lumosity
+          toast({
+            title: "الخطوة الثالثة: تسخين ذهني",
+            description: "افتح Lumosity لتنشيط عقلك.",
+            action: (
+              <button 
+                onClick={() => window.open('https://www.lumosity.com/', '_blank')}
+                className="bg-white text-black px-3 py-1 rounded-md text-xs font-bold"
+              >
+                فتح الموقع
+              </button>
+            ),
+          });
+          break;
+        case 3: // Stretches
+          setIsExercisesOpen(true);
+          toast({
+            title: "الخطوة الرابعة: الاستطالة",
+            description: "قم ببعض التمارين لتجهيز جسمك.",
+          });
+          break;
+      }
+    }
+  }, [isWarmup, warmupIntervalIndex, isActive, isPaused, toast]);
 
   const handleStart = useCallback(() => {
     baseStart();
@@ -118,21 +189,27 @@ const TimerPage = () => {
   // Match Logic: Time gets points while paused
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (isPaused && !isSessionComplete) {
+    if (isPaused && !isSessionComplete && !isGameOver) {
       interval = setInterval(() => {
         setScore(prev => {
           const next = { ...prev, time: prev.time + 1 };
           localStorage.setItem(STORAGE_KEYS.SCORE, JSON.stringify(next));
+          if (next.time >= 10 && !isGameOver) {
+            setIsGameOver(true);
+            setWinner('time');
+          }
           return next;
         });
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isPaused, isSessionComplete]);
+  }, [isPaused, isSessionComplete, isGameOver]);
 
   const handleReset = () => {
     baseReset();
     setScore({ me: 0, time: 0 });
+    setIsGameOver(false);
+    setWinner(null);
     localStorage.setItem(STORAGE_KEYS.SCORE, JSON.stringify({ me: 0, time: 0 }));
   };
 
@@ -143,9 +220,9 @@ const TimerPage = () => {
       localStorage.setItem(STORAGE_KEYS.TIMER_STATE, JSON.stringify({ ...state, currentTopic }));
       
       await User.updateMyUserData({ current_study_topic: currentTopic });
-      toast({ title: "Topic Saved!", description: `Your topic "${currentTopic}" has been saved.` });
+      toast({ title: "تم حفظ الموضوع!", description: `تم حفظ موضوعك "${currentTopic}" بنجاح.` });
     } catch (error) {
-      toast({ title: "Error", description: "Could not save topic.", variant: "destructive" });
+      toast({ title: "خطأ", description: "تعذر حفظ الموضوع.", variant: "destructive" });
     }
   };
 
@@ -153,38 +230,66 @@ const TimerPage = () => {
     setTimeLeft(newTime);
   };
 
-  if (isSessionComplete) {
+  if (isSessionComplete || isGameOver) {
+    const isMeWinner = winner === 'me' || (isSessionComplete && score.me > score.time);
+    
     return (
-      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-6">
+      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-6 stadium-gradient">
         <motion.div
           initial={{ scale: 0, rotate: -20 }}
           animate={{ scale: 1, rotate: 0 }}
-          className="w-32 h-32 bg-amber-500 rounded-full flex items-center justify-center mb-8 shadow-[0_0_50px_rgba(245,158,11,0.4)]"
+          className={`w-32 h-32 ${isMeWinner ? 'bg-amber-500' : 'bg-slate-600'} rounded-full flex items-center justify-center mb-8 shadow-2xl`}
         >
           <Trophy size={64} className="text-white" />
         </motion.div>
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-5xl font-black text-white mb-4 uppercase tracking-tighter"
+        
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-black/40 backdrop-blur-xl border border-white/10 p-8 rounded-3xl max-w-md w-full mb-8"
         >
-          Campaign Secured
-        </motion.h2>
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-slate-400 mb-12 max-w-md"
-        >
-          You've successfully navigated the focus timeline. Your cognitive stamina has increased.
-        </motion.p>
+          <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-tighter scoreboard-font">
+            {isMeWinner ? "انتصار!" : "هزيمة!"}
+          </h2>
+          
+          <div className="flex justify-center items-center gap-8 my-6">
+            <div className="text-center">
+              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">أنا</div>
+              <div className={`text-4xl font-black scoreboard-font ${isMeWinner ? 'text-mario-emerald' : 'text-slate-400'}`}>{score.me}</div>
+            </div>
+            <div className="text-2xl font-black text-white/20 scoreboard-font">ضد</div>
+            <div className="text-center">
+              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">الوقت</div>
+              <div className={`text-4xl font-black scoreboard-font ${!isMeWinner ? 'text-mario-red' : 'text-slate-400'}`}>{score.time}</div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-slate-300 font-bold uppercase tracking-widest text-xs">
+              الفائز: <span className={isMeWinner ? 'text-mario-emerald' : 'text-mario-red'}>{isMeWinner ? 'أنا' : 'الوقت'}</span>
+            </p>
+            <p className="text-slate-400 text-[10px] uppercase tracking-widest">
+              الخاسر: {isMeWinner ? 'الوقت' : 'أنا'}
+            </p>
+            {!isMeWinner && (
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-mario-red font-black uppercase tracking-[0.2em] text-sm mt-4 italic"
+              >
+                حظاً أوفر! (Hardluck)
+              </motion.p>
+            )}
+          </div>
+        </motion.div>
+
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleReset}
-          className="bg-mario-emerald text-black px-12 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl"
+          className="bg-mario-emerald text-black px-12 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl scoreboard-font"
         >
-          New Campaign
+          مباراة جديدة
         </motion.button>
       </div>
     );
@@ -197,13 +302,13 @@ const TimerPage = () => {
         
         <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
-            <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">Live</div>
-            <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">European Study League</h1>
+            <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
+            <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري المذاكرة الأوروبي</h1>
           </div>
           <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 scoreboard-font">
-            <span>Matchday 14</span>
+            <span>الجولة 14</span>
             <div className="w-1 h-1 bg-slate-600 rounded-full" />
-            <span>Group Stage</span>
+            <span>دور المجموعات</span>
           </div>
         </div>
 
@@ -217,9 +322,11 @@ const TimerPage = () => {
                   minutes={Math.floor(timeLeft / 60)} 
                   seconds={timeLeft % 60} 
                   isActive={isActive}
-                  currentInterval={isBreakTime ? "Break" : currentIntervalIndex + 1}
+                  currentInterval={isBreakTime ? "استراحة" : currentIntervalIndex + 1}
                   onTimeEdit={handleTimeEdit}
                   isBreakTime={isBreakTime}
+                  isWarmup={isWarmup}
+                  warmupIntervalIndex={warmupIntervalIndex}
                 />
                 
                 <TimerControls 
@@ -228,8 +335,16 @@ const TimerPage = () => {
                   onStart={() => { playChime('start', volume); handleStart(); }}
                   onPause={handlePause}
                   onStop={handleReset}
-                  onSkip={() => { playChime('mandatory', volume); handleSkip(); }}
+                  onSkip={() => { 
+                    playChime('mandatory', volume); 
+                    if (isWarmup) {
+                      skipAllWarmup();
+                    } else {
+                      handleSkip();
+                    }
+                  }}
                   isBreakTime={isBreakTime}
+                  isWarmup={isWarmup}
                 />
               </div>
             </div>
@@ -239,6 +354,8 @@ const TimerPage = () => {
               intervals={INTERVALS}
               progress={progress}
               isBreakTime={isBreakTime}
+              isWarmup={isWarmup}
+              warmupIntervalIndex={warmupIntervalIndex}
             />
           </div>
 
@@ -249,7 +366,7 @@ const TimerPage = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Wind size={14} className="text-broadcast-yellow" />
-                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Recovery Tools</h3>
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">أدوات الاستشفاء</h3>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -260,7 +377,7 @@ const TimerPage = () => {
                   <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Wind size={20} className="text-emerald-400" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">Box Breathing</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تنفس الصندوق</span>
                 </button>
                 <button
                   onClick={() => setIsExercisesOpen(true)}
@@ -269,7 +386,7 @@ const TimerPage = () => {
                   <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Dumbbell size={20} className="text-amber-400" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">Guided Drills</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تمارين موجهة</span>
                 </button>
               </div>
             </div>
@@ -278,7 +395,7 @@ const TimerPage = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <ExternalLink size={14} className="text-broadcast-yellow" />
-                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Stadium Ambience</h3>
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">أجواء الملعب</h3>
                 </div>
               </div>
               
@@ -298,17 +415,17 @@ const TimerPage = () => {
                   <div className="w-12 h-12 bg-mario-red rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                     <ExternalLink size={20} className="text-white ml-0.5" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">Open Stadium</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">فتح الملعب</span>
                 </div>
               </a>
-              <p className="text-[9px] text-slate-500 mt-3 italic scoreboard-font leading-relaxed">Click to open the stadium atmosphere in a new tab for the full match experience.</p>
+              <p className="text-[9px] text-slate-500 mt-3 italic scoreboard-font leading-relaxed">انقر لفتح أجواء الملعب في علامة تبويب جديدة لتجربة المباراة الكاملة.</p>
             </div>
             
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Volume2 size={14} className="text-broadcast-yellow" />
-                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Volume Control</h3>
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">التحكم في الصوت</h3>
                 </div>
                 <span className="text-[10px] font-black text-white scoreboard-font">{Math.round(volume * 100)}%</span>
               </div>
@@ -333,7 +450,7 @@ const TimerPage = () => {
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles size={14} className="text-broadcast-yellow" />
-                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Current Focus</h3>
+                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">التركيز الحالي</h3>
               </div>
               <StudyTopicInput
                 topic={currentTopic}
@@ -351,7 +468,7 @@ const TimerPage = () => {
                 onClick={handleReset}
                 className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-mario-red transition-colors disabled:opacity-30 scoreboard-font"
                 disabled={isActive}>
-                Abandon Campaign
+                إلغاء الحملة
               </button>
             </div>
           </div>
@@ -361,7 +478,7 @@ const TimerPage = () => {
       <Modal 
         isOpen={isBreathingOpen} 
         onClose={() => setIsBreathingOpen(false)}
-        title="Mindset Recovery"
+        title="استعادة التركيز"
       >
         <BoxBreathing />
       </Modal>
@@ -369,24 +486,25 @@ const TimerPage = () => {
       <Modal 
         isOpen={isExercisesOpen} 
         onClose={() => setIsExercisesOpen(false)}
-        title="Physical Recovery Drills"
+        title="تمارين الاستشفاء البدني"
       >
         <RecoveryVideos />
       </Modal>
 
       <AnimatePresence>
         {showCompletedMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, scale: 0.9, x: '-50%' }}
-            className={`fixed bottom-10 left-1/2 px-8 py-4 rounded-2xl shadow-2xl z-50 font-black uppercase tracking-widest text-xs ${
-              isSessionComplete ? "bg-purple-600 text-white" :
-              isBreakTime ? "bg-emerald-600 text-white" : "bg-blue-600 text-white"
-            }`}
-          >
-            {isSessionComplete ? "Gooooooool!" : isBreakTime ? "Break Initiated" : "Phase Secured"}
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 50, x: '-50%' }}
+              animate={{ opacity: 1, y: 0, x: '-50%' }}
+              exit={{ opacity: 0, scale: 0.9, x: '-50%' }}
+              className={`fixed bottom-10 left-1/2 px-8 py-4 rounded-2xl shadow-2xl z-50 font-black uppercase tracking-widest text-xs ${
+                isSessionComplete ? "bg-purple-600 text-white" :
+                isWarmup ? "bg-amber-600 text-white" :
+                isBreakTime ? "bg-emerald-600 text-white" : "bg-blue-600 text-white"
+              }`}
+            >
+              {isSessionComplete ? "هدددددددف!" : isWarmup ? "جاري التسخين..." : isBreakTime ? "بدأ الاستراحة" : "تم تأمين المرحلة"}
+            </motion.div>
         )}
       </AnimatePresence>
     </div>

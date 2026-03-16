@@ -1,10 +1,13 @@
 export const INTERVALS = [
-  // الشوط الأول
-  1, 1, 1, 1, 2, 10, 10, 15, 20, 25, 30, 4,
-  // الشوط الثاني
-  1, 1, 1, 1, 2, 10, 10, 15, 20, 25, 30, 4
+  1, 5, 2, 4, 5, 5, 5, 10, 9, 14
 ];
 
+// 4-step warmup sequence:
+// 1. YouTube (1 min for setup)
+// 2. Breathing (5 mins)
+// 3. Lumosity (5 mins)
+// 4. Stretches (5 mins)
+export const WARMUP_INTERVALS = [1, 5, 5, 5]; 
 export const BREAK_DURATION = 2; // 2 minutes break between intervals
 
 export const STORAGE_KEYS = {
@@ -17,20 +20,20 @@ export const STORAGE_KEYS = {
 export const RECOVERY_VIDEOS = [
   {
     id: 'wnlcuZ0mJSU',
-    title: 'Shoulder Stretches',
-    duration: '1 Min',
+    title: 'تمارين إطالة الكتف',
+    duration: 'دقيقة واحدة',
     thumbnail: 'https://img.youtube.com/vi/wnlcuZ0mJSU/mqdefault.jpg'
   },
   {
     id: 'Re-h_rtttIE',
-    title: 'Neck Stretches',
-    duration: '1 Min',
+    title: 'تمارين إطالة الرقبة',
+    duration: 'دقيقة واحدة',
     thumbnail: 'https://img.youtube.com/vi/Re-h_rtttIE/mqdefault.jpg'
   },
   {
     id: 'jvlztOtc4HI',
-    title: 'Yoga Practice',
-    duration: '1 Min',
+    title: 'تمارين اليوجا',
+    duration: 'دقيقة واحدة',
     thumbnail: 'https://img.youtube.com/vi/jvlztOtc4HI/mqdefault.jpg'
   }
 ];

@@ -1,4 +1,4 @@
-export const playChime = async (type: 'start' | 'complete' | 'mandatory', volume: number = 0.5) => {
+export const playChime = async (type: 'start' | 'complete' | 'mandatory' | 'interval', volume: number = 0.5) => {
   try {
     const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
     if (!AudioContext) return;
@@ -39,12 +39,26 @@ export const playChime = async (type: 'start' | 'complete' | 'mandatory', volume
       oscillator.start(now);
       oscillator.stop(now + 0.4);
     } else if (type === 'mandatory') {
-      oscillator.type = 'square';
-      oscillator.frequency.setValueAtTime(220, now);
-      gainNode.gain.setValueAtTime(0.15 * masterGain, now);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+      // Whistle sound: High pitch with a slight trill
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(1200, now);
+      oscillator.frequency.exponentialRampToValueAtTime(1150, now + 0.1);
+      oscillator.frequency.exponentialRampToValueAtTime(1250, now + 0.2);
+      
+      gainNode.gain.setValueAtTime(0, now);
+      gainNode.gain.linearRampToValueAtTime(0.3 * masterGain, now + 0.05);
+      gainNode.gain.linearRampToValueAtTime(0.2 * masterGain, now + 0.15);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+      
       oscillator.start(now);
-      oscillator.stop(now + 0.1);
+      oscillator.stop(now + 0.4);
+    } else if (type === 'interval') {
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(660, now);
+      gainNode.gain.setValueAtTime(0.2 * masterGain, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+      oscillator.start(now);
+      oscillator.stop(now + 0.15);
     }
   } catch (e) {
     console.warn("Audio chime failed", e);

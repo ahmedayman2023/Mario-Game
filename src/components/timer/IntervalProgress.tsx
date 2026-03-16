@@ -1,19 +1,24 @@
 import React, { useRef, useEffect, memo } from 'react';
 import { Star, Zap, ChevronRight, Trophy } from 'lucide-react';
 import { motion } from 'motion/react';
+import { WARMUP_INTERVALS } from '../../constants';
 
 interface IntervalProgressProps {
   currentIntervalIndex: number;
   intervals: number[];
   progress: number;
   isBreakTime: boolean;
+  isWarmup: boolean;
+  warmupIntervalIndex: number;
 }
 
 const IntervalProgress = memo(function IntervalProgress({ 
   currentIntervalIndex, 
   intervals, 
   progress, 
-  isBreakTime 
+  isBreakTime,
+  isWarmup,
+  warmupIntervalIndex
 }: IntervalProgressProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -37,18 +42,18 @@ const IntervalProgress = memo(function IntervalProgress({
           <div className="flex flex-col">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{title}</div>
             <div className="text-[8px] font-bold text-slate-600 uppercase tracking-widest mt-0.5">
-              Step {isPhaseCompleted ? list.length : isPhaseActive ? (currentIntervalIndex - startIndex + 1) : 0} of {list.length}
+              الخطوة {isPhaseCompleted ? list.length : isPhaseActive ? (currentIntervalIndex - startIndex + 1) : 0} من {list.length}
             </div>
           </div>
           {isPhaseActive && (
             <div className="flex items-center gap-1 text-[10px] font-black text-mario-emerald uppercase tracking-widest animate-pulse">
-              <span>Active Phase</span>
+              <span>المرحلة النشطة</span>
               <ChevronRight size={10} />
             </div>
           )}
           {isPhaseCompleted && (
             <div className="flex items-center gap-1 text-[10px] font-black text-amber-400 uppercase tracking-widest">
-              <span>Completed</span>
+              <span>مكتمل</span>
               <Star size={10} fill="currentColor" />
             </div>
           )}
@@ -109,16 +114,32 @@ const IntervalProgress = memo(function IntervalProgress({
           <div className="w-8 h-8 rounded-lg bg-mario-emerald/20 flex items-center justify-center text-mario-emerald">
             <Zap size={16} fill="currentColor" />
           </div>
-          <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">Mission Timeline</h3>
+          <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">الجدول الزمني للمهمة</h3>
         </div>
         <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">
-          Progress: {currentIntervalIndex} / {intervals.length}
+          التقدم: {currentIntervalIndex} / {intervals.length}
         </div>
       </div>
 
       <div ref={scrollRef} className="space-y-10">
-        {renderIntervals(intervals.slice(0, 12), 0, "الشوط الأول (First Half)")}
-        {renderIntervals(intervals.slice(12, 24), 12, "الشوط الثاني (Second Half)")}
+        {isWarmup && (
+          <div className="flex items-center gap-4 p-4 glass border-amber-500/30 rounded-2xl animate-pulse">
+            <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-black">
+              <Zap size={20} fill="currentColor" />
+            </div>
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-amber-500">
+                {warmupIntervalIndex === 0 ? 'قناة اليوتيوب' : 
+                 warmupIntervalIndex === 1 ? 'تمارين التنفس' :
+                 warmupIntervalIndex === 2 ? 'تسخين ذهني' : 'تمارين الاستطالة'}
+              </div>
+              <div className="text-xs font-bold text-white mt-0.5">
+                المرحلة {warmupIntervalIndex + 1} من {WARMUP_INTERVALS.length}
+              </div>
+            </div>
+          </div>
+        )}
+        {renderIntervals(intervals, 0, "الشوط")}
       </div>
     </div>
   );

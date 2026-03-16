@@ -1,8 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { INTERVALS, BREAK_DURATION, STORAGE_KEYS } from "../constants";
+import { INTERVALS, BREAK_DURATION, WARMUP_INTERVALS, STORAGE_KEYS } from "../constants";
 import { TimerState } from "../types";
 
-export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () => void, onBreakComplete: () => void) => {
+export const useTimer = (
+  onIntervalComplete: () => void, 
+  onSessionComplete: () => void, 
+  onBreakComplete: () => void,
+  onWarmupComplete: () => void,
+  onWarmupIntervalComplete: () => void
+) => {
   // Persistence Helper
   const getSavedState = () => {
     try {
@@ -15,12 +21,26 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
 
   const savedState = getSavedState();
 
+  const [isWarmup, setIsWarmup] = useState(savedState?.isWarmup ?? true);
+  const [warmupIntervalIndex, setWarmupIntervalIndex] = useState(() => {
+    const index = savedState?.warmupIntervalIndex ?? 0;
+    return index >= WARMUP_INTERVALS.length ? 0 : index;
+  });
+
+  // Ensure index is valid if WARMUP_INTERVALS changes
+  useEffect(() => {
+    if (warmupIntervalIndex >= WARMUP_INTERVALS.length) {
+      setWarmupIntervalIndex(0);
+    }
+  }, [warmupIntervalIndex]);
+  
   const [timeLeft, setTimeLeft] = useState(() => {
     if (savedState && savedState.isActive && savedState.lastUpdated) {
       const passed = Math.floor((Date.now() - savedState.lastUpdated) / 1000);
       return Math.max(0, savedState.timeLeft - passed);
     }
-    return savedState?.timeLeft ?? INTERVALS[0] * 60;
+    if (savedState?.timeLeft !== undefined) return savedState.timeLeft;
+    return WARMUP_INTERVALS[0] * 60;
   });
 
   const [isActive, setIsActive] = useState(savedState?.isActive ?? false);
@@ -40,19 +60,23 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
       ...existing,
       timeLeft,
       currentIntervalIndex,
+      warmupIntervalIndex,
       isBreakTime,
+      isWarmup,
       isSessionComplete,
       isPaused,
       isActive,
       lastUpdated: Date.now()
     };
     localStorage.setItem(STORAGE_KEYS.TIMER_STATE, JSON.stringify(state));
-  }, [timeLeft, currentIntervalIndex, isBreakTime, isSessionComplete, isPaused, isActive]);
+  }, [timeLeft, currentIntervalIndex, warmupIntervalIndex, isBreakTime, isWarmup, isSessionComplete, isPaused, isActive]);
 
   const handleReset = useCallback(() => {
     setSelectedStartingInterval(0);
     setCurrentIntervalIndex(0);
-    setTimeLeft(INTERVALS[0] * 60);
+    setWarmupIntervalIndex(0);
+    setTimeLeft(WARMUP_INTERVALS[0] * 60);
+    setIsWarmup(true);
     setIsBreakTime(false);
     setIsSessionComplete(false);
     setIsActive(false);
@@ -63,9 +87,10 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
   const handleStart = useCallback(() => {
     let initialTime = timeLeft;
     if (isSessionComplete) {
-      const startIdx = selectedStartingInterval;
-      setCurrentIntervalIndex(startIdx);
-      initialTime = INTERVALS[startIdx] * 60;
+      setIsWarmup(true);
+      setWarmupIntervalIndex(0);
+      initialTime = WARMUP_INTERVALS[0] * 60;
+      setCurrentIntervalIndex(0);
       setIsBreakTime(false);
       setIsSessionComplete(false);
     }
@@ -74,7 +99,7 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
     setIsActive(true);
     setIsPaused(false);
     targetEndTimeRef.current = Date.now() + initialTime * 1000;
-  }, [isSessionComplete, selectedStartingInterval, timeLeft]);
+  }, [isSessionComplete, timeLeft]);
 
   const handlePause = useCallback(() => {
     setIsActive(false);
@@ -84,7 +109,19 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
 
   const handleSkip = useCallback(() => {
     let nextTime = 0;
-    if (isBreakTime) {
+    if (isWarmup) {
+      if (warmupIntervalIndex < WARMUP_INTERVALS.length - 1) {
+        onWarmupIntervalComplete();
+        const nextIdx = warmupIntervalIndex + 1;
+        setWarmupIntervalIndex(nextIdx);
+        nextTime = WARMUP_INTERVALS[nextIdx] * 60;
+      } else {
+        onWarmupComplete();
+        setIsWarmup(false);
+        setCurrentIntervalIndex(0);
+        nextTime = INTERVALS[0] * 60;
+      }
+    } else if (isBreakTime) {
       onBreakComplete();
       if (currentIntervalIndex < INTERVALS.length - 1) {
         const nextIndex = currentIntervalIndex + 1;
@@ -114,7 +151,20 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
     } else {
       targetEndTimeRef.current = null;
     }
-  }, [isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete, isActive, isPaused]);
+  }, [isWarmup, isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete, isActive, isPaused]);
+
+  const skipAllWarmup = useCallback(() => {
+    onWarmupComplete();
+    setIsWarmup(false);
+    setCurrentIntervalIndex(0);
+    const nextTime = INTERVALS[0] * 60;
+    setTimeLeft(nextTime);
+    if (isActive && !isPaused) {
+      targetEndTimeRef.current = Date.now() + nextTime * 1000;
+    } else {
+      targetEndTimeRef.current = null;
+    }
+  }, [onWarmupComplete, isActive, isPaused]);
 
   useEffect(() => {
     if (isActive && !isPaused) {
@@ -130,7 +180,23 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
         if (remaining <= 0) {
           clearInterval(intervalRef.current!);
           
-          if (isBreakTime) {
+          if (isWarmup) {
+            if (warmupIntervalIndex < WARMUP_INTERVALS.length - 1) {
+              onWarmupIntervalComplete();
+              const nextIdx = warmupIntervalIndex + 1;
+              const nextTime = WARMUP_INTERVALS[nextIdx] * 60;
+              setWarmupIntervalIndex(nextIdx);
+              setTimeLeft(nextTime);
+              targetEndTimeRef.current = Date.now() + nextTime * 1000;
+            } else {
+              onWarmupComplete();
+              setIsWarmup(false);
+              setCurrentIntervalIndex(0);
+              const nextTime = INTERVALS[0] * 60;
+              setTimeLeft(nextTime);
+              targetEndTimeRef.current = Date.now() + nextTime * 1000;
+            }
+          } else if (isBreakTime) {
             onBreakComplete();
             if (currentIntervalIndex < INTERVALS.length - 1) {
               const nextIndex = currentIntervalIndex + 1;
@@ -174,7 +240,7 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isActive, isPaused, isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete]);
+  }, [isActive, isPaused, isWarmup, warmupIntervalIndex, isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete, onWarmupComplete, onWarmupIntervalComplete]);
 
   const handleTimeEdit = useCallback((newTime: number) => {
     setTimeLeft(newTime);
@@ -183,7 +249,7 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
     }
   }, [isActive, isPaused]);
 
-  const currentDuration = isBreakTime ? BREAK_DURATION : INTERVALS[currentIntervalIndex];
+  const currentDuration = isWarmup ? WARMUP_INTERVALS[warmupIntervalIndex] : isBreakTime ? BREAK_DURATION : INTERVALS[currentIntervalIndex];
   const progress = ((currentDuration * 60 - timeLeft) / (currentDuration * 60)) * 100;
 
   return {
@@ -192,7 +258,9 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
     isActive,
     isPaused,
     currentIntervalIndex,
+    warmupIntervalIndex,
     isBreakTime,
+    isWarmup,
     isSessionComplete,
     selectedStartingInterval,
     setSelectedStartingInterval,
@@ -200,6 +268,7 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
     handlePause,
     handleReset,
     handleSkip,
+    skipAllWarmup,
     handleTimeEdit,
     setIsSessionComplete,
     progress

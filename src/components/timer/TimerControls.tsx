@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Play, Pause, Square, SkipForward } from 'lucide-react';
+import { Play, Pause, Square, SkipForward, Wind } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface TimerControlsProps {
@@ -10,6 +10,7 @@ interface TimerControlsProps {
   onStop: () => void;
   onSkip: () => void;
   isBreakTime: boolean;
+  isWarmup: boolean;
 }
 
 const TimerControls = memo(function TimerControls({ 
@@ -19,7 +20,8 @@ const TimerControls = memo(function TimerControls({
   onPause, 
   onStop, 
   onSkip, 
-  isBreakTime 
+  isBreakTime,
+  isWarmup
 }: TimerControlsProps) {
   const buttonBase = "flex items-center justify-center gap-2 px-5 py-3 md:px-8 md:py-4 rounded font-black uppercase tracking-widest text-[10px] md:text-[11px] transition-all duration-300 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed scoreboard-font";
 
@@ -37,7 +39,7 @@ const TimerControls = memo(function TimerControls({
             className={`${buttonBase} bg-white text-black hover:bg-slate-200 shadow-xl`}
           >
             <Pause size={16} fill="currentColor" />
-            <span>Time Out</span>
+            <span>وقت مستقطع</span>
           </motion.button>
         ) : (
           <motion.button 
@@ -50,7 +52,7 @@ const TimerControls = memo(function TimerControls({
             className={`${buttonBase} bg-mario-emerald text-black shadow-[0_0_30px_rgba(0,255,136,0.3)] hover:shadow-[0_0_40px_rgba(0,255,136,0.5)]`}
           >
             <Play size={16} fill="currentColor" />
-            <span>{isPaused ? 'Resume Match' : 'Kick Off'}</span>
+            <span>{isPaused ? 'استئناف المباراة' : isWarmup ? 'بدء التسخين' : 'ركلة البداية'}</span>
           </motion.button>
         )}
       </AnimatePresence>
@@ -58,10 +60,10 @@ const TimerControls = memo(function TimerControls({
       <motion.button 
         whileHover={{ scale: 1.02 }}
         onClick={onSkip}
-        className={`${buttonBase} bg-stadium-blue border border-white/20 text-white hover:bg-white/10`}
+        className={`${buttonBase} ${isWarmup ? 'bg-amber-500 text-black border-none' : 'bg-stadium-blue border border-white/20 text-white'} hover:bg-white/10`}
       >
-        <SkipForward size={16} fill="currentColor" />
-        <span>{isBreakTime ? 'Skip Half' : 'Skip Period'}</span>
+        {isWarmup ? <Wind size={16} fill="currentColor" /> : <SkipForward size={16} fill="currentColor" />}
+        <span>{isWarmup ? 'صفارة الحكم (بدء المباراة)' : isBreakTime ? 'تخطي الاستراحة' : 'تخطي الفترة'}</span>
       </motion.button>
 
       <motion.button 
@@ -71,7 +73,7 @@ const TimerControls = memo(function TimerControls({
         className={`${buttonBase} bg-mario-red/10 text-mario-red border border-mario-red/30 hover:bg-mario-red hover:text-white`}
       >
         <Square size={16} fill="currentColor" />
-        <span>Abandon Match</span>
+        <span>إلغاء المباراة</span>
       </motion.button>
     </div>
   );

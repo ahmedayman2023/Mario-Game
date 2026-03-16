@@ -33,7 +33,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
             <div className="bg-stadium-blue border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
               <div className="flex items-center justify-between p-6 border-b border-white/5">
                 <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 scoreboard-font">
-                  {title || 'Modal'}
+                  {title || 'نافذة'}
                 </h3>
                 <button 
                   onClick={onClose}

@@ -33,10 +33,10 @@ const LevelPanel = memo(function LevelPanel({ level, cycles }: { level: number; 
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
             <span className="bg-broadcast-yellow text-black text-[9px] px-2 py-0.5 rounded-sm font-black uppercase tracking-widest">
-              Pro League
+              دوري المحترفين
             </span>
             <span className="text-xs font-black uppercase tracking-widest text-slate-400 scoreboard-font">
-              Season Progress
+              تقدم الموسم
             </span>
           </div>
           
@@ -52,15 +52,15 @@ const LevelPanel = memo(function LevelPanel({ level, cycles }: { level: number; 
               ))}
             </div>
             <div className="text-[10px] font-black text-slate-500 uppercase tracking-tighter scoreboard-font">
-              {balls.filter(b => b).length} / {balls.length} Wins
+              {balls.filter(b => b).length} / {balls.length} انتصارات
             </div>
           </div>
         </div>
 
         <div className="hidden md:flex flex-col items-end gap-1 pl-6 border-l border-white/10">
-          <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">VAR Status</div>
+          <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">حالة الـ VAR</div>
           <div className="text-[11px] font-black text-mario-emerald tracking-widest scoreboard-font">
-            READY
+            جاهز
           </div>
         </div>
       </div>

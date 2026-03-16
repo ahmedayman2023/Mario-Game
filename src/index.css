@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=JetBrains+Mono:wght@400;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cairo", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
   --color-pitch-green: #1a472a;
@@ -32,15 +32,16 @@
   body {
     background-color: #000814;
     color: white;
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-family: "Cairo", ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    direction: rtl;
   }
 
   h1, h2, h3, .scoreboard-font {
-    font-family: "Space Grotesk", sans-serif;
-    letter-spacing: -0.02em;
+    font-family: "Cairo", sans-serif;
+    letter-spacing: 0;
   }
 }
 
