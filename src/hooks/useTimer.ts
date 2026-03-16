@@ -31,6 +31,7 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
   const [selectedStartingInterval, setSelectedStartingInterval] = useState(0);
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const targetEndTimeRef = useRef<number | null>(null);
 
   // Save state whenever it changes
   useEffect(() => {
@@ -56,31 +57,39 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
     setIsSessionComplete(false);
     setIsActive(false);
     setIsPaused(false);
+    targetEndTimeRef.current = null;
   }, []);
 
   const handleStart = useCallback(() => {
+    let initialTime = timeLeft;
     if (isSessionComplete) {
-      setCurrentIntervalIndex(selectedStartingInterval);
-      setTimeLeft(INTERVALS[selectedStartingInterval] * 60);
+      const startIdx = selectedStartingInterval;
+      setCurrentIntervalIndex(startIdx);
+      initialTime = INTERVALS[startIdx] * 60;
       setIsBreakTime(false);
       setIsSessionComplete(false);
     }
+    
+    setTimeLeft(initialTime);
     setIsActive(true);
     setIsPaused(false);
-  }, [isSessionComplete, selectedStartingInterval]);
+    targetEndTimeRef.current = Date.now() + initialTime * 1000;
+  }, [isSessionComplete, selectedStartingInterval, timeLeft]);
 
   const handlePause = useCallback(() => {
     setIsActive(false);
     setIsPaused(true);
+    targetEndTimeRef.current = null;
   }, []);
 
   const handleSkip = useCallback(() => {
+    let nextTime = 0;
     if (isBreakTime) {
       onBreakComplete();
       if (currentIntervalIndex < INTERVALS.length - 1) {
         const nextIndex = currentIntervalIndex + 1;
         setCurrentIntervalIndex(nextIndex);
-        setTimeLeft(INTERVALS[nextIndex] * 60);
+        nextTime = INTERVALS[nextIndex] * 60;
         setIsBreakTime(false);
       } else {
         setIsActive(false);
@@ -91,66 +100,88 @@ export const useTimer = (onIntervalComplete: () => void, onSessionComplete: () =
       onIntervalComplete();
       if (currentIntervalIndex < INTERVALS.length - 1) {
         setIsBreakTime(true);
-        setTimeLeft(BREAK_DURATION * 60);
+        nextTime = BREAK_DURATION * 60;
       } else {
         setIsActive(false);
         setIsSessionComplete(true);
         onSessionComplete();
       }
     }
-  }, [isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete]);
+    
+    setTimeLeft(nextTime);
+    if (isActive && !isPaused && nextTime > 0) {
+      targetEndTimeRef.current = Date.now() + nextTime * 1000;
+    } else {
+      targetEndTimeRef.current = null;
+    }
+  }, [isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete, isActive, isPaused]);
 
   useEffect(() => {
-    if (isActive) {
+    if (isActive && !isPaused) {
+      // Initialize target end time if not set (e.g. on resume or initial load)
+      if (!targetEndTimeRef.current) {
+        targetEndTimeRef.current = Date.now() + timeLeft * 1000;
+      }
+
       intervalRef.current = setInterval(() => {
-        setTimeLeft((time) => {
-          if (time <= 1) {
-            clearInterval(intervalRef.current!);
-            
-            if (isBreakTime) {
-              // Break finished, go to next interval
-              onBreakComplete();
-              if (currentIntervalIndex < INTERVALS.length - 1) {
-                const nextIndex = currentIntervalIndex + 1;
-                setCurrentIntervalIndex(nextIndex);
-                setIsBreakTime(false);
-                setTimeLeft(INTERVALS[nextIndex] * 60);
-                return INTERVALS[nextIndex] * 60;
-              } else {
-                setIsActive(false);
-                setIsSessionComplete(true);
-                onSessionComplete();
-                return 0;
-              }
+        const now = Date.now();
+        const remaining = Math.max(0, Math.ceil((targetEndTimeRef.current! - now) / 1000));
+        
+        if (remaining <= 0) {
+          clearInterval(intervalRef.current!);
+          
+          if (isBreakTime) {
+            onBreakComplete();
+            if (currentIntervalIndex < INTERVALS.length - 1) {
+              const nextIndex = currentIntervalIndex + 1;
+              const nextTime = INTERVALS[nextIndex] * 60;
+              setCurrentIntervalIndex(nextIndex);
+              setIsBreakTime(false);
+              setTimeLeft(nextTime);
+              targetEndTimeRef.current = Date.now() + nextTime * 1000;
             } else {
-              // Study interval finished
-              onIntervalComplete();
-              if (currentIntervalIndex < INTERVALS.length - 1) {
-                setIsBreakTime(true);
-                setTimeLeft(BREAK_DURATION * 60);
-                return BREAK_DURATION * 60;
-              } else {
-                setIsActive(false);
-                setIsSessionComplete(true);
-                onSessionComplete();
-                return 0;
-              }
+              setIsActive(false);
+              setIsSessionComplete(true);
+              onSessionComplete();
+              setTimeLeft(0);
+              targetEndTimeRef.current = null;
+            }
+          } else {
+            onIntervalComplete();
+            if (currentIntervalIndex < INTERVALS.length - 1) {
+              const nextTime = BREAK_DURATION * 60;
+              setIsBreakTime(true);
+              setTimeLeft(nextTime);
+              targetEndTimeRef.current = Date.now() + nextTime * 1000;
+            } else {
+              setIsActive(false);
+              setIsSessionComplete(true);
+              onSessionComplete();
+              setTimeLeft(0);
+              targetEndTimeRef.current = null;
             }
           }
-          return time - 1;
-        });
-      }, 1000);
+        } else {
+          // Only update if the second has changed to minimize re-renders
+          setTimeLeft(remaining);
+        }
+      }, 200); // High frequency check for accuracy
     } else {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      targetEndTimeRef.current = null;
     }
+    
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isActive, isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete]);
+  }, [isActive, isPaused, isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete]);
 
   const handleTimeEdit = useCallback((newTime: number) => {
     setTimeLeft(newTime);
-  }, []);
+    if (isActive && !isPaused) {
+      targetEndTimeRef.current = Date.now() + newTime * 1000;
+    }
+  }, [isActive, isPaused]);
 
   const currentDuration = isBreakTime ? BREAK_DURATION : INTERVALS[currentIntervalIndex];
   const progress = ((currentDuration * 60 - timeLeft) / (currentDuration * 60)) * 100;

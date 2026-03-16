@@ -13,7 +13,7 @@ import LevelPanel from "../components/timer/LevelPanel";
 import BoxBreathing from "../components/timer/BoxBreathing";
 import RecoveryVideos from "../components/timer/RecoveryVideos";
 import Modal from "../components/ui/Modal";
-import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind } from 'lucide-react';
+import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
@@ -31,6 +31,7 @@ const TimerPage = () => {
   const [currentTopic, setCurrentTopic] = useState("");
   const [showCompletedMessage, setShowCompletedMessage] = useState(false);
   const [isBreathingOpen, setIsBreathingOpen] = useState(false);
+  const [isExercisesOpen, setIsExercisesOpen] = useState(false);
 
   // Persistence Logic
   const loadInitialData = useCallback(async () => {
@@ -251,18 +252,27 @@ const TimerPage = () => {
                   <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Recovery Tools</h3>
                 </div>
               </div>
-              <button
-                onClick={() => setIsBreathingOpen(true)}
-                className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
-              >
-                <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Wind size={20} className="text-emerald-400" />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">Box Breathing</span>
-              </button>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setIsBreathingOpen(true)}
+                  className="py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Wind size={20} className="text-emerald-400" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">Box Breathing</span>
+                </button>
+                <button
+                  onClick={() => setIsExercisesOpen(true)}
+                  className="py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Dumbbell size={20} className="text-amber-400" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">Guided Drills</span>
+                </button>
+              </div>
             </div>
-
-            <RecoveryVideos />
 
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl overflow-hidden">
               <div className="flex items-center justify-between mb-4">
@@ -354,6 +364,14 @@ const TimerPage = () => {
         title="Mindset Recovery"
       >
         <BoxBreathing />
+      </Modal>
+
+      <Modal 
+        isOpen={isExercisesOpen} 
+        onClose={() => setIsExercisesOpen(false)}
+        title="Physical Recovery Drills"
+      >
+        <RecoveryVideos />
       </Modal>
 
       <AnimatePresence>

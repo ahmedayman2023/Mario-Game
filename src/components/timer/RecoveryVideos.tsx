@@ -4,14 +4,7 @@ import { RECOVERY_VIDEOS } from '../../constants';
 
 const RecoveryVideos = () => {
   return (
-    <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Youtube size={14} className="text-broadcast-yellow" />
-          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">Half-Time Drills</h3>
-        </div>
-      </div>
-      
+    <div className="space-y-4">
       <div className="space-y-3">
         {RECOVERY_VIDEOS.map((video) => (
           <a

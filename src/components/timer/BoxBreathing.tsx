@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Wind } from 'lucide-react';
 
 const PHASES = [
-  { name: 'استنشاق', duration: 5, color: 'bg-emerald-500', scale: 1.5 },
-  { name: 'حبس', duration: 5, color: 'bg-blue-500', scale: 1.5 },
-  { name: 'زفير', duration: 5, color: 'bg-amber-500', scale: 1.0 },
-  { name: 'انتظار', duration: 5, color: 'bg-slate-500', scale: 1.0 },
+  { name: 'استنشاق', duration: 4, color: 'bg-emerald-500', scale: 1.5 },
+  { name: 'حبس', duration: 4, color: 'bg-blue-500', scale: 1.5 },
+  { name: 'زفير', duration: 4, color: 'bg-amber-500', scale: 1.0 },
+  { name: 'انتظار', duration: 4, color: 'bg-slate-500', scale: 1.0 },
 ];
 
 const BoxBreathing = () => {
@@ -49,7 +49,7 @@ const BoxBreathing = () => {
             scale: currentPhase.scale,
             backgroundColor: phaseIndex === 0 ? '#10b981' : phaseIndex === 1 ? '#3b82f6' : phaseIndex === 2 ? '#f59e0b' : '#64748b'
           }}
-          transition={{ duration: 5, ease: "easeInOut" }}
+          transition={{ duration: 4, ease: "easeInOut" }}
           className="w-24 h-24 rounded-full opacity-20 blur-xl"
         />
         
@@ -57,7 +57,7 @@ const BoxBreathing = () => {
           animate={{
             scale: currentPhase.scale,
           }}
-          transition={{ duration: 5, ease: "easeInOut" }}
+          transition={{ duration: 4, ease: "easeInOut" }}
           className={`w-24 h-24 rounded-full ${currentPhase.color} shadow-[0_0_30px_rgba(255,255,255,0.1)] flex items-center justify-center relative z-10`}
         >
           <span className="text-4xl font-black text-white scoreboard-font">
