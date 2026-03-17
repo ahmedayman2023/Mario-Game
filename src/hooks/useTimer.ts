@@ -136,8 +136,15 @@ export const useTimer = (
     } else {
       onIntervalComplete();
       if (currentIntervalIndex < INTERVALS.length - 1) {
-        setIsBreakTime(true);
-        nextTime = BREAK_DURATION * 60;
+        if (BREAK_DURATION > 0) {
+          setIsBreakTime(true);
+          nextTime = BREAK_DURATION * 60;
+        } else {
+          const nextIndex = currentIntervalIndex + 1;
+          setCurrentIntervalIndex(nextIndex);
+          nextTime = INTERVALS[nextIndex] * 60;
+          setIsBreakTime(false);
+        }
       } else {
         setIsActive(false);
         setIsSessionComplete(true);
@@ -215,10 +222,19 @@ export const useTimer = (
           } else {
             onIntervalComplete();
             if (currentIntervalIndex < INTERVALS.length - 1) {
-              const nextTime = BREAK_DURATION * 60;
-              setIsBreakTime(true);
-              setTimeLeft(nextTime);
-              targetEndTimeRef.current = Date.now() + nextTime * 1000;
+              if (BREAK_DURATION > 0) {
+                const nextTime = BREAK_DURATION * 60;
+                setIsBreakTime(true);
+                setTimeLeft(nextTime);
+                targetEndTimeRef.current = Date.now() + nextTime * 1000;
+              } else {
+                const nextIndex = currentIntervalIndex + 1;
+                const nextTime = INTERVALS[nextIndex] * 60;
+                setCurrentIntervalIndex(nextIndex);
+                setIsBreakTime(false);
+                setTimeLeft(nextTime);
+                targetEndTimeRef.current = Date.now() + nextTime * 1000;
+              }
             } else {
               setIsActive(false);
               setIsSessionComplete(true);
