@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, memo } from 'react';
-import { Star, Zap, ChevronRight, Trophy } from 'lucide-react';
+import { Star, Zap, ChevronRight, Trophy, Info } from 'lucide-react';
 import { motion } from 'motion/react';
-import { WARMUP_INTERVALS } from '../../constants';
+import { WARMUP_INTERVALS, FEYNMAN_STEPS } from '../../constants';
 
 interface IntervalProgressProps {
   currentIntervalIndex: number;
@@ -59,49 +59,55 @@ const IntervalProgress = memo(function IntervalProgress({
           )}
         </div>
         
-        <div className="grid grid-cols-6 sm:grid-cols-9 gap-2 p-2">
+        <div className="grid grid-cols-1 gap-3 p-2">
           {list.map((duration, idx) => {
             const absoluteIdx = startIndex + idx;
             const isActive = absoluteIdx === currentIntervalIndex;
             const isCompleted = absoluteIdx < currentIntervalIndex;
+            const step = FEYNMAN_STEPS[idx];
             
             return (
               <motion.div 
                 key={idx} 
                 data-active={isActive}
                 initial={false}
-                animate={isActive ? { scale: 1.1, zIndex: 10 } : { scale: 1, zIndex: 1 }}
-                className="flex flex-col items-center gap-1"
+                animate={isActive ? { scale: 1.02, zIndex: 10 } : { scale: 1, zIndex: 1 }}
+                className={`
+                  flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-500
+                  ${isActive ? 'bg-mario-emerald border-white text-black shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 
+                    isCompleted ? 'bg-mario-emerald/20 border-mario-emerald/40 text-mario-emerald' : 
+                    'glass border-white/5 text-slate-400'}
+                `}
               >
-                <div className="relative group">
-                  <div className={`
-                    w-10 h-10 rounded-xl flex items-center justify-center text-[10px] font-black border-2 transition-all duration-500
-                    ${isActive ? 'bg-mario-emerald border-white text-black shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 
-                      isCompleted ? 'bg-mario-emerald/20 border-mario-emerald/40 text-mario-emerald' : 
-                      'glass border-white/5 text-slate-600'}
-                  `}>
-                    {duration}
+                <div className={`
+                  w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center text-xs font-black border
+                  ${isActive ? 'bg-white text-black border-black/10' : 
+                    isCompleted ? 'bg-mario-emerald text-white border-none' : 
+                    'bg-white/5 border-white/10'}
+                `}>
+                  {idx + 1}
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <div className={`text-[11px] font-black uppercase tracking-tight truncate ${isActive ? 'text-black' : 'text-white'}`}>
+                    {step?.title}
+                  </div>
+                  <div className={`text-[9px] font-bold leading-relaxed mt-1 line-clamp-2 ${isActive ? 'text-black/70' : 'text-slate-500'}`}>
+                    {step?.description}
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center gap-1">
+                  <div className={`text-[8px] font-black uppercase tracking-widest ${isActive ? 'text-black/60' : 'text-slate-500'}`}>
+                    {duration} د
                   </div>
                   {isCompleted && (
-                    <div className="absolute -top-1 -right-1">
-                      <Star size={10} className="text-amber-400 fill-amber-400" />
-                    </div>
+                    <Star size={12} className="text-amber-400 fill-amber-400" />
                   )}
                 </div>
               </motion.div>
             );
           })}
-          
-          {/* The 19th Step: Phase Goal */}
-          <div className="flex flex-col items-center gap-1">
-            <div className={`
-              w-10 h-10 rounded-xl flex items-center justify-center border-2 transition-all duration-500
-              ${isPhaseCompleted ? 'bg-amber-400 border-white text-black shadow-[0_0_20px_rgba(251,191,36,0.5)]' : 
-                'glass border-white/5 text-slate-700'}
-            `}>
-              <Trophy size={16} fill={isPhaseCompleted ? "currentColor" : "none"} />
-            </div>
-          </div>
         </div>
       </div>
     );
@@ -114,7 +120,7 @@ const IntervalProgress = memo(function IntervalProgress({
           <div className="w-8 h-8 rounded-lg bg-mario-emerald/20 flex items-center justify-center text-mario-emerald">
             <Zap size={16} fill="currentColor" />
           </div>
-          <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">الجدول الزمني للمهمة</h3>
+          <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">خطوات تقنية فاينمان</h3>
         </div>
         <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">
           التقدم: {currentIntervalIndex} / {intervals.length}
@@ -139,7 +145,7 @@ const IntervalProgress = memo(function IntervalProgress({
             </div>
           </div>
         )}
-        {renderIntervals(intervals, 0, "الشوط")}
+        {renderIntervals(intervals, 0, "الخطوات")}
       </div>
     </div>
   );

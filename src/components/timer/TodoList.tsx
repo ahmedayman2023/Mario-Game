@@ -27,7 +27,7 @@ const TodoList = memo(function TodoList() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Target size={14} className="text-broadcast-yellow" />
-          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">تكتيكات المباراة</h3>
+          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">تكتيكات التعلم</h3>
         </div>
         <div className="text-[10px] font-black text-mario-emerald uppercase tracking-widest scoreboard-font">
           {todos.filter((t) => t.completed).length} / {todos.length} أهداف

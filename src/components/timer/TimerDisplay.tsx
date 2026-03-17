@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { FEYNMAN_STEPS } from '../../constants';
 
 interface TimerDisplayProps {
   minutes: number;
@@ -37,8 +38,8 @@ const TimerDisplay = memo(function TimerDisplay({
       case 0: return 'تجهيز الأجواء';
       case 1: return 'ركز على تنفسك';
       case 2: return 'نشط عقلك مع Lumosity';
-      case 3: return 'جهز جسمك للمباراة';
-      default: return 'استعد للمباراة';
+      case 3: return 'جهز نفسك للتعلم';
+      default: return 'استعد للتعلم';
     }
   };
 
@@ -53,10 +54,10 @@ const TimerDisplay = memo(function TimerDisplay({
           className="flex items-center gap-2 mb-4"
         >
           <div className={`px-3 py-1 text-black text-[10px] font-black uppercase tracking-widest rounded-sm ${isWarmup ? 'bg-amber-500' : 'bg-broadcast-yellow'}`}>
-            {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : `الفترة ${currentInterval}`}
+            {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.title || `المرحلة ${currentInterval}`)}
           </div>
-          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
-            {isWarmup ? getWarmupSubLabel() : isBreakTime ? 'إعادة شحن' : 'المباراة جارية'}
+          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 max-w-[200px] truncate">
+            {isWarmup ? getWarmupSubLabel() : isBreakTime ? 'إعادة شحن' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.description || 'الجلسة جارية')}
           </div>
         </motion.div>
       </AnimatePresence>

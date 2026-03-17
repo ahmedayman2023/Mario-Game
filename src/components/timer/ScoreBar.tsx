@@ -46,7 +46,7 @@ const ScoreBar = memo(function ScoreBar({ me, time, onReset }: { me: number; tim
       <div className="flex flex-col items-end gap-1">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-mario-emerald rounded-full animate-pulse" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-broadcast-yellow">مباراة مباشرة</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-broadcast-yellow">جلسة مباشرة</span>
         </div>
         <button
           onClick={onReset}

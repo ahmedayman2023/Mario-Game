@@ -52,7 +52,7 @@ const TimerControls = memo(function TimerControls({
             className={`${buttonBase} bg-mario-emerald text-black shadow-[0_0_30px_rgba(0,255,136,0.3)] hover:shadow-[0_0_40px_rgba(0,255,136,0.5)]`}
           >
             <Play size={16} fill="currentColor" />
-            <span>{isPaused ? 'استئناف المباراة' : isWarmup ? 'بدء التسخين' : 'ركلة البداية'}</span>
+            <span>{isPaused ? 'استئناف الجلسة' : isWarmup ? 'بدء التسخين' : 'بدء التقنية'}</span>
           </motion.button>
         )}
       </AnimatePresence>
@@ -63,7 +63,7 @@ const TimerControls = memo(function TimerControls({
         className={`${buttonBase} ${isWarmup ? 'bg-amber-500 text-black border-none' : 'bg-stadium-blue border border-white/20 text-white'} hover:bg-white/10`}
       >
         {isWarmup ? <Wind size={16} fill="currentColor" /> : <SkipForward size={16} fill="currentColor" />}
-        <span>{isWarmup ? 'صفارة الحكم (بدء المباراة)' : isBreakTime ? 'تخطي الاستراحة' : 'تخطي الفترة'}</span>
+        <span>{isWarmup ? 'صفارة الحكم (بدء التقنية)' : isBreakTime ? 'تخطي الاستراحة' : 'تخطي الخطوة'}</span>
       </motion.button>
 
       <motion.button 
@@ -73,7 +73,7 @@ const TimerControls = memo(function TimerControls({
         className={`${buttonBase} bg-mario-red/10 text-mario-red border border-mario-red/30 hover:bg-mario-red hover:text-white`}
       >
         <Square size={16} fill="currentColor" />
-        <span>إلغاء المباراة</span>
+        <span>إلغاء الجلسة</span>
       </motion.button>
     </div>
   );

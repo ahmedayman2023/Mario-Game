@@ -79,7 +79,6 @@ const TimerPage = () => {
     });
     setShowCompletedMessage(true);
     setTimeout(() => setShowCompletedMessage(false), 2000);
-    setIsBreathingOpen(true);
   }, [volume, isGameOver]);
 
   const onBreakComplete = useCallback(() => {
@@ -88,7 +87,6 @@ const TimerPage = () => {
       title: "انتهت الاستراحة!",
       description: "حان وقت التركيز مرة أخرى. تستأنف المهمة.",
     });
-    setIsBreathingOpen(false);
   }, [toast]);
 
   const onSessionComplete = useCallback(() => {
@@ -106,7 +104,7 @@ const TimerPage = () => {
     playChime('mandatory', volume);
     toast({
       title: "انتهى التسخين!",
-      description: "المباراة ستبدأ الآن. بالتوفيق!",
+      description: "التقنية ستبدأ الآن. بالتوفيق!",
     });
   }, [volume, toast]);
 
@@ -289,7 +287,7 @@ const TimerPage = () => {
           onClick={handleReset}
           className="bg-mario-emerald text-black px-12 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl scoreboard-font"
         >
-          مباراة جديدة
+          جلسة جديدة
         </motion.button>
       </div>
     );
@@ -303,12 +301,12 @@ const TimerPage = () => {
         <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
             <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
-            <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري المذاكرة الأوروبي</h1>
+            <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري فاينمان للمذاكرة</h1>
           </div>
           <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 scoreboard-font">
-            <span>الجولة 14</span>
+            <span>التعلم العميق</span>
             <div className="w-1 h-1 bg-slate-600 rounded-full" />
-            <span>دور المجموعات</span>
+            <span>تقنية فاينمان</span>
           </div>
         </div>
 
@@ -418,7 +416,7 @@ const TimerPage = () => {
                   <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">فتح الملعب</span>
                 </div>
               </a>
-              <p className="text-[9px] text-slate-500 mt-3 italic scoreboard-font leading-relaxed">انقر لفتح أجواء الملعب في علامة تبويب جديدة لتجربة المباراة الكاملة.</p>
+              <p className="text-[9px] text-slate-500 mt-3 italic scoreboard-font leading-relaxed">انقر لفتح أجواء الملعب في علامة تبويب جديدة لتجربة التعلم الكاملة.</p>
             </div>
             
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
@@ -503,7 +501,7 @@ const TimerPage = () => {
                 isBreakTime ? "bg-emerald-600 text-white" : "bg-blue-600 text-white"
               }`}
             >
-              {isSessionComplete ? "هدددددددف!" : isWarmup ? "جاري التسخين..." : isBreakTime ? "بدأ الاستراحة" : "تم تأمين المرحلة"}
+              {isSessionComplete ? "هدددددددف!" : isWarmup ? "جاري التسخين..." : isBreakTime ? "بدأ الاستراحة" : "تم إكمال الخطوة"}
             </motion.div>
         )}
       </AnimatePresence>
