@@ -1,5 +1,5 @@
 {
-  "name": "Mario",
-  "description": "A comprehensive React starter with authentication, routing, and query management.",
+  "name": "Feynman Study League",
+  "description": "تطبيق متطور لإدارة وقت المذاكرة باستخدام تقنية فاينمان (Feynman Technique) مع أجواء حماسية تشبه ملاعب كرة القدم الأوروبية.",
   "requestFramePermissions": []
 }
