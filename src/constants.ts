@@ -1,11 +1,6 @@
-export const INTERVALS = [1, 5, 10, 24, 20, 15]; 
+export const INTERVALS = [5, 10, 24, 20]; 
 
 export const FEYNMAN_STEPS = [
-  {
-    title: "اختر المفهوم (Choose the Concept)",
-    description: "اكتب اسم الموضوع اللي عايز تتعلمه في أعلى ورقة بيضاء. ابدأ بكتابة كل اللي تعرفه عن الموضوع ده حاليًا، وكأنك بتفرغ عقلك على الورق.",
-    completionPercentage: 5
-  },
   {
     title: "مشاهدة بدون توقف بدون كتابة فقط فهم",
     description: "شاهد المقطع بتركيز كامل بدون تدوين أي ملاحظات أو توقف. الهدف هو استيعاب الفكرة العامة للموضوع.",
@@ -24,21 +19,15 @@ export const FEYNMAN_STEPS = [
   {
     title: "مراجعة لما سبق عن طريق الكتابة زي أيام زمان",
     description: "قم بمراجعة كل ما دونته وشاهدته حتى الآن عن طريق كتابته مرة أخرى بأسلوبك الخاص على الورق، لترسيخ المعلومات في ذاكرتك.",
-    completionPercentage: 90
-  },
-  {
-    title: "اشرحه لـ طفل (Explain it to a Child)",
-    description: "تخيل إنك بتشرح المفهوم ده لطفل عنده 10 سنين. استخدم لغة بسيطة، كن موجزاً، واستخدم التشبيهات.",
     completionPercentage: 100
   }
 ];
 
-// 4-step warmup sequence:
+// 3-step warmup sequence:
 // 1. YouTube (10 seconds for setup)
 // 2. Breathing (5 mins)
 // 3. Lumosity (5 mins)
-// 4. Stretches (5 mins)
-export const WARMUP_INTERVALS = [10/60, 5, 5, 5]; 
+export const WARMUP_INTERVALS = [10/60, 5, 5]; 
 export const BREAK_DURATION = 2; // 2 minutes break between intervals
 
 export const STORAGE_KEYS = {

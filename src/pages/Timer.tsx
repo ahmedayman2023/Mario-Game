@@ -170,13 +170,6 @@ const TimerPage = () => {
             ),
           });
           break;
-        case 3: // Stretches
-          setIsExercisesOpen(true);
-          toast({
-            title: "الخطوة الرابعة: الاستطالة",
-            description: "قم ببعض التمارين لتجهيز جسمك.",
-          });
-          break;
       }
     }
   }, [isWarmup, warmupIntervalIndex, isActive, isPaused, toast]);

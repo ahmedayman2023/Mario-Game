@@ -141,8 +141,7 @@ const IntervalProgress = memo(function IntervalProgress({
             <div>
               <div className="text-[10px] font-black uppercase tracking-widest text-amber-500">
                 {warmupIntervalIndex === 0 ? 'قناة اليوتيوب' : 
-                 warmupIntervalIndex === 1 ? 'تمارين التنفس' :
-                 warmupIntervalIndex === 2 ? 'تسخين ذهني' : 'تمارين الاستطالة'}
+                 warmupIntervalIndex === 1 ? 'تمارين التنفس' : 'تسخين ذهني'}
               </div>
               <div className="text-xs font-bold text-white mt-0.5">
                 المرحلة {warmupIntervalIndex + 1} من {WARMUP_INTERVALS.length}
