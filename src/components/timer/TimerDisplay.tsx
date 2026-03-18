@@ -62,16 +62,54 @@ const TimerDisplay = memo(function TimerDisplay({
         </motion.div>
       </AnimatePresence>
 
-      <motion.div 
-        className={`text-[8rem] sm:text-[12rem] md:text-[16rem] font-black scoreboard-font tracking-tighter leading-none select-none cursor-pointer transition-colors ${isWarmup ? 'text-amber-500' : isBreakTime ? 'text-broadcast-yellow' : 'text-white'}`}
-        onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
-        animate={isActive && !isBreakTime && !isWarmup ? {
-          opacity: [1, 0.8, 1],
-          transition: { duration: 1, repeat: Infinity, ease: "linear" }
-        } : {}}
-      >
-        {String(minutes).padStart(2, '0')}<span className="animate-pulse">:</span>{String(seconds).padStart(2, '0')}
-      </motion.div>
+      <div className="flex flex-row items-center justify-center gap-4 sm:gap-8 md:gap-12">
+        <motion.div 
+          className={`text-[5rem] sm:text-[8rem] md:text-[10rem] font-black scoreboard-font tracking-tighter leading-none select-none cursor-pointer transition-colors ${isWarmup ? 'text-amber-500' : isBreakTime ? 'text-broadcast-yellow' : 'text-white'}`}
+          onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
+          animate={isActive && !isBreakTime && !isWarmup ? {
+            opacity: [1, 0.8, 1],
+            transition: { duration: 1, repeat: Infinity, ease: "linear" }
+          } : {}}
+        >
+          {String(minutes).padStart(2, '0')}<span className="animate-pulse">:</span>{String(seconds).padStart(2, '0')}
+        </motion.div>
+
+        {!isWarmup && !isBreakTime && Number(currentInterval) > 0 && (
+          <motion.div 
+            initial={{ scale: 0, opacity: 0, x: 20 }}
+            animate={{ scale: 1, opacity: 1, x: 0 }}
+            className="flex-shrink-0"
+          >
+            <div className="relative w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 flex items-center justify-center">
+              {/* Outer Glow Circle */}
+              <div className="absolute inset-0 rounded-full border-4 border-mario-emerald/20 animate-pulse shadow-[0_0_30px_rgba(16,185,129,0.3)]" />
+              
+              {/* Main Circle */}
+              <div className="absolute inset-2 rounded-full border-2 border-mario-emerald/40 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center">
+                <div className="text-[7px] sm:text-[9px] font-black text-mario-emerald uppercase tracking-widest leading-none mb-1">إنجاز</div>
+                <div className="text-lg sm:text-2xl md:text-3xl font-black text-white scoreboard-font leading-none">
+                  {FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage}%
+                </div>
+              </div>
+              
+              {/* Progress Ring (SVG) */}
+              <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  strokeDasharray="283"
+                  strokeDashoffset={283 - (283 * (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)) / 100}
+                  className="text-mario-emerald transition-all duration-1000 ease-out"
+                />
+              </svg>
+            </div>
+          </motion.div>
+        )}
+      </div>
 
       <div className="mt-6 flex items-center gap-8">
         <div className="flex flex-col items-center">

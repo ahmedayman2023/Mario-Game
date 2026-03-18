@@ -122,8 +122,13 @@ const IntervalProgress = memo(function IntervalProgress({
           </div>
           <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">خطوات تقنية فاينمان</h3>
         </div>
-        <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">
-          التقدم: {currentIntervalIndex} / {intervals.length}
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col items-end">
+            <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-0.5">التقدم الإجمالي</div>
+            <div className="text-[10px] font-black text-white uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/10">
+              {currentIntervalIndex} / {intervals.length}
+            </div>
+          </div>
         </div>
       </div>
 
