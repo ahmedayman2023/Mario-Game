@@ -125,6 +125,7 @@ const TimerPage = () => {
     handlePause,
     handleReset: baseReset,
     handleSkip,
+    handleBack,
     skipAllWarmup,
     setTimeLeft,
     progress
@@ -320,7 +321,7 @@ const TimerPage = () => {
                   minutes={Math.floor(timeLeft / 60)} 
                   seconds={timeLeft % 60} 
                   isActive={isActive}
-                  currentInterval={isBreakTime ? "استراحة" : currentIntervalIndex + 1}
+                  currentInterval={currentIntervalIndex + 1}
                   onTimeEdit={handleTimeEdit}
                   isBreakTime={isBreakTime}
                   isWarmup={isWarmup}
@@ -341,6 +342,7 @@ const TimerPage = () => {
                       handleSkip();
                     }
                   }}
+                  onBack={handleBack}
                   isBreakTime={isBreakTime}
                   isWarmup={isWarmup}
                 />

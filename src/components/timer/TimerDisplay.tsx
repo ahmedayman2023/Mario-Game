@@ -74,7 +74,7 @@ const TimerDisplay = memo(function TimerDisplay({
           {String(minutes).padStart(2, '0')}<span className="animate-pulse">:</span>{String(seconds).padStart(2, '0')}
         </motion.div>
 
-        {!isWarmup && !isBreakTime && Number(currentInterval) > 0 && (
+        {!isWarmup && Number(currentInterval) > 0 && (
           <motion.div 
             initial={{ scale: 0, opacity: 0, x: 20 }}
             animate={{ scale: 1, opacity: 1, x: 0 }}

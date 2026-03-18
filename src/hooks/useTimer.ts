@@ -160,6 +160,47 @@ export const useTimer = (
     }
   }, [isWarmup, isBreakTime, currentIntervalIndex, onIntervalComplete, onSessionComplete, onBreakComplete, isActive, isPaused]);
 
+  const handleBack = useCallback(() => {
+    let nextTime = 0;
+    if (isWarmup) {
+      if (warmupIntervalIndex > 0) {
+        const nextIdx = warmupIntervalIndex - 1;
+        setWarmupIntervalIndex(nextIdx);
+        nextTime = WARMUP_INTERVALS[nextIdx] * 60;
+      } else {
+        nextTime = WARMUP_INTERVALS[0] * 60;
+      }
+    } else if (isBreakTime) {
+      setIsBreakTime(false);
+      nextTime = INTERVALS[currentIntervalIndex] * 60;
+    } else {
+      if (currentIntervalIndex > 0) {
+        if (BREAK_DURATION > 0) {
+          setIsBreakTime(true);
+          const prevIndex = currentIntervalIndex - 1;
+          setCurrentIntervalIndex(prevIndex);
+          nextTime = BREAK_DURATION * 60;
+        } else {
+          const prevIndex = currentIntervalIndex - 1;
+          setCurrentIntervalIndex(prevIndex);
+          nextTime = INTERVALS[prevIndex] * 60;
+        }
+      } else {
+        setIsWarmup(true);
+        const lastWarmupIdx = WARMUP_INTERVALS.length - 1;
+        setWarmupIntervalIndex(lastWarmupIdx);
+        nextTime = WARMUP_INTERVALS[lastWarmupIdx] * 60;
+      }
+    }
+
+    setTimeLeft(nextTime);
+    if (isActive && !isPaused && nextTime > 0) {
+      targetEndTimeRef.current = Date.now() + nextTime * 1000;
+    } else {
+      targetEndTimeRef.current = null;
+    }
+  }, [isWarmup, warmupIntervalIndex, isBreakTime, currentIntervalIndex, isActive, isPaused]);
+
   const skipAllWarmup = useCallback(() => {
     onWarmupComplete();
     setIsWarmup(false);
@@ -284,6 +325,7 @@ export const useTimer = (
     handlePause,
     handleReset,
     handleSkip,
+    handleBack,
     skipAllWarmup,
     handleTimeEdit,
     setIsSessionComplete,

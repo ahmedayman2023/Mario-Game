@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Play, Pause, Square, SkipForward, Wind } from 'lucide-react';
+import { Play, Pause, Square, SkipForward, SkipBack, Wind } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface TimerControlsProps {
@@ -9,6 +9,7 @@ interface TimerControlsProps {
   onPause: () => void;
   onStop: () => void;
   onSkip: () => void;
+  onBack: () => void;
   isBreakTime: boolean;
   isWarmup: boolean;
 }
@@ -20,6 +21,7 @@ const TimerControls = memo(function TimerControls({
   onPause, 
   onStop, 
   onSkip, 
+  onBack,
   isBreakTime,
   isWarmup
 }: TimerControlsProps) {
@@ -64,6 +66,15 @@ const TimerControls = memo(function TimerControls({
       >
         {isWarmup ? <Wind size={16} fill="currentColor" /> : <SkipForward size={16} fill="currentColor" />}
         <span>{isWarmup ? 'صفارة الحكم (بدء التقنية)' : isBreakTime ? 'تخطي الاستراحة' : 'تخطي الخطوة'}</span>
+      </motion.button>
+
+      <motion.button 
+        whileHover={{ scale: 1.02 }}
+        onClick={onBack}
+        className={`${buttonBase} bg-stadium-blue border border-white/20 text-white hover:bg-white/10`}
+      >
+        <SkipBack size={16} fill="currentColor" />
+        <span>رجوع</span>
       </motion.button>
 
       <motion.button 
