@@ -1,4 +1,4 @@
-export const INTERVALS = [1, 5, 10, 24, 56, 15, 15, 10]; 
+export const INTERVALS = [1, 5, 10, 24, 20, 56, 15, 15, 10]; 
 
 export const FEYNMAN_STEPS = [
   {
@@ -16,6 +16,10 @@ export const FEYNMAN_STEPS = [
   {
     title: "المشاهدة والتوقف والكتابة",
     description: "شاهد المقطع بتركيز، وتوقف كل 3 دقائق لتدوين الملاحظات وتلخيص ما شاهدته. استمر في هذه الدورة لمدة 24 دقيقة."
+  },
+  {
+    title: "مراجعة لما سبق عن طريق الكتابة زي أيام زمان",
+    description: "قم بمراجعة كل ما دونته وشاهدته حتى الآن عن طريق كتابته مرة أخرى بأسلوبك الخاص على الورق، لترسيخ المعلومات في ذاكرتك."
   },
   {
     title: "المذاكرة النشطة: المذاكرة العميقة",
@@ -41,7 +45,7 @@ export const FEYNMAN_STEPS = [
 // 3. Lumosity (5 mins)
 // 4. Stretches (5 mins)
 export const WARMUP_INTERVALS = [10/60, 5, 5, 5]; 
-export const BREAK_DURATION = 0; // No breaks between intervals
+export const BREAK_DURATION = 2; // 2 minutes break between intervals
 
 export const STORAGE_KEYS = {
   SCORE: 'mario_timer_score',
