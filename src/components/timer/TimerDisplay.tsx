@@ -88,7 +88,9 @@ const TimerDisplay = memo(function TimerDisplay({
               <div className="absolute inset-2 rounded-full border-2 border-mario-emerald/40 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center">
                 <div className="text-[7px] sm:text-[9px] font-black text-mario-emerald uppercase tracking-widest leading-none mb-1">إنجاز</div>
                 <div className="text-lg sm:text-2xl md:text-3xl font-black text-white scoreboard-font leading-none">
-                  {FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage}%
+                  {isBreakTime 
+                    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
+                    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0)}%
                 </div>
               </div>
               
@@ -102,7 +104,9 @@ const TimerDisplay = memo(function TimerDisplay({
                   stroke="currentColor"
                   strokeWidth="4"
                   strokeDasharray="283"
-                  strokeDashoffset={283 - (283 * (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)) / 100}
+                  strokeDashoffset={283 - (283 * (isBreakTime 
+                    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
+                    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0))) / 100}
                   className="text-mario-emerald transition-all duration-1000 ease-out"
                 />
               </svg>
