@@ -35,6 +35,8 @@ const TimerPage = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [winner, setWinner] = useState<'me' | 'time' | null>(null);
   const [isBismillahOpen, setIsBismillahOpen] = useState(true);
+  const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
+  const [hasAcknowledgedCompletion, setHasAcknowledgedCompletion] = useState(false);
 
   // Persistence Logic
   const loadInitialData = useCallback(async () => {
@@ -98,8 +100,9 @@ const TimerPage = () => {
       return next;
     });
     setShowCompletedMessage(true);
+    setIsSessionModalOpen(true);
     setTimeout(() => setShowCompletedMessage(false), 2000);
-  }, []);
+  }, [volume]);
 
   const onWarmupComplete = useCallback(() => {
     playChime('mandatory', volume);
@@ -203,6 +206,7 @@ const TimerPage = () => {
     setScore({ me: 0, time: 0 });
     setIsGameOver(false);
     setWinner(null);
+    setHasAcknowledgedCompletion(false);
     localStorage.setItem(STORAGE_KEYS.SCORE, JSON.stringify({ me: 0, time: 0 }));
   };
 
@@ -223,7 +227,7 @@ const TimerPage = () => {
     setTimeLeft(newTime);
   };
 
-  if (isSessionComplete || isGameOver) {
+  if ((isSessionComplete || isGameOver) && (isGameOver || hasAcknowledgedCompletion)) {
     const isMeWinner = winner === 'me' || (isSessionComplete && score.me > score.time);
     
     return (
@@ -248,18 +252,18 @@ const TimerPage = () => {
           <div className="flex justify-center items-center gap-8 my-6">
             <div className="text-center">
               <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">أنا</div>
-              <div className={`text-4xl font-black scoreboard-font ${isMeWinner ? 'text-mario-emerald' : 'text-slate-400'}`}>{score.me}</div>
+              <div className={`text-4xl font-black scoreboard-font ${isMeWinner ? 'text-emerald-400' : 'text-slate-400'}`}>{score.me}</div>
             </div>
             <div className="text-2xl font-black text-white/20 scoreboard-font">ضد</div>
             <div className="text-center">
               <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">الوقت</div>
-              <div className={`text-4xl font-black scoreboard-font ${!isMeWinner ? 'text-mario-red' : 'text-slate-400'}`}>{score.time}</div>
+              <div className={`text-4xl font-black scoreboard-font ${!isMeWinner ? 'text-red-500' : 'text-slate-400'}`}>{score.time}</div>
             </div>
           </div>
 
           <div className="space-y-2">
             <p className="text-slate-300 font-bold uppercase tracking-widest text-xs">
-              الفائز: <span className={isMeWinner ? 'text-mario-emerald' : 'text-mario-red'}>{isMeWinner ? 'أنا' : 'الوقت'}</span>
+              الفائز: <span className={isMeWinner ? 'text-emerald-400' : 'text-red-500'}>{isMeWinner ? 'أنا' : 'الوقت'}</span>
             </p>
             <p className="text-slate-400 text-[10px] uppercase tracking-widest">
               الخاسر: {isMeWinner ? 'الوقت' : 'أنا'}
@@ -268,7 +272,7 @@ const TimerPage = () => {
               <motion.p 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-mario-red font-black uppercase tracking-[0.2em] text-sm mt-4 italic"
+                className="text-red-500 font-black uppercase tracking-[0.2em] text-sm mt-4 italic"
               >
                 حظاً أوفر! (Hardluck)
               </motion.p>
@@ -280,7 +284,7 @@ const TimerPage = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleReset}
-          className="bg-mario-emerald text-black px-12 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl scoreboard-font"
+          className="bg-emerald-600 text-white px-12 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl scoreboard-font"
         >
           جلسة جديدة
         </motion.button>
@@ -295,7 +299,7 @@ const TimerPage = () => {
         
         <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
-            <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
+            <div className="bg-red-600 px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
             <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري فاينمان للمذاكرة</h1>
             <button 
               onClick={() => setIsBismillahOpen(true)}
@@ -412,7 +416,7 @@ const TimerPage = () => {
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                  <div className="w-12 h-12 bg-mario-red rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                     <ExternalLink size={20} className="text-white ml-0.5" />
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">فتح الملعب</span>
@@ -466,7 +470,7 @@ const TimerPage = () => {
             <div className="flex justify-center pt-4">
               <button
                 onClick={handleReset}
-                className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-mario-red transition-colors disabled:opacity-30 scoreboard-font"
+                className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-red-500 transition-colors disabled:opacity-30 scoreboard-font"
                 disabled={isActive}>
                 إلغاء الحملة
               </button>
@@ -512,6 +516,34 @@ const TimerPage = () => {
             className="mt-8 bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-2 rounded-xl font-black transition-colors"
           >
             استعنا بالله
+          </button>
+        </div>
+      </Modal>
+
+      <Modal 
+        isOpen={isSessionModalOpen} 
+        onClose={() => setIsSessionModalOpen(false)}
+        title="تمت المهمة بنجاح"
+      >
+        <div className="flex flex-col items-center justify-center py-10 text-center">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="text-5xl font-black text-emerald-400 scoreboard-font mb-6 leading-relaxed px-4"
+          >
+            الحمد لله
+          </motion.div>
+          <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6">
+            <Trophy className="text-emerald-400" size={32} />
+          </div>
+          <button
+            onClick={() => {
+              setIsSessionModalOpen(false);
+              setHasAcknowledgedCompletion(true);
+            }}
+            className="bg-emerald-600 hover:bg-emerald-500 text-white px-10 py-3 rounded-xl font-black transition-colors shadow-lg shadow-emerald-900/20"
+          >
+            تقبل الله
           </button>
         </div>
       </Modal>

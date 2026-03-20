@@ -1,70 +1,80 @@
 import React, { memo } from 'react';
-import { Trophy, Info } from 'lucide-react';
+import { Trophy, Star, Zap, Target } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const LevelPanel = memo(function LevelPanel({ level, cycles }: { level: number; cycles: number }) {
-  // Mocking the balls for visual match
-  const balls = [true, true, true, false, false, false];
+interface LevelPanelProps {
+  level: number;
+  cycles: number;
+}
 
+const LevelPanel = memo(function LevelPanel({ level, cycles }: LevelPanelProps) {
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="bg-stadium-blue/80 border border-white/10 rounded-lg p-5 mb-6 text-white relative overflow-hidden group shadow-xl"
-    >
-      <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-100 transition-opacity">
-        <Info size={14} className="cursor-help" />
+    <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl relative overflow-hidden group">
+      {/* Background Glow */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-broadcast-yellow/10 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-broadcast-yellow/20 transition-colors" />
+
+      <div className="flex items-center justify-between mb-6 relative z-10">
+        <div className="flex items-center gap-2">
+          <Trophy size={14} className="text-broadcast-yellow" fill="currentColor" />
+          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">المستوى</h3>
+        </div>
+        <div className="flex items-center gap-1">
+          {[1, 2, 3, 4, 5].map((s) => (
+            <Star key={s} size={10} className={s <= (level % 5 || 5) ? "text-broadcast-yellow" : "text-slate-700"} fill="currentColor" />
+          ))}
+        </div>
       </div>
 
-      <div className="flex items-center gap-6">
-        <div className="relative">
-          <div className="w-16 h-16 bg-pitch-green rounded-lg flex items-center justify-center text-broadcast-yellow border border-white/10 shadow-inner">
-            <Trophy size={32} />
+      <div className="flex items-end justify-between mb-6 relative z-10">
+        <div>
+          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">الرتبة</div>
+          <div className="text-3xl font-black text-white scoreboard-font tracking-tighter">
+            Lvl {level + 1}
           </div>
+        </div>
+        <div className="text-right">
+          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">الجلسات</div>
+          <div className="text-xl font-black text-broadcast-yellow scoreboard-font tracking-tighter">
+            {cycles}
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4 relative z-10">
+        <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-slate-500">
+          <span>التقدم للمستوى التالي</span>
+          <span>{((cycles % 4) / 4) * 100}%</span>
+        </div>
+        <div className="h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/5">
           <motion.div 
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 4, repeat: Infinity }}
-            className="absolute -bottom-2 -right-2 w-7 h-7 bg-broadcast-yellow rounded flex items-center justify-center text-[11px] font-black text-black shadow-lg scoreboard-font"
-          >
-            L{level + 1}
-          </motion.div>
+            initial={{ width: 0 }}
+            animate={{ width: `${((cycles % 4) / 4) * 100}%` }}
+            className="h-full bg-gradient-to-r from-broadcast-yellow to-amber-500"
+          />
         </div>
-        
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="bg-broadcast-yellow text-black text-[9px] px-2 py-0.5 rounded-sm font-black uppercase tracking-widest">
-              دوري المحترفين
-            </span>
-            <span className="text-xs font-black uppercase tracking-widest text-slate-400 scoreboard-font">
-              تقدم الموسم
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <div className="flex gap-1.5">
-              {balls.map((active, i) => (
-                <motion.div 
-                  key={i} 
-                  initial={active ? { scale: 0 } : {}}
-                  animate={active ? { scale: 1 } : {}}
-                  className={`w-3 h-3 rounded-sm border border-white/10 ${active ? 'bg-mario-emerald shadow-[0_0_12px_rgba(0,255,136,0.4)]' : 'bg-slate-800'}`}
-                />
-              ))}
-            </div>
-            <div className="text-[10px] font-black text-slate-500 uppercase tracking-tighter scoreboard-font">
-              {balls.filter(b => b).length} / {balls.length} انتصارات
-            </div>
-          </div>
-        </div>
+      </div>
 
-        <div className="hidden md:flex flex-col items-end gap-1 pl-6 border-l border-white/10">
-          <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">حالة الـ VAR</div>
-          <div className="text-[11px] font-black text-mario-emerald tracking-widest scoreboard-font">
-            جاهز
+      <div className="mt-6 pt-6 border-t border-white/5 grid grid-cols-2 gap-4 relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-mario-emerald/10 text-mario-emerald">
+            <Zap size={14} fill="currentColor" />
+          </div>
+          <div>
+            <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest">السلسلة</div>
+            <div className="text-xs font-black text-white">3 أيام</div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-mario-red/10 text-mario-red">
+            <Target size={14} fill="currentColor" />
+          </div>
+          <div>
+            <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest">الدقة</div>
+            <div className="text-xs font-black text-white">94%</div>
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 });
 

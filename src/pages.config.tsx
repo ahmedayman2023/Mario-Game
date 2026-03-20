@@ -1,13 +1,11 @@
-import ADHD from './pages/ADHD';
-import Stats from './pages/Stats';
 import Timer from './pages/Timer';
+import SpacedRepetition from './pages/SpacedRepetition';
 import __Layout from './Layout.tsx';
 
 
 export const PAGES = {
-    "ADHD": ADHD,
-    "Stats": Stats,
     "Timer": Timer,
+    "SRS": SpacedRepetition,
 }
 
 export const pagesConfig = {

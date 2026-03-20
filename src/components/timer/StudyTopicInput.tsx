@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
-import { BookOpen, Save } from 'lucide-react';
+import { Sparkles, Save } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface StudyTopicInputProps {
   topic: string;
@@ -12,29 +13,34 @@ interface StudyTopicInputProps {
 const StudyTopicInput = memo(function StudyTopicInput({ 
   topic, 
   onTopicChange, 
-  onTopicSave, 
-  isActive, 
-  isPaused 
+  onTopicSave,
+  isActive,
+  isPaused
 }: StudyTopicInputProps) {
   return (
-    <div className="relative group">
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500/50 group-focus-within:text-emerald-500 transition-colors">
-        <BookOpen size={20} />
+    <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
+      <div className="flex items-center gap-2 mb-4">
+        <Sparkles size={14} className="text-broadcast-yellow" />
+        <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">التركيز الحالي</h3>
       </div>
-      <input 
-        type="text"
-        value={topic || ""}
-        onChange={(e) => onTopicChange(e.target.value)}
-        placeholder="ماذا سندرس اليوم؟"
-        className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pr-12 pl-16 text-lg font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/5 transition-all"
-        disabled={isActive && !isPaused}
-      />
-      <button 
-        onClick={onTopicSave}
-        className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-emerald-600/20 text-emerald-500 rounded-xl hover:bg-emerald-600 hover:text-white transition-all"
-      >
-        <Save size={18} />
-      </button>
+      <div className="flex gap-2">
+        <input 
+          type="text" 
+          placeholder="ما الذي تدرسه الآن؟" 
+          value={topic}
+          onChange={(e) => onTopicChange(e.target.value)}
+          disabled={isActive && !isPaused}
+          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-broadcast-yellow/50 transition-all disabled:opacity-50"
+        />
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onTopicSave}
+          className="bg-broadcast-yellow text-black p-3 rounded-xl font-black hover:bg-amber-400 transition-colors"
+        >
+          <Save size={20} />
+        </motion.button>
+      </div>
     </div>
   );
 });

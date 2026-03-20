@@ -13,19 +13,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
-  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
-  const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(true);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(false);
+  const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(false);
   const [authError, setAuthError] = useState<{ type: string } | null>(null);
 
   useEffect(() => {
-    // Simulate auth check
-    const timer = setTimeout(() => {
-      setIsLoadingAuth(false);
-      setIsLoadingPublicSettings(false);
-      // For demo purposes, we'll stay "unauthenticated" but without error
-      // setAuthError({ type: 'auth_required' }); 
-    }, 1000);
-    return () => clearTimeout(timer);
+    // No simulation needed as we start as "ready"
   }, []);
 
   const navigateToLogin = () => {
