@@ -34,6 +34,7 @@ const TimerPage = () => {
   const [isExercisesOpen, setIsExercisesOpen] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [winner, setWinner] = useState<'me' | 'time' | null>(null);
+  const [isBismillahOpen, setIsBismillahOpen] = useState(true);
 
   // Persistence Logic
   const loadInitialData = useCallback(async () => {
@@ -296,6 +297,12 @@ const TimerPage = () => {
           <div className="flex items-center gap-3">
             <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
             <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري فاينمان للمذاكرة</h1>
+            <button 
+              onClick={() => setIsBismillahOpen(true)}
+              className="ml-4 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black px-3 py-1 rounded-full transition-colors scoreboard-font"
+            >
+              بسم الله
+            </button>
           </div>
           <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 scoreboard-font">
             <span>التعلم العميق</span>
@@ -482,6 +489,31 @@ const TimerPage = () => {
         title="تمارين الاستشفاء البدني"
       >
         <RecoveryVideos />
+      </Modal>
+
+      <Modal 
+        isOpen={isBismillahOpen} 
+        onClose={() => setIsBismillahOpen(false)}
+        title="بداية مباركة"
+      >
+        <div className="flex flex-col items-center justify-center py-10 text-center">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="text-5xl font-black text-emerald-400 scoreboard-font mb-4"
+          >
+            بسم الله
+          </motion.div>
+          <p className="text-slate-400 text-sm font-bold">
+            "وقل ربي زدني علماً"
+          </p>
+          <button
+            onClick={() => setIsBismillahOpen(false)}
+            className="mt-8 bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-2 rounded-xl font-black transition-colors"
+          >
+            استعنا بالله
+          </button>
+        </div>
       </Modal>
 
       <AnimatePresence>
