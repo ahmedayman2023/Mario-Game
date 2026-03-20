@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -35,12 +34,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
                 <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 scoreboard-font">
                   {title || 'نافذة'}
                 </h3>
-                <button 
-                  onClick={onClose}
-                  className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-400 hover:text-white"
-                >
-                  <X size={20} />
-                </button>
               </div>
               <div className="p-6">
                 {children}

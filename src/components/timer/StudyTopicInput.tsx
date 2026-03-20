@@ -18,22 +18,22 @@ const StudyTopicInput = memo(function StudyTopicInput({
 }: StudyTopicInputProps) {
   return (
     <div className="relative group">
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500/50 group-focus-within:text-emerald-500 transition-colors">
-        <BookOpen size={20} />
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-accent transition-colors">
+        <BookOpen size={18} />
       </div>
       <input 
         type="text"
         value={topic || ""}
         onChange={(e) => onTopicChange(e.target.value)}
-        placeholder="ماذا سندرس اليوم؟"
-        className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pr-12 pl-16 text-lg font-medium text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/5 transition-all"
+        placeholder="ما هي مهمتك اليوم؟"
+        className="w-full bg-paper border ink-border py-4 pr-12 pl-14 text-sm font-bold text-ink placeholder:text-slate-300 focus:outline-none focus:border-accent rounded-lg transition-all"
         disabled={isActive && !isPaused}
       />
       <button 
         onClick={onTopicSave}
-        className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-emerald-600/20 text-emerald-500 rounded-xl hover:bg-emerald-600 hover:text-white transition-all"
+        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-primary text-white rounded-md shadow-md hover:bg-primary-hover active:scale-95 transition-all"
       >
-        <Save size={18} />
+        <Save size={14} />
       </button>
     </div>
   );

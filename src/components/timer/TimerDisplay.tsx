@@ -44,34 +44,34 @@ const TimerDisplay = memo(function TimerDisplay({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-6 md:py-10">
+    <div className="flex flex-col items-center justify-center py-12">
       <AnimatePresence mode="wait">
         <motion.div
           key={isWarmup ? `warmup-${warmupIntervalIndex}` : isBreakTime ? 'break' : 'study'}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="flex items-center gap-2 mb-4"
+          className="flex flex-col items-center gap-4 mb-12"
         >
-          <div className={`px-3 py-1 text-black text-[10px] font-black uppercase tracking-widest rounded-sm ${isWarmup ? 'bg-amber-500' : 'bg-broadcast-yellow'}`}>
+          <div className={`px-6 py-2 text-[10px] font-bold uppercase rounded-full tracking-[0.2em] ${isWarmup ? 'bg-warning/5 text-warning border ink-border' : isBreakTime ? 'bg-success/5 text-success border ink-border' : 'bg-primary/5 text-primary border ink-border'}`}>
             {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.title || `المرحلة ${currentInterval}`)}
           </div>
-          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 max-w-[200px] truncate">
+          <div className="text-xs font-serif italic text-slate-400 tracking-wide max-w-[300px] text-center leading-relaxed">
             {isWarmup ? getWarmupSubLabel() : isBreakTime ? 'إعادة شحن' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.description || 'الجلسة جارية')}
           </div>
         </motion.div>
       </AnimatePresence>
 
-      <div className="flex flex-row items-center justify-center gap-4 sm:gap-8 md:gap-12">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-12 md:gap-20">
         <motion.div 
-          className={`text-[5rem] sm:text-[8rem] md:text-[10rem] font-black scoreboard-font tracking-tighter leading-none select-none cursor-pointer transition-colors ${isWarmup ? 'text-amber-500' : isBreakTime ? 'text-broadcast-yellow' : 'text-white'}`}
+          className={`text-[8rem] sm:text-[10rem] md:text-[12rem] font-mono font-medium tracking-tight leading-none select-none cursor-pointer transition-colors ${isWarmup ? 'text-warning' : isBreakTime ? 'text-success' : 'text-ink'}`}
           onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
           animate={isActive && !isBreakTime && !isWarmup ? {
-            opacity: [1, 0.8, 1],
-            transition: { duration: 1, repeat: Infinity, ease: "linear" }
+            scale: [1, 1.01, 1],
+            transition: { duration: 1, repeat: Infinity }
           } : {}}
         >
-          {String(minutes).padStart(2, '0')}<span className="animate-pulse">:</span>{String(seconds).padStart(2, '0')}
+          {String(minutes).padStart(2, '0')}<span className="opacity-20">:</span>{String(seconds).padStart(2, '0')}
         </motion.div>
 
         {!isWarmup && Number(currentInterval) > 0 && (
@@ -80,52 +80,37 @@ const TimerDisplay = memo(function TimerDisplay({
             animate={{ scale: 1, opacity: 1, x: 0 }}
             className="flex-shrink-0"
           >
-            <div className="relative w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 flex items-center justify-center">
-              {/* Outer Glow Circle */}
-              <div className="absolute inset-0 rounded-full border-4 border-mario-emerald/20 animate-pulse shadow-[0_0_30px_rgba(16,185,129,0.3)]" />
-              
-              {/* Main Circle */}
-              <div className="absolute inset-2 rounded-full border-2 border-mario-emerald/40 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center">
-                <div className="text-[7px] sm:text-[9px] font-black text-mario-emerald uppercase tracking-widest leading-none mb-1">إنجاز</div>
-                <div className="text-lg sm:text-2xl md:text-3xl font-black text-white scoreboard-font leading-none">
-                  {isBreakTime 
-                    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
-                    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0)}%
-                </div>
+            <div className="relative w-28 h-28 sm:w-36 sm:h-36 bg-white border ink-border rounded-lg paper-shadow flex flex-col items-center justify-center overflow-hidden">
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">الإنجاز</div>
+              <div className="text-4xl font-serif text-ink">
+                {isBreakTime 
+                  ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
+                  : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0)}%
               </div>
-              
-              {/* Progress Ring (SVG) */}
-              <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  strokeDasharray="283"
-                  strokeDashoffset={283 - (283 * (isBreakTime 
-                    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
-                    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0))) / 100}
-                  className="text-mario-emerald transition-all duration-1000 ease-out"
+              <div className="absolute bottom-0 left-0 w-full h-1.5 bg-paper">
+                <div 
+                  className="h-full bg-accent transition-all duration-1000" 
+                  style={{ width: `${isBreakTime ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0) : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0)}%` }}
                 />
-              </svg>
+              </div>
             </div>
           </motion.div>
         )}
       </div>
 
-      <div className="mt-6 flex items-center gap-8">
+      <div className="mt-16 flex items-center gap-16">
         <div className="flex flex-col items-center">
-          <div className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">الحالة</div>
-          <div className={`text-xs font-black uppercase tracking-widest ${isActive ? 'text-mario-emerald' : 'text-mario-red'}`}>
-            {isActive ? 'لعب' : 'متوقف'}
+          <div className="text-[10px] font-bold uppercase text-slate-400 mb-4 tracking-widest">الحالة</div>
+          <div className={`text-[10px] font-bold uppercase px-6 py-2 rounded-full tracking-widest border ${isActive ? 'bg-success/5 text-success border-success/20' : 'bg-danger/5 text-danger border-danger/20'}`}>
+            {isActive ? 'جاري' : 'متوقف'}
           </div>
         </div>
-        <div className="w-px h-8 bg-white/10" />
+        <div className="w-[1px] h-12 bg-slate-100" />
         <div className="flex flex-col items-center">
-          <div className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">الشدة</div>
-          <div className="text-xs font-black uppercase tracking-widest text-white">عالية</div>
+          <div className="text-[10px] font-bold uppercase text-slate-400 mb-4 tracking-widest">التركيز</div>
+          <div className="text-[10px] font-bold uppercase px-6 py-2 bg-paper text-slate-600 rounded-full border ink-border tracking-widest">
+            مرتفع
+          </div>
         </div>
       </div>
     </div>

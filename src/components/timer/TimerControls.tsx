@@ -25,67 +25,62 @@ const TimerControls = memo(function TimerControls({
   isBreakTime,
   isWarmup
 }: TimerControlsProps) {
-  const buttonBase = "flex items-center justify-center gap-2 px-5 py-3 md:px-8 md:py-4 rounded font-black uppercase tracking-widest text-[10px] md:text-[11px] transition-all duration-300 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed scoreboard-font";
+  const buttonBase = "flex items-center justify-center gap-3 px-8 py-4 rounded-lg transition-all font-bold text-[10px] disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-[0.2em] border ink-border paper-shadow";
 
   return (
-    <div className="flex flex-wrap justify-center items-center gap-3 md:gap-6 mb-8 md:mb-12">
+    <div className="flex flex-wrap justify-center items-center gap-6 mb-16">
       <AnimatePresence mode="wait">
         {isActive ? (
           <motion.button 
             key="pause"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            whileHover={{ scale: 1.02 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             onClick={onPause}
-            className={`${buttonBase} bg-white text-black hover:bg-slate-200 shadow-xl`}
+            className={`${buttonBase} bg-warning text-white hover:bg-warning/90`}
           >
-            <Pause size={16} fill="currentColor" />
-            <span>وقت مستقطع</span>
+            <Pause size={14} strokeWidth={3} />
+            <span>توقف مؤقت</span>
           </motion.button>
         ) : (
           <motion.button 
             key="play"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            whileHover={{ scale: 1.02 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             onClick={onStart}
-            className={`${buttonBase} bg-mario-emerald text-black shadow-[0_0_30px_rgba(0,255,136,0.3)] hover:shadow-[0_0_40px_rgba(0,255,136,0.5)]`}
+            className={`${buttonBase} bg-primary text-white hover:bg-primary/90`}
           >
-            <Play size={16} fill="currentColor" />
-            <span>{isPaused ? 'استئناف الجلسة' : isWarmup ? 'بدء التسخين' : 'بدء التقنية'}</span>
+            <Play size={14} strokeWidth={3} />
+            <span>{isPaused ? 'استئناف' : isWarmup ? 'بدء' : 'ابدأ الآن'}</span>
           </motion.button>
         )}
       </AnimatePresence>
 
-      <motion.button 
-        whileHover={{ scale: 1.02 }}
+      <button 
         onClick={onSkip}
-        className={`${buttonBase} ${isWarmup ? 'bg-amber-500 text-black border-none' : 'bg-stadium-blue border border-white/20 text-white'} hover:bg-white/10`}
+        className={`${buttonBase} bg-white text-ink hover:bg-paper`}
       >
-        {isWarmup ? <Wind size={16} fill="currentColor" /> : <SkipForward size={16} fill="currentColor" />}
-        <span>{isWarmup ? 'صفارة الحكم (بدء التقنية)' : isBreakTime ? 'تخطي الاستراحة' : 'تخطي الخطوة'}</span>
-      </motion.button>
+        <SkipForward size={14} strokeWidth={3} />
+        <span>تخطي</span>
+      </button>
 
-      <motion.button 
-        whileHover={{ scale: 1.02 }}
+      <button 
         onClick={onBack}
-        className={`${buttonBase} bg-stadium-blue border border-white/20 text-white hover:bg-white/10`}
+        className={`${buttonBase} bg-white text-ink hover:bg-paper`}
       >
-        <SkipBack size={16} fill="currentColor" />
+        <SkipBack size={14} strokeWidth={3} />
         <span>رجوع</span>
-      </motion.button>
+      </button>
 
-      <motion.button 
-        whileHover={{ scale: 1.02 }}
+      <button 
         onClick={onStop}
         disabled={!isActive && !isPaused}
-        className={`${buttonBase} bg-mario-red/10 text-mario-red border border-mario-red/30 hover:bg-mario-red hover:text-white`}
+        className={`${buttonBase} bg-danger/5 text-danger hover:bg-danger hover:text-white border-danger/20`}
       >
-        <Square size={16} fill="currentColor" />
-        <span>إلغاء الجلسة</span>
-      </motion.button>
+        <Square size={14} strokeWidth={3} />
+        <span>إلغاء</span>
+      </button>
     </div>
   );
 });

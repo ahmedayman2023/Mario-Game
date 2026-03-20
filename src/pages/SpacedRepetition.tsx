@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Check, X, RotateCcw, Calendar, Brain, Sparkles, Star, Trophy, Coins } from 'lucide-react';
+import { Plus, Trash2, Check, RotateCcw, Calendar, Brain, Sparkles, Star, Trophy, Coins } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import Modal from "../components/ui/Modal";
 
@@ -253,12 +253,6 @@ const SpacedRepetition = () => {
               <div className="bg-black/40 px-4 py-2 border-2 border-white/20">
                 CARD: {currentCardIndex + 1} / {reviewQueue.length}
               </div>
-              <button 
-                onClick={() => setIsReviewing(false)}
-                className="bg-[#E52521] p-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-              >
-                <X size={20} strokeWidth={3} />
-              </button>
             </div>
 
             <AnimatePresence mode="wait">
