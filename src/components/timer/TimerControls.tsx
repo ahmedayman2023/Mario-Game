@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { Play, Pause, Square, SkipForward, RotateCcw } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Play, Pause, Square, SkipForward, SkipBack, Wind } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface TimerControlsProps {
   isActive: boolean;
@@ -25,49 +25,66 @@ const TimerControls = memo(function TimerControls({
   isBreakTime,
   isWarmup
 }: TimerControlsProps) {
+  const buttonBase = "flex items-center justify-center gap-2 px-5 py-3 md:px-8 md:py-4 rounded font-black uppercase tracking-widest text-[10px] md:text-[11px] transition-all duration-300 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed scoreboard-font";
+
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 mt-4">
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={onBack}
-        className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all"
-        title="العودة للمرحلة السابقة"
-      >
-        <RotateCcw size={20} />
-      </motion.button>
+    <div className="flex flex-wrap justify-center items-center gap-3 md:gap-6 mb-8 md:mb-12">
+      <AnimatePresence mode="wait">
+        {isActive ? (
+          <motion.button 
+            key="pause"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            whileHover={{ scale: 1.02 }}
+            onClick={onPause}
+            className={`${buttonBase} bg-white text-black hover:bg-slate-200 shadow-xl`}
+          >
+            <Pause size={16} fill="currentColor" />
+            <span>وقت مستقطع</span>
+          </motion.button>
+        ) : (
+          <motion.button 
+            key="play"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            whileHover={{ scale: 1.02 }}
+            onClick={onStart}
+            className={`${buttonBase} bg-mario-emerald text-black shadow-[0_0_30px_rgba(0,255,136,0.3)] hover:shadow-[0_0_40px_rgba(0,255,136,0.5)]`}
+          >
+            <Play size={16} fill="currentColor" />
+            <span>{isPaused ? 'استئناف الجلسة' : isWarmup ? 'بدء التسخين' : 'بدء التقنية'}</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
 
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={isActive && !isPaused ? onPause : onStart}
-        className={`w-20 h-20 rounded-full flex items-center justify-center shadow-2xl transition-all ${
-          isActive && !isPaused 
-            ? 'bg-mario-red text-white shadow-mario-red/20' 
-            : 'bg-mario-emerald text-black shadow-mario-emerald/20'
-        }`}
-      >
-        {isActive && !isPaused ? <Pause size={32} fill="currentColor" /> : <Play size={32} className="ml-1" fill="currentColor" />}
-      </motion.button>
-
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+      <motion.button 
+        whileHover={{ scale: 1.02 }}
         onClick={onSkip}
-        className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all"
-        title={isWarmup ? "تخطي التسخين" : "تخطي المرحلة"}
+        className={`${buttonBase} ${isWarmup ? 'bg-amber-500 text-black border-none' : 'bg-stadium-blue border border-white/20 text-white'} hover:bg-white/10`}
       >
-        <SkipForward size={20} />
+        {isWarmup ? <Wind size={16} fill="currentColor" /> : <SkipForward size={16} fill="currentColor" />}
+        <span>{isWarmup ? 'صفارة الحكم (بدء التقنية)' : isBreakTime ? 'تخطي الاستراحة' : 'تخطي الخطوة'}</span>
       </motion.button>
 
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={onStop}
-        className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-mario-red hover:bg-mario-red/10 transition-all"
-        title="إعادة ضبط"
+      <motion.button 
+        whileHover={{ scale: 1.02 }}
+        onClick={onBack}
+        className={`${buttonBase} bg-stadium-blue border border-white/20 text-white hover:bg-white/10`}
       >
-        <Square size={20} fill="currentColor" />
+        <SkipBack size={16} fill="currentColor" />
+        <span>رجوع</span>
+      </motion.button>
+
+      <motion.button 
+        whileHover={{ scale: 1.02 }}
+        onClick={onStop}
+        disabled={!isActive && !isPaused}
+        className={`${buttonBase} bg-mario-red/10 text-mario-red border border-mario-red/30 hover:bg-mario-red hover:text-white`}
+      >
+        <Square size={16} fill="currentColor" />
+        <span>إلغاء الجلسة</span>
       </motion.button>
     </div>
   );

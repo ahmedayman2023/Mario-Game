@@ -1,52 +1,46 @@
-import React, { memo } from 'react';
-import { ExternalLink, Play } from 'lucide-react';
-import { motion } from 'motion/react';
+import React from 'react';
+import { Play, Youtube } from 'lucide-react';
+import { RECOVERY_VIDEOS } from '../../constants';
 
-const RECOVERY_VIDEOS = [
-  {
-    id: '74cOUSKXMz0',
-    title: 'أجواء الملعب - تركيز كامل',
-    duration: '10:00'
-  }
-];
-
-const RecoveryVideos = memo(function RecoveryVideos() {
+const RecoveryVideos = () => {
   return (
-    <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl overflow-hidden">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <ExternalLink size={14} className="text-broadcast-yellow" />
-          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">أجواء الملعب</h3>
-        </div>
-      </div>
-      
-      <div className="space-y-4">
+    <div className="space-y-4">
+      <div className="space-y-3">
         {RECOVERY_VIDEOS.map((video) => (
-          <a 
+          <a
             key={video.id}
-            href={`https://www.youtube.com/watch?v=${video.id}`} 
-            target="_blank" 
+            href={`https://www.youtube.com/watch?v=${video.id}`}
+            target="_blank"
             rel="noopener noreferrer"
-            className="group relative block aspect-video bg-black rounded-md overflow-hidden border border-white/5 hover:border-broadcast-yellow/50 transition-colors"
+            className="group flex items-center gap-3 p-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl transition-all"
           >
-            <img 
-              src={`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`} 
-              alt={video.title} 
-              className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-              <div className="w-12 h-12 bg-mario-red rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                <Play size={20} className="text-white ml-0.5" fill="currentColor" />
+            <div className="relative w-16 h-10 rounded-lg overflow-hidden flex-shrink-0">
+              <img 
+                src={video.thumbnail} 
+                alt={video.title} 
+                className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Play size={12} className="text-white fill-white opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">فتح الملعب</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] font-black text-white uppercase tracking-tight truncate scoreboard-font">
+                {video.title}
+              </div>
+              <div className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
+                تمرين {video.duration}
+              </div>
             </div>
           </a>
         ))}
       </div>
-      <p className="text-[9px] text-slate-500 mt-3 italic scoreboard-font leading-relaxed">انقر لفتح أجواء الملعب في علامة تبويب جديدة لتجربة التعلم الكاملة.</p>
+      <p className="text-[8px] text-slate-600 mt-4 italic scoreboard-font leading-relaxed">
+        تمارين بدنية سريعة للحفاظ على ذروة الأداء الذهني خلال فترات الاستراحة.
+      </p>
     </div>
   );
-});
+};
 
 export default RecoveryVideos;

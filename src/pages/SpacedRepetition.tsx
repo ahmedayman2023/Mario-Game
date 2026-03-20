@@ -142,105 +142,102 @@ const SpacedRepetition = () => {
 
   return (
     <div className="p-4 sm:p-8 max-w-4xl mx-auto min-h-screen">
-      {/* Header - Stadium Style */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-12 gap-6 bg-stadium-blue/80 p-8 rounded-3xl border border-white/10 shadow-2xl backdrop-blur-xl">
+      {/* Header - Mario Style */}
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-12 gap-6 bg-[#5C94FC] p-6 rounded-3xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
         <div className="flex items-center gap-4">
-          <div className="bg-amber-500/20 p-4 rounded-2xl border border-amber-500/30">
-            <Star size={32} className="text-amber-400 fill-amber-400/20" />
+          <div className="bg-[#FBD000] p-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-bounce">
+            <Star size={32} className="text-black fill-black" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-white uppercase tracking-tight scoreboard-font">نظام المراجعة الذكي</h1>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">Spaced Repetition System</p>
+            <h1 className="text-2xl font-pixel text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">SUPER SRS</h1>
+            <p className="text-[10px] font-pixel text-black/60 mt-2">WORLD 1-1</p>
           </div>
         </div>
         <button 
           onClick={() => setIsAddModalOpen(true)}
-          className="bg-emerald-600 hover:bg-emerald-500 text-white p-4 rounded-2xl transition-all shadow-lg shadow-emerald-900/20 group"
+          className="bg-[#E52521] hover:bg-[#ff3e3e] text-white p-4 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all"
         >
-          <Plus size={24} strokeWidth={3} className="group-hover:scale-110 transition-transform" />
+          <Plus size={24} strokeWidth={4} />
         </button>
       </div>
 
       {!isReviewing ? (
         <div className="space-y-12">
-          {/* Stats Summary - Stadium Style */}
+          {/* Stats Summary - Coin Blocks */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="bg-slate-900/50 p-6 rounded-2xl border border-white/5 shadow-xl flex flex-col items-center text-center group hover:border-indigo-500/30 transition-colors">
-              <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Coins size={24} className="text-indigo-400" />
+            <div className="bg-[#FBD000] p-6 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center relative overflow-hidden group">
+              <div className="absolute top-2 right-2 opacity-20 group-hover:scale-125 transition-transform">
+                <Coins size={40} className="text-black" />
               </div>
-              <div className="text-3xl font-black text-white scoreboard-font mb-1">{cards.length}</div>
-              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">إجمالي البطاقات</div>
+              <div className="text-3xl font-pixel text-black mb-2">{cards.length}</div>
+              <div className="text-[8px] font-pixel text-black/70 leading-relaxed uppercase">إجمالي البطاقات</div>
             </div>
             
-            <div className="bg-slate-900/50 p-6 rounded-2xl border border-white/5 shadow-xl flex flex-col items-center text-center group hover:border-amber-500/30 transition-colors">
-              <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Calendar size={24} className="text-amber-400" />
+            <div className="bg-[#E52521] p-6 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center relative overflow-hidden group">
+              <div className="absolute top-2 right-2 opacity-20 group-hover:scale-125 transition-transform">
+                <Calendar size={40} className="text-white" />
               </div>
-              <div className="text-3xl font-black text-white scoreboard-font mb-1">{dueCount}</div>
-              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">مستحق للمراجعة</div>
+              <div className="text-3xl font-pixel text-white mb-2">{dueCount}</div>
+              <div className="text-[8px] font-pixel text-white/70 leading-relaxed uppercase">مستحق للمراجعة</div>
             </div>
 
-            <div className="bg-slate-900/50 p-6 rounded-2xl border border-white/5 shadow-xl flex flex-col items-center text-center group hover:border-emerald-500/30 transition-colors">
-              <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Trophy size={24} className="text-emerald-400" />
+            <div className="bg-[#43B047] p-6 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center relative overflow-hidden group">
+              <div className="absolute top-2 right-2 opacity-20 group-hover:scale-125 transition-transform">
+                <Trophy size={40} className="text-white" />
               </div>
-              <div className="text-3xl font-black text-white scoreboard-font mb-1">
+              <div className="text-3xl font-pixel text-white mb-2">
                 {cards.filter(c => c.status === 'reviewing').length}
               </div>
-              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">بطاقات متقنة</div>
+              <div className="text-[8px] font-pixel text-white/70 leading-relaxed uppercase">بطاقات متقنة</div>
             </div>
           </div>
 
-          {/* Start Button - Stadium Style */}
+          {/* Start Button - Big Pipe Style */}
           <button
             onClick={startReview}
             disabled={dueCount === 0}
-            className={`w-full py-6 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-4 shadow-xl scoreboard-font ${
+            className={`w-full py-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] font-pixel text-xl transition-all flex items-center justify-center gap-4 active:shadow-none active:translate-x-2 active:translate-y-2 ${
               dueCount > 0 
-                ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-900/20' 
-                : 'bg-slate-800 text-slate-600 cursor-not-allowed border border-white/5'
+                ? 'bg-[#43B047] hover:bg-[#4ed453] text-white' 
+                : 'bg-slate-800 text-slate-600 cursor-not-allowed border-slate-700'
             }`}
           >
-            <Brain size={24} strokeWidth={3} />
-            ابدأ جلسة المراجعة
+            <Brain size={32} strokeWidth={3} />
+            ابدأ المغامرة
           </button>
 
-          {/* Cards List - Stadium Style */}
+          {/* Cards List - Brick Style */}
           <div className="space-y-6">
-            <h2 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] flex items-center gap-3 scoreboard-font">
-              <div className="w-2 h-2 bg-indigo-500 rounded-full" />
+            <h2 className="text-xs font-pixel text-white uppercase flex items-center gap-3">
+              <div className="w-4 h-4 bg-[#8B4513] border-2 border-black" />
               قائمة البطاقات
             </h2>
             <div className="grid grid-cols-1 gap-4">
               {cards.length === 0 ? (
-                <div className="text-center py-16 bg-black/20 border border-dashed border-white/10 rounded-3xl">
-                  <p className="text-slate-500 font-bold text-sm">لا توجد بطاقات حالياً. ابدأ بإضافة أول بطاقة!</p>
+                <div className="text-center py-16 bg-black/20 border-4 border-dashed border-white/10 rounded-3xl">
+                  <p className="text-slate-500 font-pixel text-[10px]">لا توجد بطاقات. ابحث عن صندوق الحظ!</p>
                 </div>
               ) : (
                 cards.map(card => (
-                  <div key={card.id} className="bg-slate-900/40 p-5 rounded-2xl border border-white/5 flex items-center justify-between group hover:bg-slate-900/60 transition-all">
+                  <div key={card.id} className="bg-[#8B4513] p-5 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between group hover:-translate-y-1 transition-transform">
                     <div className="min-w-0 flex-1">
                       <div className="text-white font-bold truncate text-lg">{card.question}</div>
-                      <div className="text-[10px] font-black text-slate-500 mt-2 flex items-center gap-4">
-                        <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter ${
-                          card.status === 'new' ? 'bg-indigo-500/20 text-indigo-400' :
-                          card.status === 'learning' ? 'bg-amber-500/20 text-amber-400' :
-                          'bg-emerald-500/20 text-emerald-400'
+                      <div className="text-[8px] font-pixel text-white/50 mt-2 flex items-center gap-3">
+                        <span className={`px-2 py-1 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${
+                          card.status === 'new' ? 'bg-[#5C94FC] text-white' :
+                          card.status === 'learning' ? 'bg-[#FBD000] text-black' :
+                          'bg-[#43B047] text-white'
                         }`}>
                           {card.status === 'new' ? 'جديد' : card.status === 'learning' ? 'تعلم' : 'مراجعة'}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Calendar size={12} />
-                          المراجعة القادمة: {new Date(card.nextReview).toLocaleDateString('ar-EG')}
-                        </span>
+                        <span>NEXT: {new Date(card.nextReview).toLocaleDateString('ar-EG')}</span>
                       </div>
                     </div>
                     <button 
                       onClick={() => deleteCard(card.id)}
-                      className="text-slate-600 hover:text-mario-red p-3 transition-colors"
+                      className="text-white/30 hover:text-[#E52521] p-3 transition-colors"
                     >
-                      <Trash2 size={20} />
+                      <Trash2 size={24} />
                     </button>
                   </div>
                 ))
@@ -249,62 +246,66 @@ const SpacedRepetition = () => {
           </div>
         </div>
       ) : (
-        /* Review Mode - Stadium Style */
+        /* Review Mode - Question Block Style */
         <div className="flex flex-col items-center justify-center py-8">
           <div className="w-full max-w-2xl">
-            <div className="flex justify-between items-center mb-8 px-4">
-              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest scoreboard-font">
-                البطاقة: {currentCardIndex + 1} / {reviewQueue.length}
+            <div className="flex justify-between items-center mb-8 px-4 font-pixel text-[10px] text-white">
+              <div className="bg-black/40 px-4 py-2 border-2 border-white/20">
+                CARD: {currentCardIndex + 1} / {reviewQueue.length}
               </div>
               <button 
                 onClick={() => setIsReviewing(false)}
-                className="text-slate-500 hover:text-white transition-colors"
+                className="bg-[#E52521] p-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
               >
-                <X size={24} strokeWidth={3} />
+                <X size={20} strokeWidth={3} />
               </button>
             </div>
 
             <AnimatePresence mode="wait">
               <motion.div
                 key={reviewQueue[currentCardIndex].id + (showAnswer ? '-ans' : '-q')}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="bg-stadium-blue/80 p-12 rounded-[2.5rem] border border-white/10 shadow-2xl backdrop-blur-xl min-h-[400px] flex flex-col items-center justify-center text-center relative overflow-hidden"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.1 }}
+                className="bg-[#FBD000] p-12 border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] min-h-[400px] flex flex-col items-center justify-center text-center relative overflow-hidden"
               >
+                {/* Decorative dots for Question Block */}
+                <div className="absolute top-4 left-4 w-4 h-4 bg-black/20 rounded-full" />
+                <div className="absolute top-4 right-4 w-4 h-4 bg-black/20 rounded-full" />
+                <div className="absolute bottom-4 left-4 w-4 h-4 bg-black/20 rounded-full" />
+                <div className="absolute bottom-4 right-4 w-4 h-4 bg-black/20 rounded-full" />
+
                 {!showAnswer ? (
                   <>
-                    <div className="w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-8">
-                      <Brain size={32} className="text-indigo-400" />
-                    </div>
-                    <div className="text-3xl font-black text-white leading-tight mb-12 px-4">
+                    <div className="text-xl font-pixel text-black mb-8 animate-pulse">?</div>
+                    <div className="text-3xl font-black text-black leading-tight mb-12">
                       {reviewQueue[currentCardIndex].question}
                     </div>
                     <button
                       onClick={() => setShowAnswer(true)}
-                      className="bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-4 rounded-2xl font-black transition-all shadow-lg shadow-indigo-900/20 scoreboard-font"
+                      className="bg-black text-white px-10 py-4 border-4 border-white/20 font-pixel text-xs hover:scale-105 transition-transform"
                     >
                       إظهار الإجابة
                     </button>
                   </>
                 ) : (
                   <>
-                    <div className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.4em] mb-6 scoreboard-font">تم كشف الإجابة</div>
-                    <div className="text-2xl font-bold text-white leading-relaxed mb-12 px-4">
+                    <div className="text-[10px] font-pixel text-black/40 mb-6">ANSWER FOUND!</div>
+                    <div className="text-2xl font-bold text-black leading-relaxed mb-12">
                       {reviewQueue[currentCardIndex].answer}
                     </div>
                     
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
                       {[
-                        { label: 'مرة أخرى', rating: 1, color: 'bg-mario-red/20 text-mario-red hover:bg-mario-red hover:text-white' },
-                        { label: 'صعب', rating: 2, color: 'bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-white' },
-                        { label: 'جيد', rating: 3, color: 'bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white' },
-                        { label: 'سهل', rating: 4, color: 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white' },
+                        { label: 'مرة أخرى', rating: 1, color: 'bg-[#E52521]' },
+                        { label: 'صعب', rating: 2, color: 'bg-[#FBD000] text-black' },
+                        { label: 'جيد', rating: 3, color: 'bg-[#5C94FC]' },
+                        { label: 'سهل', rating: 4, color: 'bg-[#43B047]' },
                       ].map((btn) => (
                         <button
                           key={btn.rating}
                           onClick={() => handleRating(btn.rating as any)}
-                          className={`${btn.color} py-4 rounded-xl font-black text-[10px] uppercase transition-all border border-white/5 scoreboard-font`}
+                          className={`${btn.color} border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 text-white py-4 font-pixel text-[8px] uppercase transition-all`}
                         >
                           {btn.label}
                         </button>
@@ -318,34 +319,34 @@ const SpacedRepetition = () => {
         </div>
       )}
 
-      {/* Add Card Modal - Stadium Style */}
+      {/* Add Card Modal - Mario Style */}
       <Modal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        title="إضافة بطاقة جديدة"
+        title="NEW POWER-UP"
       >
-        <div className="space-y-8 p-4">
+        <div className="space-y-8 p-4 bg-[#5C94FC] border-4 border-black">
           <div className="space-y-3">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest scoreboard-font">السؤال</label>
+            <label className="text-[10px] font-pixel text-white uppercase">السؤال (INPUT)</label>
             <textarea
               value={newCard.question}
               onChange={(e) => setNewCard({ ...newCard, question: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-bold focus:ring-2 focus:ring-indigo-500 outline-none min-h-[120px] transition-all"
+              className="w-full bg-white border-4 border-black p-4 text-black font-bold focus:ring-0 outline-none min-h-[120px] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
               placeholder="ما الذي تريد تذكره؟"
             />
           </div>
           <div className="space-y-3">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest scoreboard-font">الإجابة</label>
+            <label className="text-[10px] font-pixel text-white uppercase">الإجابة (OUTPUT)</label>
             <textarea
               value={newCard.answer}
               onChange={(e) => setNewCard({ ...newCard, answer: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-bold focus:ring-2 focus:ring-indigo-500 outline-none min-h-[120px] transition-all"
+              className="w-full bg-white border-4 border-black p-4 text-black font-bold focus:ring-0 outline-none min-h-[120px] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
               placeholder="اكتب الإجابة هنا..."
             />
           </div>
           <button
             onClick={addCard}
-            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-5 rounded-2xl font-black transition-all shadow-lg shadow-emerald-900/20 scoreboard-font"
+            className="w-full bg-[#43B047] hover:bg-[#4ed453] text-white py-5 border-4 border-black font-pixel text-sm transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
           >
             حفظ البطاقة
           </button>

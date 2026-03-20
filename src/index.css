@@ -1,14 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=JetBrains+Mono:wght@400;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=JetBrains+Mono:wght@400;800&family=Press+Start+2P&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Cairo", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-pixel: "Press Start 2P", cursive;
   
   --color-pitch-green: #1a472a;
   --color-stadium-blue: #001229;
   --color-broadcast-yellow: #eaff00;
+  --color-mario-red: #ff3e3e;
+  --color-mario-emerald: #00ff88;
 }
 
 @layer base {
