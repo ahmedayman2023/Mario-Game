@@ -490,8 +490,6 @@ const TimerPage = () => {
               />
             </div>
 
-            <TodoList />
-
             <div className="flex justify-center pt-4">
               <button
                 onClick={handleReset}
