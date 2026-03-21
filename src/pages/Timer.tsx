@@ -297,9 +297,25 @@ const TimerPage = () => {
         <Toaster />
         
         <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
-            <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري فاينمان للمذاكرة</h1>
+            
+            <div className="flex items-center gap-2">
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" 
+                alt="Real Madrid" 
+                className="w-8 h-8 object-contain"
+                referrerPolicy="no-referrer"
+              />
+              <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري فاينمان للمذاكرة</h1>
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg" 
+                alt="Manchester City" 
+                className="w-8 h-8 object-contain"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+
             <button 
               onClick={() => setIsBismillahOpen(true)}
               className="ml-4 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black px-3 py-1 rounded-full transition-colors scoreboard-font"
