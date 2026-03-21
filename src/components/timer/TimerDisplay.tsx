@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { FEYNMAN_STEPS } from '../../constants';
 
 interface TimerDisplayProps {
@@ -7,7 +7,6 @@ interface TimerDisplayProps {
   seconds: number;
   isActive: boolean;
   currentInterval: string | number;
-  progress: number; // النسبة المئوية من 0 إلى 100
   onTimeEdit: (time: number) => void;
   isBreakTime: boolean;
   isWarmup: boolean;
@@ -19,91 +18,114 @@ const TimerDisplay = memo(function TimerDisplay({
   seconds, 
   isActive, 
   currentInterval, 
-  progress,
   onTimeEdit, 
   isBreakTime,
   isWarmup,
   warmupIntervalIndex
 }: TimerDisplayProps) {
-
-  // حساب محيط الدائرة (القطر 120 * ط)
-  const radius = 170;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (progress / 100) * circumference;
-
   const getWarmupLabel = () => {
-    const labels = ['قناة اليوتيوب', 'تمارين التنفس', 'تسخين ذهني', 'تمارين الاستطالة'];
-    return labels[warmupIntervalIndex] || 'تسخين';
+    switch (warmupIntervalIndex) {
+      case 0: return 'قناة اليوتيوب';
+      case 1: return 'تمارين التنفس';
+      case 2: return 'تسخين ذهني';
+      case 3: return 'تمارين الاستطالة';
+      default: return 'تسخين';
+    }
+  };
+
+  const getWarmupSubLabel = () => {
+    switch (warmupIntervalIndex) {
+      case 0: return 'تجهيز الأجواء';
+      case 1: return 'ركز على تنفسك';
+      case 2: return 'نشط عقلك مع Lumosity';
+      case 3: return 'جهز نفسك للتعلم';
+      default: return 'استعد للتعلم';
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full py-12 text-white">
-      
-      {/* العنوان الفرعي والحالة */}
-      <div className="flex flex-col items-center mb-8">
-        <div className="px-6 py-1 border border-white/10 rounded-full bg-white/5 text-[12px] font-bold text-slate-300 mb-3 tracking-wide">
-          {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : 'جلسة تركيز'}
-        </div>
-        <div className="text-slate-500 text-sm font-light">
-          {isWarmup ? 'تجهيز الأجواء' : isBreakTime ? 'إعادة شحن' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.title || 'تعلم')}
-        </div>
-      </div>
-
-      {/* المؤقت مع الدائرة */}
-      <div className="relative flex items-center justify-center w-[400px] h-[400px]">
-        {/* الدائرة الخلفية الرمادية */}
-        <svg className="absolute w-full h-full -rotate-90" viewBox="0 0 400 400">
-          <circle
-            cx="200"
-            cy="200"
-            r={radius}
-            stroke="currentColor"
-            strokeWidth="8"
-            fill="transparent"
-            className="text-white/5"
-          />
-          {/* دائرة التقدم الملونة */}
-          <motion.circle
-            cx="200"
-            cy="200"
-            r={radius}
-            stroke="#D9F13F" // اللون الفسفوري من الصورة
-            strokeWidth="12"
-            fill="transparent"
-            strokeDasharray={circumference}
-            initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset: offset }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            strokeLinecap="round"
-          />
-        </svg>
-
-        {/* أرقام المؤقت */}
-        <div 
-          className="z-10 text-[8rem] md:text-[9rem] font-bold tracking-tighter cursor-pointer select-none"
-          onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
+    <div className="flex flex-col items-center justify-center py-6 md:py-10">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={isWarmup ? `warmup-${warmupIntervalIndex}` : isBreakTime ? 'break' : 'study'}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="flex items-center gap-2 mb-4"
         >
-          <span className="tabular-nums">{String(minutes).padStart(2, '0')}</span>
-          <span className={`transition-opacity duration-500 ${isActive ? 'animate-pulse' : 'opacity-20'}`}>:</span>
-          <span className="tabular-nums">{String(seconds).padStart(2, '0')}</span>
-        </div>
+          <div className={`px-3 py-1 text-black text-[10px] font-black uppercase tracking-widest rounded-sm ${isWarmup ? 'bg-amber-500' : 'bg-broadcast-yellow'}`}>
+            {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.title || `المرحلة ${currentInterval}`)}
+          </div>
+          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 max-w-[200px] truncate">
+            {isWarmup ? getWarmupSubLabel() : isBreakTime ? 'إعادة شحن' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.description || 'الجلسة جارية')}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="flex flex-row items-center justify-center gap-4 sm:gap-8 md:gap-12">
+        <motion.div 
+          className={`text-[5rem] sm:text-[8rem] md:text-[10rem] font-black scoreboard-font tracking-tighter leading-none select-none cursor-pointer transition-colors ${isWarmup ? 'text-amber-500' : isBreakTime ? 'text-broadcast-yellow' : 'text-white'}`}
+          onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
+          animate={isActive && !isBreakTime && !isWarmup ? {
+            opacity: [1, 0.8, 1],
+            transition: { duration: 1, repeat: Infinity, ease: "linear" }
+          } : {}}
+        >
+          {String(minutes).padStart(2, '0')}<span className="animate-pulse">:</span>{String(seconds).padStart(2, '0')}
+        </motion.div>
+
+        {!isWarmup && Number(currentInterval) > 0 && (
+          <motion.div 
+            initial={{ scale: 0, opacity: 0, x: 20 }}
+            animate={{ scale: 1, opacity: 1, x: 0 }}
+            className="flex-shrink-0"
+          >
+            <div className="relative w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 flex items-center justify-center">
+              {/* Outer Glow Circle */}
+              <div className="absolute inset-0 rounded-full border-4 border-mario-emerald/20 animate-pulse shadow-[0_0_30px_rgba(16,185,129,0.3)]" />
+              
+              {/* Main Circle */}
+              <div className="absolute inset-2 rounded-full border-2 border-mario-emerald/40 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center">
+                <div className="text-[7px] sm:text-[9px] font-black text-mario-emerald uppercase tracking-widest leading-none mb-1">إنجاز</div>
+                <div className="text-lg sm:text-2xl md:text-3xl font-black text-white scoreboard-font leading-none">
+                  {isBreakTime 
+                    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
+                    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0)}%
+                </div>
+              </div>
+              
+              {/* Progress Ring (SVG) */}
+              <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  strokeDasharray="283"
+                  strokeDashoffset={283 - (283 * (isBreakTime 
+                    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
+                    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0))) / 100}
+                  className="text-mario-emerald transition-all duration-1000 ease-out"
+                />
+              </svg>
+            </div>
+          </motion.div>
+        )}
       </div>
 
-      {/* شريط المعلومات السفلي */}
-      <div className="grid grid-cols-2 gap-12 w-full max-w-sm mt-12 pt-8 border-t border-white/5">
-        <div className="flex flex-col items-center border-r border-white/10 pr-12">
-          <span className="text-[10px] uppercase tracking-widest text-slate-500 mb-3">الحالة</span>
-          <div className="bg-white text-black px-4 py-1.5 rounded-full text-[11px] font-black flex items-center gap-2">
-             <div className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`} />
-             {isActive ? 'جاري العمل' : 'متوقف مؤقتاً'}
+      <div className="mt-6 flex items-center gap-8">
+        <div className="flex flex-col items-center">
+          <div className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">الحالة</div>
+          <div className={`text-xs font-black uppercase tracking-widest ${isActive ? 'text-mario-emerald' : 'text-mario-red'}`}>
+            {isActive ? 'لعب' : 'متوقف'}
           </div>
         </div>
-
+        <div className="w-px h-8 bg-white/10" />
         <div className="flex flex-col items-center">
-          <span className="text-[10px] uppercase tracking-widest text-slate-500 mb-3">التركيز</span>
-          <div className="border border-white/20 px-4 py-1.5 rounded-full text-[11px] font-black tracking-tighter">
-             مرتفع جداً
-          </div>
+          <div className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">الشدة</div>
+          <div className="text-xs font-black uppercase tracking-widest text-white">عالية</div>
         </div>
       </div>
     </div>
