@@ -16,7 +16,7 @@ import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell } from
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
-import { INTERVALS, STORAGE_KEYS } from "../constants";
+import { INTERVALS, STORAGE_KEYS, RECOVERY_VIDEOS } from "../constants";
 import { playChime } from "../utils/audio";
 import { Score, TimerState } from "../types";
 
@@ -380,15 +380,27 @@ const TimerPage = () => {
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تنفس الصندوق</span>
                 </button>
-                <button
-                  onClick={() => setIsExercisesOpen(true)}
-                  className="py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Dumbbell size={20} className="text-amber-400" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تمارين موجهة</span>
-                </button>
+                
+                {/* Individualized Exercises */}
+                {RECOVERY_VIDEOS.map((video) => (
+                  <button
+                    key={video.id}
+                    onClick={() => window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank')}
+                    className="py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform overflow-hidden">
+                      <img 
+                        src={video.thumbnail} 
+                        alt={video.title} 
+                        className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font text-center px-2 line-clamp-1">
+                      {video.title}
+                    </span>
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -482,14 +494,6 @@ const TimerPage = () => {
         title="استعادة التركيز"
       >
         <BoxBreathing />
-      </Modal>
-
-      <Modal 
-        isOpen={isExercisesOpen} 
-        onClose={() => setIsExercisesOpen(false)}
-        title="تمارين الاستشفاء البدني"
-      >
-        <RecoveryVideos />
       </Modal>
 
       <Modal 
