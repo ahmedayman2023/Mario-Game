@@ -16,7 +16,7 @@ import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell } from
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
-import { INTERVALS, STORAGE_KEYS } from "../constants";
+import { INTERVALS, STORAGE_KEYS, RECOVERY_VIDEOS } from "../constants";
 import { playChime } from "../utils/audio";
 import { Score, TimerState } from "../types";
 
@@ -292,14 +292,30 @@ const TimerPage = () => {
   }
 
   return (
-    <div className="min-h-screen stadium-gradient">
-      <div className="max-w-5xl mx-auto px-4 py-6 md:py-10 relative">
+    <div className="stadium-gradient">
+      <div className="relative p-6 md:p-10">
         <Toaster />
         
         <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
-            <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري فاينمان للمذاكرة</h1>
+            
+            <div className="flex items-center gap-2">
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" 
+                alt="Real Madrid" 
+                className="w-8 h-8 object-contain"
+                referrerPolicy="no-referrer"
+              />
+              <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري فاينمان للمذاكرة</h1>
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg" 
+                alt="Manchester City" 
+                className="w-8 h-8 object-contain"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+
             <button 
               onClick={() => setIsBismillahOpen(true)}
               className="ml-4 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black px-3 py-1 rounded-full transition-colors scoreboard-font"
@@ -381,15 +397,27 @@ const TimerPage = () => {
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تنفس الصندوق</span>
                 </button>
-                <button
-                  onClick={() => setIsExercisesOpen(true)}
-                  className="py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Dumbbell size={20} className="text-amber-400" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تمارين موجهة</span>
-                </button>
+                
+                {/* Individualized Exercises */}
+                {RECOVERY_VIDEOS.map((video) => (
+                  <button
+                    key={video.id}
+                    onClick={() => window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank')}
+                    className="py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform overflow-hidden">
+                      <img 
+                        src={video.thumbnail} 
+                        alt={video.title} 
+                        className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font text-center px-2 line-clamp-1">
+                      {video.title}
+                    </span>
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -463,8 +491,6 @@ const TimerPage = () => {
               />
             </div>
 
-            <TodoList />
-
             <div className="flex justify-center pt-4">
               <button
                 onClick={handleReset}
@@ -483,14 +509,6 @@ const TimerPage = () => {
         title="استعادة التركيز"
       >
         <BoxBreathing />
-      </Modal>
-
-      <Modal 
-        isOpen={isExercisesOpen} 
-        onClose={() => setIsExercisesOpen(false)}
-        title="تمارين الاستشفاء البدني"
-      >
-        <RecoveryVideos />
       </Modal>
 
       <Modal 

@@ -14,7 +14,7 @@ export default function Layout({ children, currentPageName }: { children: React.
       </div>
 
       
-      <main className={`max-w-5xl mx-auto px-4 sm:px-6 py-10 ${['Timer', 'SRS'].includes(currentPageName) ? 'text-white' : 'text-slate-100 rounded-3xl ring-1 ring-emerald-500/15 bg-slate-900/30 shadow-[0_0_40px_-10px_rgba(16,185,129,0.35)]'}`}>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10 text-slate-100 rounded-3xl ring-1 ring-emerald-500/15 bg-slate-900/40 backdrop-blur-md shadow-[0_0_40px_-10px_rgba(16,185,129,0.35)]">
         {children}
       </main>
 
@@ -32,7 +32,7 @@ export default function Layout({ children, currentPageName }: { children: React.
           className={`flex flex-col items-center gap-1 transition-all ${currentPageName === 'SRS' ? 'text-emerald-400 scale-110' : 'text-slate-500 hover:text-slate-300'}`}
         >
           <Brain size={20} />
-          <span className="text-[8px] font-black uppercase tracking-widest">التكرار المتباعد</span>
+          <span className="text-[8px] font-black uppercase tracking-widest">التكرار</span>
         </Link>
       </nav>
     </div>
