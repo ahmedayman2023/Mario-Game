@@ -7,6 +7,7 @@ interface TimerDisplayProps {
   seconds: number;
   isActive: boolean;
   currentInterval: string | number;
+  progress: number;
   onTimeEdit: (time: number) => void;
   isBreakTime: boolean;
   isWarmup: boolean;
@@ -18,6 +19,7 @@ const TimerDisplay = memo(function TimerDisplay({
   seconds, 
   isActive, 
   currentInterval, 
+  progress,
   onTimeEdit, 
   isBreakTime,
   isWarmup,
@@ -62,17 +64,37 @@ const TimerDisplay = memo(function TimerDisplay({
         </motion.div>
       </AnimatePresence>
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-12 md:gap-20">
-        <motion.div 
-          className={`text-[8rem] sm:text-[10rem] md:text-[12rem] font-mono font-medium tracking-tight leading-none select-none cursor-pointer transition-colors ${isWarmup ? 'text-warning' : isBreakTime ? 'text-success' : 'text-ink'}`}
-          onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
-          animate={isActive && !isBreakTime && !isWarmup ? {
-            scale: [1, 1.01, 1],
-            transition: { duration: 1, repeat: Infinity }
-          } : {}}
-        >
-          {String(minutes).padStart(2, '0')}<span className="opacity-20">:</span>{String(seconds).padStart(2, '0')}
-        </motion.div>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-12 md:gap-20">
+          <motion.div 
+            className={`text-[8rem] sm:text-[10rem] md:text-[12rem] font-mono font-medium tracking-tight leading-none select-none cursor-pointer transition-colors ${isWarmup ? 'text-warning' : isBreakTime ? 'text-success' : 'text-ink'}`}
+            onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
+            animate={isActive && !isBreakTime && !isWarmup ? {
+              scale: [1, 1.01, 1],
+              transition: { duration: 1, repeat: Infinity }
+            } : {}}
+          >
+            {String(minutes).padStart(2, '0')}<span className="opacity-20">:</span>{String(seconds).padStart(2, '0')}
+          </motion.div>
+
+          <motion.div 
+            className="flex flex-col items-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="text-[10px] font-black text-white/80 uppercase tracking-widest mb-1 scoreboard-font">التقدم</span>
+            <div className="w-20 h-20 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 shadow-2xl">
+              <motion.span 
+                className="text-2xl font-black text-white scoreboard-font"
+                key={Math.round(progress)}
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                {Math.round(progress)}%
+              </motion.span>
+            </div>
+          </motion.div>
 
         {!isWarmup && Number(currentInterval) > 0 && (
           <motion.div 
