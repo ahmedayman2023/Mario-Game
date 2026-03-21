@@ -14,7 +14,7 @@ export default function Layout({ children, currentPageName }: { children: React.
       </div>
 
       
-      <main className={`max-w-5xl mx-auto px-4 sm:px-6 py-10 ${['Timer', 'SRS'].includes(currentPageName) ? 'text-white' : 'text-slate-100 rounded-3xl ring-1 ring-emerald-500/15 bg-slate-900/30 shadow-[0_0_40px_-10px_rgba(16,185,129,0.35)]'}`}>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10 text-slate-100 rounded-3xl ring-1 ring-emerald-500/15 bg-slate-900/40 backdrop-blur-md shadow-[0_0_40px_-10px_rgba(16,185,129,0.35)]">
         {children}
       </main>
 
