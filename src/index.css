@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=JetBrains+Mono:wght@400;800&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Cairo:wght@200..1000&family=JetBrains+Mono:wght@400;800&family=Press+Start+2P&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Noto Kufi Arabic", sans-serif;
+  --font-cairo: "Cairo", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-pixel: "Press Start 2P", cursive;
   
