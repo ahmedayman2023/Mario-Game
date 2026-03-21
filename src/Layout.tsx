@@ -7,32 +7,42 @@ export default function Layout({ children, currentPageName }: { children: React.
   const location = useLocation();
 
   return (
-    <div className="dark min-h-screen relative">
-      <div className="absolute inset-0 -z-10">
-        <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d250f1a460005e70e7e458/a17066f78_SuperMarioMobileWallpaper.jpg" alt="App background" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/50" />
+    <div className="dark min-h-screen relative overflow-x-hidden">
+      <div className="fixed inset-0 -z-10">
+        <img 
+          src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=2070&auto=format&fit=crop" 
+          alt="Stadium background" 
+          className="w-full h-full object-cover opacity-40" 
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-stadium-blue/80 via-stadium-blue/90 to-black" />
       </div>
 
-      
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10 text-slate-100 rounded-3xl ring-1 ring-emerald-500/15 bg-slate-900/40 backdrop-blur-md shadow-[0_0_40px_-10px_rgba(16,185,129,0.35)]">
-        {children}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 pb-32">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[80vh]">
+          {children}
+        </div>
       </main>
 
       {/* Navigation Bar */}
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 glass px-6 py-4 rounded-[2rem] border-white/10 shadow-2xl z-50 flex items-center gap-12">
+      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 glass px-8 py-5 rounded-[2.5rem] border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 flex items-center gap-16">
         <Link 
           to="/" 
-          className={`flex flex-col items-center gap-1 transition-all ${currentPageName === 'Timer' ? 'text-emerald-400 scale-110' : 'text-slate-500 hover:text-slate-300'}`}
+          className={`flex flex-col items-center gap-2 transition-all group ${currentPageName === 'Timer' ? 'text-mario-emerald scale-110' : 'text-slate-500 hover:text-slate-300'}`}
         >
-          <Clock size={20} />
-          <span className="text-[8px] font-black uppercase tracking-widest">المؤقت</span>
+          <div className={`p-2 rounded-xl transition-colors ${currentPageName === 'Timer' ? 'bg-mario-emerald/20' : 'group-hover:bg-white/5'}`}>
+            <Clock size={24} />
+          </div>
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] scoreboard-font">المؤقت</span>
         </Link>
         <Link 
           to="/SRS" 
-          className={`flex flex-col items-center gap-1 transition-all ${currentPageName === 'SRS' ? 'text-emerald-400 scale-110' : 'text-slate-500 hover:text-slate-300'}`}
+          className={`flex flex-col items-center gap-2 transition-all group ${currentPageName === 'SRS' ? 'text-mario-emerald scale-110' : 'text-slate-500 hover:text-slate-300'}`}
         >
-          <Brain size={20} />
-          <span className="text-[8px] font-black uppercase tracking-widest">التكرار</span>
+          <div className={`p-2 rounded-xl transition-colors ${currentPageName === 'SRS' ? 'bg-mario-emerald/20' : 'group-hover:bg-white/5'}`}>
+            <Brain size={24} />
+          </div>
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] scoreboard-font">التكرار</span>
         </Link>
       </nav>
     </div>

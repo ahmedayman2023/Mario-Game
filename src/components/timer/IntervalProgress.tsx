@@ -40,19 +40,19 @@ const IntervalProgress = memo(function IntervalProgress({
       <div className="space-y-4">
         <div className="flex items-center justify-between px-2">
           <div className="flex flex-col">
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{title}</div>
-            <div className="text-[8px] font-bold text-slate-600 uppercase tracking-widest mt-0.5">
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 scoreboard-font">{"الخطوات"}</div>
+            <div className="text-[8px] font-black text-slate-600 uppercase tracking-widest mt-0.5 scoreboard-font">
               الخطوة {isPhaseCompleted ? list.length : isPhaseActive ? (currentIntervalIndex - startIndex + 1) : 0} من {list.length}
             </div>
           </div>
           {isPhaseActive && (
-            <div className="flex items-center gap-1 text-[10px] font-black text-mario-emerald uppercase tracking-widest animate-pulse">
+            <div className="flex items-center gap-1 text-[10px] font-black text-mario-emerald uppercase tracking-widest animate-pulse scoreboard-font">
               <span>المرحلة النشطة</span>
               <ChevronRight size={10} />
             </div>
           )}
           {isPhaseCompleted && (
-            <div className="flex items-center gap-1 text-[10px] font-black text-amber-400 uppercase tracking-widest">
+            <div className="flex items-center gap-1 text-[10px] font-black text-amber-400 uppercase tracking-widest scoreboard-font">
               <span>مكتمل</span>
               <Star size={10} fill="currentColor" />
             </div>
@@ -73,14 +73,14 @@ const IntervalProgress = memo(function IntervalProgress({
                 initial={false}
                 animate={isActive ? { scale: 1.02, zIndex: 10 } : { scale: 1, zIndex: 1 }}
                 className={`
-                  flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-500
+                  flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500
                   ${isActive ? 'bg-mario-emerald border-white text-black shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 
                     isCompleted ? 'bg-mario-emerald/20 border-mario-emerald/40 text-mario-emerald' : 
-                    'glass border-white/5 text-slate-400'}
+                    'bg-white/5 border-white/5 text-slate-400'}
                 `}
               >
                 <div className={`
-                  w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center text-xs font-black border
+                  w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center text-xs font-black border scoreboard-font
                   ${isActive ? 'bg-white text-black border-black/10' : 
                     isCompleted ? 'bg-mario-emerald text-white border-none' : 
                     'bg-white/5 border-white/10'}
@@ -89,16 +89,16 @@ const IntervalProgress = memo(function IntervalProgress({
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <div className={`text-[14px] font-black uppercase tracking-tight truncate ${isActive ? 'text-black' : 'text-white'}`}>
+                  <div className={`text-[14px] font-black uppercase tracking-tight truncate scoreboard-font ${isActive ? 'text-black' : 'text-white'}`}>
                     {step?.title}
                   </div>
-                  <div className={`text-[12px] font-bold leading-relaxed mt-1 line-clamp-2 ${isActive ? 'text-black/70' : 'text-slate-500'}`}>
+                  <div className={`text-[12px] font-bold leading-relaxed mt-1 line-clamp-2 scoreboard-font ${isActive ? 'text-black/70' : 'text-slate-500'}`}>
                     {step?.description}
                   </div>
                 </div>
 
                 <div className="flex flex-col items-center gap-1">
-                  <div className={`text-[8px] font-black uppercase tracking-widest ${isActive ? 'text-black/60' : 'text-slate-500'}`}>
+                  <div className={`text-[8px] font-black uppercase tracking-widest scoreboard-font ${isActive ? 'text-black/60' : 'text-slate-500'}`}>
                     {duration} د
                   </div>
                   {isCompleted && (

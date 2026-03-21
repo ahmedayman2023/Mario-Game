@@ -340,7 +340,6 @@ const TimerPage = () => {
                   minutes={Math.floor(timeLeft / 60)} 
                   seconds={timeLeft % 60} 
                   isActive={isActive}
-                  progress={progress}
                   currentInterval={currentIntervalIndex + 1}
                   onTimeEdit={handleTimeEdit}
                   isBreakTime={isBreakTime}

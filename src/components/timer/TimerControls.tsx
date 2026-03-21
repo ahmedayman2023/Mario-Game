@@ -25,7 +25,7 @@ const TimerControls = memo(function TimerControls({
   isBreakTime,
   isWarmup
 }: TimerControlsProps) {
-  const buttonBase = "flex items-center justify-center gap-3 px-8 py-4 rounded-lg transition-all font-bold text-[10px] disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-[0.2em] border ink-border paper-shadow";
+  const buttonBase = "flex items-center justify-center gap-3 px-8 py-4 rounded-2xl transition-all font-black text-[10px] disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-[0.2em] border scoreboard-font shadow-xl";
 
   return (
     <div className="flex flex-wrap justify-center items-center gap-6 mb-16">
@@ -37,7 +37,7 @@ const TimerControls = memo(function TimerControls({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             onClick={onPause}
-            className={`${buttonBase} bg-warning text-white hover:bg-warning/90`}
+            className={`${buttonBase} bg-broadcast-yellow text-black border-broadcast-yellow/50 hover:bg-broadcast-yellow/90`}
           >
             <Pause size={14} strokeWidth={3} />
             <span>توقف مؤقت</span>
@@ -49,7 +49,7 @@ const TimerControls = memo(function TimerControls({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             onClick={onStart}
-            className={`${buttonBase} bg-primary text-white hover:bg-primary/90`}
+            className={`${buttonBase} bg-mario-emerald text-white border-mario-emerald/50 hover:bg-mario-emerald/90`}
           >
             <Play size={14} strokeWidth={3} />
             <span>{isPaused ? 'استئناف' : isWarmup ? 'بدء' : 'ابدأ الآن'}</span>
@@ -59,7 +59,7 @@ const TimerControls = memo(function TimerControls({
 
       <button 
         onClick={onSkip}
-        className={`${buttonBase} bg-white text-ink hover:bg-paper`}
+        className={`${buttonBase} bg-white/10 text-white border-white/10 hover:bg-white/20`}
       >
         <SkipForward size={14} strokeWidth={3} />
         <span>تخطي</span>
@@ -67,7 +67,7 @@ const TimerControls = memo(function TimerControls({
 
       <button 
         onClick={onBack}
-        className={`${buttonBase} bg-white text-ink hover:bg-paper`}
+        className={`${buttonBase} bg-white/10 text-white border-white/10 hover:bg-white/20`}
       >
         <SkipBack size={14} strokeWidth={3} />
         <span>رجوع</span>
@@ -76,7 +76,7 @@ const TimerControls = memo(function TimerControls({
       <button 
         onClick={onStop}
         disabled={!isActive && !isPaused}
-        className={`${buttonBase} bg-danger/5 text-danger hover:bg-danger hover:text-white border-danger/20`}
+        className={`${buttonBase} bg-mario-red/20 text-mario-red border-mario-red/30 hover:bg-mario-red hover:text-white`}
       >
         <Square size={14} strokeWidth={3} />
         <span>إلغاء</span>
