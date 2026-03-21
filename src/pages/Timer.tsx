@@ -292,8 +292,8 @@ const TimerPage = () => {
   }
 
   return (
-    <div className="min-h-screen stadium-gradient">
-      <div className="max-w-5xl mx-auto px-4 py-6 md:py-10 relative">
+    <div className="stadium-gradient">
+      <div className="relative">
         <Toaster />
         
         <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">

@@ -32,7 +32,7 @@ export default function Layout({ children, currentPageName }: { children: React.
           className={`flex flex-col items-center gap-1 transition-all ${currentPageName === 'SRS' ? 'text-emerald-400 scale-110' : 'text-slate-500 hover:text-slate-300'}`}
         >
           <Brain size={20} />
-          <span className="text-[8px] font-black uppercase tracking-widest">التكرار المتباعد</span>
+          <span className="text-[8px] font-black uppercase tracking-widest">التكرار</span>
         </Link>
       </nav>
     </div>
