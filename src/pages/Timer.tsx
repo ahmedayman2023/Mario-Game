@@ -310,7 +310,7 @@ const TimerPage = () => {
           <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 scoreboard-font">
             <span>التعلم العميق</span>
             <div className="w-1 h-1 bg-slate-600 rounded-full" />
-            <span>تقنية فاينمان</span>
+            <span>ماريو</span>
           </div>
         </div>
 
