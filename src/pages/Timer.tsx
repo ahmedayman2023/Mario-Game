@@ -293,7 +293,7 @@ const TimerPage = () => {
 
   return (
     <div className="stadium-gradient">
-      <div className="relative">
+      <div className="relative p-6 md:p-10">
         <Toaster />
         
         <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
