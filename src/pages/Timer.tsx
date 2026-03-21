@@ -156,7 +156,7 @@ const TimerPage = () => {
           setIsBreathingOpen(true);
           toast({
             title: "الخطوة الثانية: التنفس",
-            description: "ركز على تنفسك لمدة 5 دقائق.",
+            description: "ركز على تنفسك لمدة دقيقتين.",
           });
           break;
         case 2: // Lumosity

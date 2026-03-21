@@ -25,9 +25,9 @@ export const FEYNMAN_STEPS = [
 
 // 3-step warmup sequence:
 // 1. YouTube (10 seconds for setup)
-// 2. Breathing (5 mins)
+// 2. Breathing (2 mins)
 // 3. Lumosity (5 mins)
-export const WARMUP_INTERVALS = [10/60, 5, 5]; 
+export const WARMUP_INTERVALS = [10/60, 2, 5]; 
 export const BREAK_DURATION = 2; // 2 minutes break between intervals
 
 export const STORAGE_KEYS = {
