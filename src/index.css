@@ -1,72 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=JetBrains+Mono:wght@400;800&family=Press+Start+2P&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Playfair Display", serif;
+  --font-sans: "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Noto Kufi Arabic", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-pixel: "Press Start 2P", cursive;
   
-  --color-primary: #2D3436;
-  --color-primary-hover: #000000;
-  --color-accent: #D4AF37; /* Gold */
-  --color-success: #556B2F; /* Olive Green */
-  --color-danger: #8B0000; /* Dark Red */
-  --color-warning: #B8860B; /* Dark Goldenrod */
-  --color-paper: #FDFCFB;
-  --color-ink: #1A1A1A;
+  --color-pitch-green: #1a472a;
+  --color-stadium-blue: #001229;
+  --color-broadcast-yellow: #eaff00;
+  --color-mario-red: #ff3e3e;
+  --color-mario-emerald: #00ff88;
 }
 
 @layer base {
   :root {
-    --background: 0 0% 99%;
-    --foreground: 0 0% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
-    --primary: 222 10% 20%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 10%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 45 50% 50%;
-    --accent-foreground: 0 0% 10%;
-    --destructive: 0 80% 40%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 222 10% 20%;
+    --background: 220 40% 5%;
+    --foreground: 0 0% 100%;
+    --card: 220 40% 8%;
+    --card-foreground: 0 0% 98%;
+    --border: 220 40% 15%;
     --radius: 0.5rem;
   }
 }
 
 @layer base {
   * {
-    border-color: var(--border);
+    border-color: rgba(255, 255, 255, 0.08);
   }
 
   body {
-    background-color: #FDFCFB;
-    color: #1A1A1A;
-    font-family: "IBM Plex Sans Arabic", sans-serif;
+    background-color: #000814;
+    color: white;
+    font-family: "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
     direction: rtl;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: "IBM Plex Sans Arabic", sans-serif;
-    font-weight: 700;
+  h1, h2, h3, .scoreboard-font {
+    font-family: "Noto Kufi Arabic", sans-serif;
+    letter-spacing: 0;
   }
 }
 
-.serif-text {
-  font-family: "Playfair Display", serif;
+.glass {
+  @apply bg-white/5 backdrop-blur-md border border-white/10;
 }
 
-.glass {
-  @apply bg-white/70 backdrop-blur-md border border-slate-200/50 shadow-sm;
+.stadium-gradient {
+  background: radial-gradient(circle at 50% -20%, #1a472a 0%, #000814 70%);
+}
+
+.scoreboard-panel {
+  @apply bg-[#001229] border-b-2 border-broadcast-yellow/50 shadow-2xl;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -75,12 +64,4 @@
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-.paper-shadow {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
-}
-
-.ink-border {
-  border-color: rgba(26, 26, 26, 0.1);
 }
