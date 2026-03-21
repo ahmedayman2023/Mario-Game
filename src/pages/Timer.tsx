@@ -9,11 +9,10 @@ import TimerControls from "../components/timer/TimerControls";
 import IntervalProgress from "../components/timer/IntervalProgress";
 import ScoreBar from "../components/timer/ScoreBar";
 import StudyTopicInput from "../components/timer/StudyTopicInput";
-import LevelPanel from "../components/timer/LevelPanel";
 import BoxBreathing from "../components/timer/BoxBreathing";
 import RecoveryVideos from "../components/timer/RecoveryVideos";
 import Modal from "../components/ui/Modal";
-import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell, ChevronRight } from 'lucide-react';
+import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
@@ -231,96 +230,96 @@ const TimerPage = () => {
     const isMeWinner = winner === 'me' || (isSessionComplete && score.me > score.time);
     
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-center p-6 bg-paper">
+      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-6 stadium-gradient">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mb-10 paper-shadow"
+          initial={{ scale: 0, rotate: -20 }}
+          animate={{ scale: 1, rotate: 0 }}
+          className={`w-32 h-32 ${isMeWinner ? 'bg-amber-500' : 'bg-slate-600'} rounded-full flex items-center justify-center mb-8 shadow-2xl`}
         >
-          <Trophy size={40} className="text-white" />
+          <Trophy size={64} className="text-white" />
         </motion.div>
         
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white border ink-border p-12 rounded-lg max-w-md w-full mb-10 paper-shadow"
+          className="bg-black/40 backdrop-blur-xl border border-white/10 p-8 rounded-3xl max-w-md w-full mb-8"
         >
-          <h2 className="text-4xl serif-text font-bold text-ink mb-6">
-            {isMeWinner ? "إنجاز عظيم" : "انقضى الوقت"}
+          <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-tighter scoreboard-font">
+            {isMeWinner ? "انتصار!" : "هزيمة!"}
           </h2>
           
-          <div className="flex justify-center items-center gap-16 my-10">
+          <div className="flex justify-center items-center gap-8 my-6">
             <div className="text-center">
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">التركيز</div>
-              <div className={`text-6xl font-serif ${isMeWinner ? 'text-accent' : 'text-slate-300'}`}>{score.me}</div>
+              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">أنا</div>
+              <div className={`text-4xl font-black scoreboard-font ${isMeWinner ? 'text-mario-emerald' : 'text-slate-400'}`}>{score.me}</div>
             </div>
-            <div className="text-3xl font-serif text-slate-100">/</div>
+            <div className="text-2xl font-black text-white/20 scoreboard-font">ضد</div>
             <div className="text-center">
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">الوقت</div>
-              <div className={`text-6xl font-serif ${!isMeWinner ? 'text-danger' : 'text-slate-300'}`}>{score.time}</div>
+              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">الوقت</div>
+              <div className={`text-4xl font-black scoreboard-font ${!isMeWinner ? 'text-mario-red' : 'text-slate-400'}`}>{score.time}</div>
             </div>
           </div>
 
-          <div className="pt-6 border-t ink-border">
-            <p className="text-slate-500 text-sm italic serif-text">
-              {isMeWinner ? "لقد انتصرت على الوقت اليوم." : "الوقت لا ينتظر أحداً، استعد للجولة القادمة."}
+          <div className="space-y-2">
+            <p className="text-slate-300 font-bold uppercase tracking-widest text-xs">
+              الفائز: <span className={isMeWinner ? 'text-mario-emerald' : 'text-mario-red'}>{isMeWinner ? 'أنا' : 'الوقت'}</span>
             </p>
+            <p className="text-slate-400 text-[10px] uppercase tracking-widest">
+              الخاسر: {isMeWinner ? 'الوقت' : 'أنا'}
+            </p>
+            {!isMeWinner && (
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-mario-red font-black uppercase tracking-[0.2em] text-sm mt-4 italic"
+              >
+                حظاً أوفر! (Hardluck)
+              </motion.p>
+            )}
           </div>
         </motion.div>
 
         <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={handleReset}
-          className="bg-primary text-white px-16 py-4 rounded-full font-bold shadow-xl hover:bg-primary-hover transition-all tracking-widest text-xs uppercase"
+          className="bg-mario-emerald text-black px-12 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl scoreboard-font"
         >
-          بدء رحلة جديدة
+          جلسة جديدة
         </motion.button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
-      <div className="max-w-6xl mx-auto px-6 py-12 relative">
+    <div className="min-h-screen stadium-gradient">
+      <div className="max-w-5xl mx-auto px-4 py-6 md:py-10 relative">
         <Toaster />
         
-        <header className="flex flex-col items-center mb-16 text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-4 mb-4"
-          >
-            <div className="h-[1px] w-12 bg-accent/30" />
-            <span className="text-[10px] font-bold text-accent uppercase tracking-[0.4em]">FEYNMAN STUDY LEAGUE</span>
-            <div className="h-[1px] w-12 bg-accent/30" />
-          </motion.div>
-          
-          <h1 className="text-5xl serif-text font-bold text-ink mb-6">محراب العلم</h1>
-          
-          <div className="flex items-center gap-8">
+        <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
+            <h1 className="text-xl font-black uppercase tracking-tight scoreboard-font">دوري فاينمان للمذاكرة</h1>
             <button 
               onClick={() => setIsBismillahOpen(true)}
-              className="text-xs font-bold text-slate-400 hover:text-ink transition-all border-b border-transparent hover:border-ink pb-1"
+              className="ml-4 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black px-3 py-1 rounded-full transition-colors scoreboard-font"
             >
               بسم الله
             </button>
-            <div className="w-1 h-1 bg-accent rounded-full" />
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-              التعلم العميق
-            </div>
           </div>
-        </header>
+          <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 scoreboard-font">
+            <span>التعلم العميق</span>
+            <div className="w-1 h-1 bg-slate-600 rounded-full" />
+            <span>تقنية فاينمان</span>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          <main className="lg:col-span-8 space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+          <div className="lg:col-span-8 flex flex-col">
             <ScoreBar me={score.me} time={score.time} onReset={handleReset} />
             
-            <div className="bg-white border ink-border rounded-lg paper-shadow p-12 flex flex-col items-center justify-center min-h-[500px] relative overflow-hidden">
-              {/* Subtle background pattern */}
-              <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-              
-              <div className="relative z-10 w-full flex flex-col items-center">
+            <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px] bg-black/20 rounded-lg border border-white/5 shadow-inner mb-6 relative overflow-hidden">
+              <div className="flex flex-col items-center justify-center w-full h-full">
                 <TimerDisplay 
                   minutes={Math.floor(timeLeft / 60)} 
                   seconds={timeLeft % 60} 
@@ -332,26 +331,24 @@ const TimerPage = () => {
                   warmupIntervalIndex={warmupIntervalIndex}
                 />
                 
-                <div className="mt-12">
-                  <TimerControls 
-                    isActive={isActive}
-                    isPaused={isPaused}
-                    onStart={() => { playChime('start', volume); handleStart(); }}
-                    onPause={handlePause}
-                    onStop={handleReset}
-                    onSkip={() => { 
-                      playChime('mandatory', volume); 
-                      if (isWarmup) {
-                        skipAllWarmup();
-                      } else {
-                        handleSkip();
-                      }
-                    }}
-                    onBack={handleBack}
-                    isBreakTime={isBreakTime}
-                    isWarmup={isWarmup}
-                  />
-                </div>
+                <TimerControls 
+                  isActive={isActive}
+                  isPaused={isPaused}
+                  onStart={() => { playChime('start', volume); handleStart(); }}
+                  onPause={handlePause}
+                  onStop={handleReset}
+                  onSkip={() => { 
+                    playChime('mandatory', volume); 
+                    if (isWarmup) {
+                      skipAllWarmup();
+                    } else {
+                      handleSkip();
+                    }
+                  }}
+                  onBack={handleBack}
+                  isBreakTime={isBreakTime}
+                  isWarmup={isWarmup}
+                />
               </div>
             </div>
 
@@ -363,80 +360,78 @@ const TimerPage = () => {
               isWarmup={isWarmup}
               warmupIntervalIndex={warmupIntervalIndex}
             />
-          </main>
+          </div>
 
-          <aside className="lg:col-span-4 space-y-10">
-            <LevelPanel level={fullCycles} cycles={fullCycles} />
-
-            <section className="bg-white border ink-border p-8 rounded-lg paper-shadow">
-              <div className="flex items-center gap-4 mb-8">
-                <Wind size={16} className="text-accent" />
-                <h3 className="text-xs font-bold text-ink uppercase tracking-widest">أدوات الاستشفاء</h3>
+          <div className="lg:col-span-4 space-y-4 md:space-y-6">
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Wind size={14} className="text-broadcast-yellow" />
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">أدوات الاستشفاء</h3>
+                </div>
               </div>
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setIsBreathingOpen(true)}
-                  className="group flex items-center justify-between p-4 bg-paper border ink-border rounded-lg transition-all hover:border-accent"
+                  className="py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-8 h-8 bg-success/10 rounded-full flex items-center justify-center">
-                      <Wind size={14} className="text-success" />
-                    </div>
-                    <span className="text-xs font-bold text-slate-700">تنفس الصندوق</span>
+                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Wind size={20} className="text-emerald-400" />
                   </div>
-                  <ChevronRight size={14} className="text-slate-300 group-hover:text-accent transition-colors" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تنفس الصندوق</span>
                 </button>
                 <button
                   onClick={() => setIsExercisesOpen(true)}
-                  className="group flex items-center justify-between p-4 bg-paper border ink-border rounded-lg transition-all hover:border-accent"
+                  className="py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex flex-col items-center justify-center gap-2 transition-all group"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-8 h-8 bg-danger/10 rounded-full flex items-center justify-center">
-                      <Dumbbell size={14} className="text-danger" />
-                    </div>
-                    <span className="text-xs font-bold text-slate-700">تمارين موجهة</span>
+                  <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Dumbbell size={20} className="text-amber-400" />
                   </div>
-                  <ChevronRight size={14} className="text-slate-300 group-hover:text-accent transition-colors" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تمارين موجهة</span>
                 </button>
               </div>
-            </section>
+            </div>
 
-            <section className="bg-white border ink-border p-8 rounded-lg paper-shadow">
-              <div className="flex items-center gap-4 mb-8">
-                <ExternalLink size={16} className="text-accent" />
-                <h3 className="text-xs font-bold text-ink uppercase tracking-widest">أجواء التركيز</h3>
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl overflow-hidden">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <ExternalLink size={14} className="text-broadcast-yellow" />
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">أجواء الملعب</h3>
+                </div>
               </div>
               
               <a 
                 href="https://www.youtube.com/watch?v=74cOUSKXMz0" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="group relative block aspect-video bg-ink rounded-lg overflow-hidden"
+                className="group relative block aspect-video bg-black rounded-md overflow-hidden border border-white/5 hover:border-broadcast-yellow/50 transition-colors"
               >
                 <img 
                   src="https://img.youtube.com/vi/74cOUSKXMz0/maxresdefault.jpg" 
-                  alt="Focus Video Thumbnail" 
-                  className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
+                  alt="Stadium Video Thumbnail" 
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <ExternalLink size={16} className="text-white" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                  <div className="w-12 h-12 bg-mario-red rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <ExternalLink size={20} className="text-white ml-0.5" />
                   </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">فتح الملعب</span>
                 </div>
               </a>
-              <p className="text-[10px] text-slate-400 mt-4 leading-relaxed italic serif-text">موسيقى هادئة لتعزيز التركيز العميق.</p>
-            </section>
+              <p className="text-[9px] text-slate-500 mt-3 italic scoreboard-font leading-relaxed">انقر لفتح أجواء الملعب في علامة تبويب جديدة لتجربة التعلم الكاملة.</p>
+            </div>
             
-            <section className="bg-white border ink-border p-8 rounded-lg paper-shadow">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-                  <Volume2 size={16} className="text-accent" />
-                  <h3 className="text-xs font-bold text-ink uppercase tracking-widest">الصوت</h3>
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Volume2 size={14} className="text-broadcast-yellow" />
+                  <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">التحكم في الصوت</h3>
                 </div>
-                <span className="text-[10px] font-bold text-slate-400">{Math.round(volume * 100)}%</span>
+                <span className="text-[10px] font-black text-white scoreboard-font">{Math.round(volume * 100)}%</span>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                {volume === 0 ? <VolumeX size={16} className="text-slate-500" /> : <Volume2 size={16} className="text-broadcast-yellow" />}
                 <input 
                   type="range" 
                   min="0" 
@@ -448,15 +443,15 @@ const TimerPage = () => {
                     setVolume(val);
                     localStorage.setItem(STORAGE_KEYS.VOLUME, val.toString());
                   }}
-                  className="flex-1 h-1 bg-slate-100 rounded-full appearance-none cursor-pointer accent-primary"
+                  className="flex-1 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-broadcast-yellow"
                 />
               </div>
-            </section>
+            </div>
 
-            <section className="bg-white border ink-border p-8 rounded-lg paper-shadow">
-              <div className="flex items-center gap-4 mb-8">
-                <Sparkles size={16} className="text-accent" />
-                <h3 className="text-xs font-bold text-ink uppercase tracking-widest">المهمة الحالية</h3>
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles size={14} className="text-broadcast-yellow" />
+                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">التركيز الحالي</h3>
               </div>
               <StudyTopicInput
                 topic={currentTopic}
@@ -465,26 +460,26 @@ const TimerPage = () => {
                 isActive={isActive}
                 isPaused={isPaused} 
               />
-            </section>
+            </div>
 
             <TodoList />
 
-            <div className="flex justify-center pt-8">
+            <div className="flex justify-center pt-4">
               <button
                 onClick={handleReset}
-                className="text-[10px] font-bold text-slate-300 hover:text-danger transition-colors uppercase tracking-widest"
+                className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-mario-red transition-colors disabled:opacity-30 scoreboard-font"
                 disabled={isActive}>
-                إلغاء الجلسة
+                إلغاء الحملة
               </button>
             </div>
-          </aside>
+          </div>
         </div>
       </div>
 
       <Modal 
         isOpen={isBreathingOpen} 
         onClose={() => setIsBreathingOpen(false)}
-        title="استعادة السكينة"
+        title="استعادة التركيز"
       >
         <BoxBreathing />
       </Modal>
@@ -492,7 +487,7 @@ const TimerPage = () => {
       <Modal 
         isOpen={isExercisesOpen} 
         onClose={() => setIsExercisesOpen(false)}
-        title="تنشيط الجسد"
+        title="تمارين الاستشفاء البدني"
       >
         <RecoveryVideos />
       </Modal>
@@ -500,22 +495,22 @@ const TimerPage = () => {
       <Modal 
         isOpen={isBismillahOpen} 
         onClose={() => setIsBismillahOpen(false)}
-        title="بداية الرحلة"
+        title="بداية مباركة"
       >
-        <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="flex flex-col items-center justify-center py-10 text-center">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-6xl serif-text font-bold text-ink mb-8"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="text-5xl font-black text-emerald-400 scoreboard-font mb-4"
           >
             بسم الله
           </motion.div>
-          <p className="text-slate-400 text-xl font-serif italic mb-12">
+          <p className="text-slate-400 text-sm font-bold">
             "وقل ربي زدني علماً"
           </p>
           <button
             onClick={() => setIsBismillahOpen(false)}
-            className="bg-primary text-white px-16 py-4 rounded-full font-bold transition-all shadow-xl hover:bg-primary-hover tracking-widest text-xs uppercase"
+            className="mt-8 bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-2 rounded-xl font-black transition-colors"
           >
             استعنا بالله
           </button>
@@ -525,25 +520,25 @@ const TimerPage = () => {
       <Modal 
         isOpen={isSessionModalOpen} 
         onClose={() => setIsSessionModalOpen(false)}
-        title="حصاد العلم"
+        title="تمت المهمة بنجاح"
       >
-        <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="flex flex-col items-center justify-center py-10 text-center">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-6xl serif-text font-bold text-success mb-10"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="text-5xl font-black text-emerald-400 scoreboard-font mb-6 leading-relaxed px-4"
           >
             الحمد لله
           </motion.div>
-          <div className="w-24 h-24 bg-success/5 rounded-full flex items-center justify-center mb-12">
-            <Trophy className="text-success" size={48} />
+          <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6">
+            <Trophy className="text-emerald-400" size={32} />
           </div>
           <button
             onClick={() => {
               setIsSessionModalOpen(false);
               setHasAcknowledgedCompletion(true);
             }}
-            className="bg-success text-white px-16 py-4 rounded-full font-bold transition-all shadow-xl hover:bg-success/90 tracking-widest text-xs uppercase"
+            className="bg-emerald-600 hover:bg-emerald-500 text-white px-10 py-3 rounded-xl font-black transition-colors shadow-lg shadow-emerald-900/20"
           >
             تقبل الله
           </button>
@@ -556,13 +551,13 @@ const TimerPage = () => {
               initial={{ opacity: 0, y: 50, x: '-50%' }}
               animate={{ opacity: 1, y: 0, x: '-50%' }}
               exit={{ opacity: 0, scale: 0.9, x: '-50%' }}
-              className={`fixed bottom-12 left-1/2 px-10 py-4 rounded-full shadow-2xl z-50 font-bold text-[10px] uppercase tracking-[0.2em] border-none ${
-                isSessionComplete ? "bg-primary text-white" :
-                isWarmup ? "bg-danger text-white" :
-                isBreakTime ? "bg-success text-white" : "bg-accent text-white"
+              className={`fixed bottom-10 left-1/2 px-8 py-4 rounded-2xl shadow-2xl z-50 font-black uppercase tracking-widest text-xs ${
+                isSessionComplete ? "bg-purple-600 text-white" :
+                isWarmup ? "bg-amber-600 text-white" :
+                isBreakTime ? "bg-emerald-600 text-white" : "bg-blue-600 text-white"
               }`}
             >
-              {isSessionComplete ? "مهمة مكتملة" : isWarmup ? "جاري التسخين" : isBreakTime ? "استراحة" : "تم الإنجاز"}
+              {isSessionComplete ? "هدددددددف!" : isWarmup ? "جاري التسخين..." : isBreakTime ? "بدأ الاستراحة" : "تم إكمال الخطوة"}
             </motion.div>
         )}
       </AnimatePresence>
