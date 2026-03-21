@@ -1,5 +1,8 @@
 {
   "name": "feynman-study-league",
+  "description": "A gamified study timer based on the Feynman Technique with a football stadium theme.",
+  "author": "Feynman Study League Team",
+  "license": "MIT",
   "private": true,
   "version": "0.0.0",
   "type": "module",
