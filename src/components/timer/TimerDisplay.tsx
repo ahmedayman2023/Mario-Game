@@ -64,6 +64,16 @@ const TimerDisplay = memo(function TimerDisplay({
         </motion.div>
       </AnimatePresence>
 
+              <div className="absolute inset-2 rounded-full border-2 border-mario-emerald/40 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center">
+                <div className="text-[7px] sm:text-[9px] font-black text-mario-emerald uppercase tracking-widest leading-none mb-1">إنجاز</div>
+                <div className="text-lg sm:text-2xl md:text-3xl font-black text-white scoreboard-font leading-none">
+                  {FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage}%
+                  {isBreakTime 
+                    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
+                    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0)}%
+                </div>
+              </div>
+
         <div className="flex flex-col sm:flex-row items-center justify-center gap-12 md:gap-20">
           <motion.div 
             className={`text-[8rem] sm:text-[10rem] md:text-[12rem] font-mono font-medium tracking-tight leading-none select-none cursor-pointer transition-colors ${isWarmup ? 'text-warning' : isBreakTime ? 'text-success' : 'text-ink'}`}
