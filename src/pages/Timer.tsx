@@ -13,7 +13,7 @@ import BoxBreathing from "../components/timer/BoxBreathing";
 import MentalWarmup from "../components/timer/MentalWarmup";
 import RecoveryVideos from "../components/timer/RecoveryVideos";
 import Modal from "../components/ui/Modal";
-import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell } from 'lucide-react';
+import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell, Zap } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
@@ -360,6 +360,25 @@ const TimerPage = () => {
                   isBreakTime={isBreakTime}
                   isWarmup={isWarmup}
                 />
+              </div>
+            </div>
+
+            {/* Quick Timers Bar */}
+            <div className="mb-6 bg-black/20 p-6 rounded-2xl border border-white/5">
+              <div className="flex items-center gap-2 mb-4">
+                <Zap size={14} className="text-broadcast-yellow" />
+                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">مؤقتات سريعة (دقائق)</h3>
+              </div>
+              <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                {[1, 1, 1, 2, 5, 2, 5, 2, 5, 5, 2, 5, 10, 2, 15, 3, 15, 4, 5].map((mins, tIdx) => (
+                  <button
+                    key={tIdx}
+                    onClick={() => handleTimeEdit(mins * 60)}
+                    className="h-10 bg-broadcast-yellow text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-black text-xs flex items-center justify-center active:shadow-none active:translate-x-0.5 active:translate-y-0.5 hover:bg-[#ffe000] transition-all"
+                  >
+                    {mins}
+                  </button>
+                ))}
               </div>
             </div>
 

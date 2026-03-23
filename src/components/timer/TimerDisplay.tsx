@@ -43,6 +43,9 @@ const TimerDisplay = memo(function TimerDisplay({
     }
   };
 
+  const currentStep = !isWarmup && !isBreakTime ? FEYNMAN_STEPS[Number(currentInterval) - 1] : null;
+  const completionPercentage = Math.round((Number(currentInterval) / FEYNMAN_STEPS.length) * 100);
+
   return (
     <div className="flex flex-col items-center justify-center py-6 md:py-10">
       <AnimatePresence mode="wait">
@@ -54,10 +57,10 @@ const TimerDisplay = memo(function TimerDisplay({
           className="flex items-center gap-2 mb-4"
         >
           <div className={`px-3 py-1 text-black text-[10px] font-black uppercase tracking-widest rounded-sm ${isWarmup ? 'bg-amber-500' : 'bg-broadcast-yellow'}`}>
-            {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.title || `المرحلة ${currentInterval}`)}
+            {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : (currentStep?.title || `الجلسة ${currentInterval}`)}
           </div>
           <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 max-w-[200px] truncate">
-            {isWarmup ? getWarmupSubLabel() : isBreakTime ? 'إعادة شحن' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.description || 'الجلسة جارية')}
+            {isWarmup ? getWarmupSubLabel() : isBreakTime ? 'إعادة شحن' : 'الجلسة جارية'}
           </div>
         </motion.div>
       </AnimatePresence>
@@ -88,9 +91,7 @@ const TimerDisplay = memo(function TimerDisplay({
               <div className="absolute inset-2 rounded-full border-2 border-mario-emerald/40 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center">
                 <div className="text-[7px] sm:text-[9px] font-black text-mario-emerald uppercase tracking-widest leading-none mb-1">إنجاز</div>
                 <div className="text-lg sm:text-2xl md:text-3xl font-black text-white scoreboard-font leading-none">
-                  {isBreakTime 
-                    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
-                    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0)}%
+                  {completionPercentage}%
                 </div>
               </div>
               
@@ -104,9 +105,7 @@ const TimerDisplay = memo(function TimerDisplay({
                   stroke="currentColor"
                   strokeWidth="4"
                   strokeDasharray="283"
-                  strokeDashoffset={283 - (283 * (isBreakTime 
-                    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
-                    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0))) / 100}
+                  strokeDashoffset={283 - (283 * completionPercentage) / 100}
                   className="text-mario-emerald transition-all duration-1000 ease-out"
                 />
               </svg>

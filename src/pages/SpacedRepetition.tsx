@@ -302,6 +302,28 @@ const SpacedRepetition = () => {
             </div>
           </div>
 
+          {/* Quick Timers Bar - Global */}
+          <div className="mb-8 bg-black/20 p-6 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <div className="text-[8px] font-pixel text-slate-500 uppercase tracking-widest mb-4">مؤقتات سريعة (دقائق)</div>
+            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+              {[1, 1, 1, 2, 5, 2, 5, 2, 5, 5, 2, 5, 10, 2, 15, 3, 15, 4, 5].map((mins, tIdx) => (
+                <button
+                  key={tIdx}
+                  onClick={() => {
+                    // Start a general timer or just show a toast for now if no card is selected
+                    toast({
+                      title: `مؤقت ${mins} دقائق`,
+                      description: "تم اختيار المؤقت السريع.",
+                    });
+                  }}
+                  className="flex-shrink-0 min-w-[48px] h-12 bg-[#FBD000] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-pixel text-xs flex items-center justify-center active:shadow-none active:translate-x-1 active:translate-y-1 hover:bg-[#ffe04d]"
+                >
+                  {mins}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Start Button - Big Pipe Style */}
           <div className="flex flex-col sm:flex-row gap-4">
             <button

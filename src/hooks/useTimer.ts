@@ -120,6 +120,8 @@ export const useTimer = (
         setIsWarmup(false);
         setCurrentIntervalIndex(0);
         nextTime = INTERVALS[0] * 60;
+        setIsActive(true);
+        setIsPaused(false);
       }
     } else if (isBreakTime) {
       onBreakComplete();
@@ -207,12 +209,10 @@ export const useTimer = (
     setCurrentIntervalIndex(0);
     const nextTime = INTERVALS[0] * 60;
     setTimeLeft(nextTime);
-    if (isActive && !isPaused) {
-      targetEndTimeRef.current = Date.now() + nextTime * 1000;
-    } else {
-      targetEndTimeRef.current = null;
-    }
-  }, [onWarmupComplete, isActive, isPaused]);
+    setIsActive(true);
+    setIsPaused(false);
+    targetEndTimeRef.current = Date.now() + nextTime * 1000;
+  }, [onWarmupComplete]);
 
   useEffect(() => {
     if (isActive && !isPaused) {

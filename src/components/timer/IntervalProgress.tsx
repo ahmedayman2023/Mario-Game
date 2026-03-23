@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, memo } from 'react';
-import { Star, Zap, ChevronRight, Trophy, Info } from 'lucide-react';
+import { Star, Zap, ChevronRight, Trophy, Info, Wind } from 'lucide-react';
 import { motion } from 'motion/react';
 import { WARMUP_INTERVALS, FEYNMAN_STEPS } from '../../constants';
 
@@ -32,7 +32,6 @@ const IntervalProgress = memo(function IntervalProgress({
   }, [currentIntervalIndex]);
 
   const renderIntervals = (list: number[], startIndex: number, title: string) => {
-    const phaseProgress = Math.min(Math.max(currentIntervalIndex - startIndex, 0), list.length);
     const isPhaseActive = currentIntervalIndex >= startIndex && currentIntervalIndex < startIndex + list.length;
     const isPhaseCompleted = currentIntervalIndex >= startIndex + list.length;
 
@@ -41,73 +40,65 @@ const IntervalProgress = memo(function IntervalProgress({
         <div className="flex items-center justify-between px-2">
           <div className="flex flex-col">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{title}</div>
-            <div className="text-[8px] font-bold text-slate-600 uppercase tracking-widest mt-0.5">
-              الخطوة {isPhaseCompleted ? list.length : isPhaseActive ? (currentIntervalIndex - startIndex + 1) : 0} من {list.length}
-            </div>
           </div>
           {isPhaseActive && (
             <div className="flex items-center gap-1 text-[10px] font-black text-mario-emerald uppercase tracking-widest animate-pulse">
-              <span>المرحلة النشطة</span>
+              <span>الجلسة الحالية</span>
               <ChevronRight size={10} />
-            </div>
-          )}
-          {isPhaseCompleted && (
-            <div className="flex items-center gap-1 text-[10px] font-black text-amber-400 uppercase tracking-widest">
-              <span>مكتمل</span>
-              <Star size={10} fill="currentColor" />
             </div>
           )}
         </div>
         
-        <div className="grid grid-cols-1 gap-3 p-2">
-          {list.map((duration, idx) => {
-            const absoluteIdx = startIndex + idx;
-            const isActive = absoluteIdx === currentIntervalIndex;
-            const isCompleted = absoluteIdx < currentIntervalIndex;
-            const step = FEYNMAN_STEPS[idx];
-            
-            return (
-              <motion.div 
-                key={idx} 
-                data-active={isActive}
-                initial={false}
-                animate={isActive ? { scale: 1.02, zIndex: 10 } : { scale: 1, zIndex: 1 }}
-                className={`
-                  flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-500
-                  ${isActive ? 'bg-mario-emerald border-white text-black shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 
-                    isCompleted ? 'bg-mario-emerald/20 border-mario-emerald/40 text-mario-emerald' : 
-                    'glass border-white/5 text-slate-400'}
-                `}
-              >
-                <div className={`
-                  w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center text-xs font-black border
-                  ${isActive ? 'bg-white text-black border-black/10' : 
-                    isCompleted ? 'bg-mario-emerald text-white border-none' : 
-                    'bg-white/5 border-white/10'}
-                `}>
-                  {idx + 1}
-                </div>
+        <div className="overflow-hidden rounded-xl border border-slate-700 bg-black/40">
+          <table className="w-full text-right border-collapse">
+            <thead>
+              <tr className="bg-slate-800/50 border-b border-slate-700">
+                <th className="p-2 text-[9px] font-black text-slate-400 uppercase tracking-widest border-l border-slate-700 w-10 text-center">#</th>
+                <th className="p-2 text-[9px] font-black text-slate-400 uppercase tracking-widest border-l border-slate-700">النشاط الدراسي</th>
+                <th className="p-2 text-[9px] font-black text-slate-400 uppercase tracking-widest w-16 text-center">المدة</th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.map((duration, idx) => {
+                const absoluteIdx = startIndex + idx;
+                const isActive = absoluteIdx === currentIntervalIndex;
+                const isCompleted = absoluteIdx < currentIntervalIndex;
+                const step = FEYNMAN_STEPS[idx];
                 
-                <div className="flex-1 min-w-0">
-                  <div className={`text-[11px] font-black uppercase tracking-tight truncate ${isActive ? 'text-black' : 'text-white'}`}>
-                    {step?.title}
-                  </div>
-                  <div className={`text-[9px] font-bold leading-relaxed mt-1 line-clamp-2 ${isActive ? 'text-black/70' : 'text-slate-500'}`}>
-                    {step?.description}
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center gap-1">
-                  <div className={`text-[8px] font-black uppercase tracking-widest ${isActive ? 'text-black/60' : 'text-slate-500'}`}>
-                    {duration} د
-                  </div>
-                  {isCompleted && (
-                    <Star size={12} className="text-amber-400 fill-amber-400" />
-                  )}
-                </div>
-              </motion.div>
-            );
-          })}
+                return (
+                  <tr 
+                    key={idx}
+                    data-active={isActive}
+                    className={`
+                      border-b border-slate-700/50 transition-colors duration-300
+                      ${isActive ? 'bg-mario-emerald/30 text-white' : 
+                        isCompleted ? 'bg-mario-emerald/5 text-mario-emerald/40' : 
+                        idx % 2 === 0 ? 'bg-white/[0.02] text-slate-400' : 'bg-transparent text-slate-400'}
+                      hover:bg-white/5
+                    `}
+                  >
+                    <td className={`p-2 text-[10px] font-mono border-l border-slate-700/50 text-center ${isActive ? 'text-mario-emerald font-bold' : ''}`}>
+                      {idx + 1}
+                    </td>
+                    <td className="p-2 border-l border-slate-700/50">
+                      <div className="flex items-center gap-2">
+                        {isActive && <Zap size={10} className="text-mario-emerald animate-pulse" fill="currentColor" />}
+                        <span className={`text-[10px] font-medium leading-tight ${isActive ? 'text-white font-bold' : ''}`}>
+                          {step?.title || `جلسة ${idx + 1}`}
+                        </span>
+                        {isCompleted && <Star size={10} className="text-amber-400 fill-amber-400 ml-auto" />}
+                      </div>
+                    </td>
+                    <td className="p-2 text-center">
+                      <span className={`text-[10px] font-mono ${isActive ? 'text-white font-bold' : ''}`}>
+                        {duration}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     );
@@ -146,6 +137,17 @@ const IntervalProgress = memo(function IntervalProgress({
               <div className="text-xs font-bold text-white mt-0.5">
                 المرحلة {warmupIntervalIndex + 1} من {WARMUP_INTERVALS.length}
               </div>
+            </div>
+          </div>
+        )}
+        {isBreakTime && (
+          <div className="flex items-center gap-4 p-4 glass border-mario-emerald/30 rounded-2xl animate-pulse">
+            <div className="w-10 h-10 rounded-xl bg-mario-emerald flex items-center justify-center text-black">
+              <Wind size={20} />
+            </div>
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-mario-emerald">وقت الراحة</div>
+              <div className="text-xs font-bold text-white mt-0.5">استرخِ قليلاً قبل الجلسة القادمة</div>
             </div>
           </div>
         )}
