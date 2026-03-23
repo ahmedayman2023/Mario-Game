@@ -10,6 +10,7 @@ import IntervalProgress from "../components/timer/IntervalProgress";
 import ScoreBar from "../components/timer/ScoreBar";
 import StudyTopicInput from "../components/timer/StudyTopicInput";
 import BoxBreathing from "../components/timer/BoxBreathing";
+import MentalWarmup from "../components/timer/MentalWarmup";
 import RecoveryVideos from "../components/timer/RecoveryVideos";
 import Modal from "../components/ui/Modal";
 import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell } from 'lucide-react';
@@ -30,6 +31,7 @@ const TimerPage = () => {
   const [currentTopic, setCurrentTopic] = useState("");
   const [showCompletedMessage, setShowCompletedMessage] = useState(false);
   const [isBreathingOpen, setIsBreathingOpen] = useState(false);
+  const [isMentalWarmupOpen, setIsMentalWarmupOpen] = useState(false);
   const [isExercisesOpen, setIsExercisesOpen] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [winner, setWinner] = useState<'me' | 'time' | null>(null);
@@ -159,18 +161,11 @@ const TimerPage = () => {
             description: "ركز على تنفسك لمدة دقيقتين.",
           });
           break;
-        case 2: // Lumosity
+        case 2: // Mental Warmup
+          setIsMentalWarmupOpen(true);
           toast({
             title: "الخطوة الثالثة: تسخين ذهني",
-            description: "افتح Lumosity لتنشيط عقلك.",
-            action: (
-              <button 
-                onClick={() => window.open('https://www.lumosity.com/', '_blank')}
-                className="bg-white text-black px-3 py-1 rounded-md text-xs font-bold"
-              >
-                فتح الموقع
-              </button>
-            ),
+            description: "قم بحل المسائل الرياضية لتنشيط عقلك.",
           });
           break;
       }
@@ -508,6 +503,14 @@ const TimerPage = () => {
         title="استعادة التركيز"
       >
         <BoxBreathing />
+      </Modal>
+
+      <Modal 
+        isOpen={isMentalWarmupOpen} 
+        onClose={() => setIsMentalWarmupOpen(false)}
+        title="تسخين ذهني"
+      >
+        <MentalWarmup onComplete={() => setIsMentalWarmupOpen(false)} />
       </Modal>
 
       <Modal 

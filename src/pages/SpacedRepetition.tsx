@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Trash2, Check, RotateCcw, Calendar, Brain, Sparkles, Star, Trophy, Coins, Pencil } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import Modal from "../components/ui/Modal";
+import MentalWarmup from "../components/timer/MentalWarmup";
 
 interface Flashcard {
   id: string;
@@ -32,6 +33,31 @@ const SpacedRepetition = () => {
   const [reviewQueue, setReviewQueue] = useState<Flashcard[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [isMentalWarmupOpen, setIsMentalWarmupOpen] = useState(false);
+  const [activeTimer, setActiveTimer] = useState<{ cardId: string, stageIdx: number, seconds: number } | null>(null);
+
+  // Timer Logic
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (activeTimer && activeTimer.seconds > 0) {
+      interval = setInterval(() => {
+        setActiveTimer(prev => prev ? { ...prev, seconds: prev.seconds - 1 } : null);
+      }, 1000);
+    } else if (activeTimer && activeTimer.seconds === 0) {
+      toast({
+        title: "انتهى الوقت!",
+        description: "انتهى مؤقت المراجعة لهذه المرحلة",
+        variant: "default",
+      });
+      // Play a simple beep if possible, or just the toast
+      setActiveTimer(null);
+    }
+    return () => clearInterval(interval);
+  }, [activeTimer, toast]);
+
+  const startTimer = (cardId: string, stageIdx: number, minutes: number) => {
+    setActiveTimer({ cardId, stageIdx, seconds: minutes * 60 });
+  };
 
   // Load cards from localStorage
   useEffect(() => {
@@ -277,18 +303,27 @@ const SpacedRepetition = () => {
           </div>
 
           {/* Start Button - Big Pipe Style */}
-          <button
-            onClick={startReview}
-            disabled={dueCount === 0}
-            className={`w-full py-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] font-pixel text-xl transition-all flex items-center justify-center gap-4 active:shadow-none active:translate-x-2 active:translate-y-2 ${
-              dueCount > 0 
-                ? 'bg-[#43B047] hover:bg-[#4ed453] text-white' 
-                : 'bg-slate-800 text-slate-600 cursor-not-allowed border-slate-700'
-            }`}
-          >
-            <Brain size={32} strokeWidth={3} />
-            ابدأ المغامرة
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={() => setIsMentalWarmupOpen(true)}
+              className="flex-1 py-8 bg-[#5C94FC] hover:bg-[#7ba6ff] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] font-pixel text-xl transition-all flex items-center justify-center gap-4 active:shadow-none active:translate-x-2 active:translate-y-2 text-white"
+            >
+              <Sparkles size={32} strokeWidth={3} className="text-[#FBD000]" />
+              تسخين ذهني
+            </button>
+            <button
+              onClick={startReview}
+              disabled={dueCount === 0}
+              className={`flex-[2] py-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] font-pixel text-xl transition-all flex items-center justify-center gap-4 active:shadow-none active:translate-x-2 active:translate-y-2 ${
+                dueCount > 0 
+                  ? 'bg-[#43B047] hover:bg-[#4ed453] text-white' 
+                  : 'bg-slate-800 text-slate-600 cursor-not-allowed border-slate-700'
+              }`}
+            >
+              <Brain size={32} strokeWidth={3} />
+              ابدأ المغامرة
+            </button>
+          </div>
 
           {/* Cards List - Brick Style */}
           <div className="space-y-6">
@@ -356,6 +391,41 @@ const SpacedRepetition = () => {
                                     {isToday && <div className="text-[#FBD000] text-[15px]">{dateObj.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</div>}
                                   </div>
                                 )}
+                              </div>
+
+                              {/* Timer Boxes */}
+                              <div className="grid grid-cols-5 gap-1 mt-2 w-full">
+                                {[1, 2, 3, 4, 5].map((mins) => {
+                                  const isThisTimerActive = activeTimer?.cardId === card.id && activeTimer?.stageIdx === idx && Math.ceil(activeTimer.seconds / 60) === mins;
+                                  const isAnyTimerActiveInThisStage = activeTimer?.cardId === card.id && activeTimer?.stageIdx === idx;
+                                  
+                                  return (
+                                    <button
+                                      key={mins}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (isThisTimerActive) {
+                                          setActiveTimer(null);
+                                        } else {
+                                          startTimer(card.id, idx, mins);
+                                        }
+                                      }}
+                                      className={`text-[7px] font-pixel p-1 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all active:shadow-none active:translate-x-0.5 active:translate-y-0.5 ${
+                                        isThisTimerActive 
+                                          ? 'bg-[#E52521] text-white animate-pulse' 
+                                          : isAnyTimerActiveInThisStage
+                                            ? 'bg-white/10 text-white/30 cursor-not-allowed'
+                                            : 'bg-[#FBD000] text-black hover:bg-[#ffe04d]'
+                                      }`}
+                                      disabled={isAnyTimerActiveInThisStage && !isThisTimerActive}
+                                    >
+                                      {isThisTimerActive 
+                                        ? `${Math.floor(activeTimer.seconds / 60)}:${(activeTimer.seconds % 60).toString().padStart(2, '0')}` 
+                                        : `${mins}د`
+                                      }
+                                    </button>
+                                  );
+                                })}
                               </div>
                             </div>
                           );
@@ -540,6 +610,14 @@ const SpacedRepetition = () => {
             {editingId ? "تحديث البطاقة" : "حفظ البطاقة"}
           </button>
         </div>
+      </Modal>
+
+      <Modal
+        isOpen={isMentalWarmupOpen}
+        onClose={() => setIsMentalWarmupOpen(false)}
+        title="BONUS STAGE: MENTAL WARMUP"
+      >
+        <MentalWarmup onComplete={() => setIsMentalWarmupOpen(false)} />
       </Modal>
     </div>
   );
