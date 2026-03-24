@@ -133,7 +133,8 @@ const TimerPage = () => {
     handleBack,
     skipAllWarmup,
     setTimeLeft,
-    progress
+    progress,
+    jumpToInterval
   } = useTimer(onIntervalComplete, onSessionComplete, onBreakComplete, onWarmupComplete, onWarmupIntervalComplete);
 
   // Warmup Steps Logic
@@ -340,6 +341,7 @@ const TimerPage = () => {
                   isBreakTime={isBreakTime}
                   isWarmup={isWarmup}
                   warmupIntervalIndex={warmupIntervalIndex}
+                  progress={progress}
                 />
                 
                 <TimerControls 
@@ -370,7 +372,7 @@ const TimerPage = () => {
                 <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">مؤقتات سريعة (دقائق)</h3>
               </div>
               <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
-                {[1, 1, 1, 2, 5, 2, 5, 2, 5, 5, 2, 5, 10, 2, 15, 3, 15, 4, 5].map((mins, tIdx) => (
+                {INTERVALS.map((mins, tIdx) => (
                   <button
                     key={tIdx}
                     onClick={() => handleTimeEdit(mins * 60)}
@@ -389,6 +391,7 @@ const TimerPage = () => {
               isBreakTime={isBreakTime}
               isWarmup={isWarmup}
               warmupIntervalIndex={warmupIntervalIndex}
+              onJumpToInterval={jumpToInterval}
             />
           </div>
 

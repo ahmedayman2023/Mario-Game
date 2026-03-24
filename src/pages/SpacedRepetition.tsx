@@ -4,6 +4,7 @@ import { Plus, Trash2, Check, RotateCcw, Calendar, Brain, Sparkles, Star, Trophy
 import { useToast } from "@/src/components/ui/use-toast";
 import Modal from "../components/ui/Modal";
 import MentalWarmup from "../components/timer/MentalWarmup";
+import { INTERVALS } from '../constants';
 
 interface Flashcard {
   id: string;
@@ -306,7 +307,7 @@ const SpacedRepetition = () => {
           <div className="mb-8 bg-black/20 p-6 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <div className="text-[8px] font-pixel text-slate-500 uppercase tracking-widest mb-4">مؤقتات سريعة (دقائق)</div>
             <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-              {[1, 1, 1, 2, 5, 2, 5, 2, 5, 5, 2, 5, 10, 2, 15, 3, 15, 4, 5].map((mins, tIdx) => (
+              {INTERVALS.map((mins, tIdx) => (
                 <button
                   key={tIdx}
                   onClick={() => {

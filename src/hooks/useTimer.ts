@@ -329,6 +329,19 @@ export const useTimer = (
     skipAllWarmup,
     handleTimeEdit,
     setIsSessionComplete,
-    progress
+    progress,
+    jumpToInterval: useCallback((index: number) => {
+      if (index < 0 || index >= INTERVALS.length) return;
+      
+      setIsWarmup(false);
+      setIsBreakTime(false);
+      setCurrentIntervalIndex(index);
+      const nextTime = INTERVALS[index] * 60;
+      setTimeLeft(nextTime);
+      setIsActive(true);
+      setIsPaused(false);
+      setIsSessionComplete(false);
+      targetEndTimeRef.current = Date.now() + nextTime * 1000;
+    }, [])
   };
 };

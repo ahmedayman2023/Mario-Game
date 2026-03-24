@@ -10,6 +10,7 @@ interface IntervalProgressProps {
   isBreakTime: boolean;
   isWarmup: boolean;
   warmupIntervalIndex: number;
+  onJumpToInterval?: (index: number) => void;
 }
 
 const IntervalProgress = memo(function IntervalProgress({ 
@@ -18,7 +19,8 @@ const IntervalProgress = memo(function IntervalProgress({
   progress, 
   isBreakTime,
   isWarmup,
-  warmupIntervalIndex
+  warmupIntervalIndex,
+  onJumpToInterval
 }: IntervalProgressProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -69,12 +71,13 @@ const IntervalProgress = memo(function IntervalProgress({
                   <tr 
                     key={idx}
                     data-active={isActive}
+                    onClick={() => onJumpToInterval?.(idx)}
                     className={`
-                      border-b border-slate-700/50 transition-colors duration-300
+                      border-b border-slate-700/50 transition-colors duration-300 cursor-pointer
                       ${isActive ? 'bg-mario-emerald/30 text-white' : 
                         isCompleted ? 'bg-mario-emerald/5 text-mario-emerald/40' : 
                         idx % 2 === 0 ? 'bg-white/[0.02] text-slate-400' : 'bg-transparent text-slate-400'}
-                      hover:bg-white/5
+                      hover:bg-white/10
                     `}
                   >
                     <td className={`p-2 text-[10px] font-mono border-l border-slate-700/50 text-center ${isActive ? 'text-mario-emerald font-bold' : ''}`}>

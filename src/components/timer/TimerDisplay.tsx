@@ -11,6 +11,7 @@ interface TimerDisplayProps {
   isBreakTime: boolean;
   isWarmup: boolean;
   warmupIntervalIndex: number;
+  progress: number;
 }
 
 const TimerDisplay = memo(function TimerDisplay({ 
@@ -21,7 +22,8 @@ const TimerDisplay = memo(function TimerDisplay({
   onTimeEdit, 
   isBreakTime,
   isWarmup,
-  warmupIntervalIndex
+  warmupIntervalIndex,
+  progress
 }: TimerDisplayProps) {
   const getWarmupLabel = () => {
     switch (warmupIntervalIndex) {
@@ -44,7 +46,9 @@ const TimerDisplay = memo(function TimerDisplay({
   };
 
   const currentStep = !isWarmup && !isBreakTime ? FEYNMAN_STEPS[Number(currentInterval) - 1] : null;
-  const completionPercentage = Math.round((Number(currentInterval) / FEYNMAN_STEPS.length) * 100);
+  const overallProgress = isWarmup ? 0 : 
+    ((Number(currentInterval) - 1 + (isBreakTime ? 1 : progress / 100)) / FEYNMAN_STEPS.length) * 100;
+  const displayPercentage = Math.min(100, Math.round(overallProgress));
 
   return (
     <div className="flex flex-col items-center justify-center py-6 md:py-10">
@@ -91,7 +95,7 @@ const TimerDisplay = memo(function TimerDisplay({
               <div className="absolute inset-2 rounded-full border-2 border-mario-emerald/40 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center">
                 <div className="text-[7px] sm:text-[9px] font-black text-mario-emerald uppercase tracking-widest leading-none mb-1">إنجاز</div>
                 <div className="text-lg sm:text-2xl md:text-3xl font-black text-white scoreboard-font leading-none">
-                  {completionPercentage}%
+                  {displayPercentage}%
                 </div>
               </div>
               
@@ -105,7 +109,7 @@ const TimerDisplay = memo(function TimerDisplay({
                   stroke="currentColor"
                   strokeWidth="4"
                   strokeDasharray="283"
-                  strokeDashoffset={283 - (283 * completionPercentage) / 100}
+                  strokeDashoffset={283 - (283 * displayPercentage) / 100}
                   className="text-mario-emerald transition-all duration-1000 ease-out"
                 />
               </svg>
