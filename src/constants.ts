@@ -1,6 +1,7 @@
-export const INTERVALS = [1, 1, 1, 2, 5, 1, 1, 2, 2, 10, 1, 1, 1, 2, 5, 10, 1, 1, 10]; 
+export const INTERVALS = [1, 1, 1, 1, 2, 5, 1, 1, 2, 2, 10, 1, 1, 1, 2, 5, 10, 1, 1, 10]; 
 
 export const FEYNMAN_STEPS = [
+  { title: "استماع فقط (ويفضل عند النوم)", duration: 1 },
   { title: "مشاهدة بدون توقف بدون كتابة فقط فهم", duration: 1 },
   { title: "مشاهدة بدون توقف بدون كتابة فقط فهم", duration: 1 },
   { title: "مشاهدة بدون توقف بدون كتابة فقط فهم", duration: 1 },

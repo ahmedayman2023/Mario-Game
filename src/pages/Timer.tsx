@@ -75,7 +75,7 @@ const TimerPage = () => {
     setScore(prev => {
       const next = { ...prev, me: prev.me + 1 };
       localStorage.setItem(STORAGE_KEYS.SCORE, JSON.stringify(next));
-      if (next.me >= 10 && !isGameOver) {
+      if (next.me >= 20 && !isGameOver) {
         setIsGameOver(true);
         setWinner('me');
       }
@@ -185,7 +185,7 @@ const TimerPage = () => {
         setScore(prev => {
           const next = { ...prev, time: prev.time + 1 };
           localStorage.setItem(STORAGE_KEYS.SCORE, JSON.stringify(next));
-          if (next.time >= 10 && !isGameOver) {
+          if (next.time >= 20 && !isGameOver) {
             setIsGameOver(true);
             setWinner('time');
           }
