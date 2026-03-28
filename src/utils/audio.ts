@@ -1,9 +1,27 @@
+let audioContextInstance: AudioContext | null = null;
+
+const getAudioContext = () => {
+  if (!audioContextInstance) {
+    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+    if (AudioContext) {
+      audioContextInstance = new AudioContext();
+    }
+  }
+  return audioContextInstance;
+};
+
+// Call this on any user interaction to ensure the context is resumed
+export const initAudio = async () => {
+  const context = getAudioContext();
+  if (context && context.state === 'suspended') {
+    await context.resume();
+  }
+};
+
 export const playChime = async (type: 'start' | 'complete' | 'mandatory' | 'interval', volume: number = 0.5) => {
   try {
-    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioContext) return;
-    
-    const context = new AudioContext();
+    const context = getAudioContext();
+    if (!context) return;
     
     // Resume context if suspended (browser restriction)
     if (context.state === 'suspended') {

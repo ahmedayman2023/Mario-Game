@@ -2,10 +2,12 @@ import React, { useState, memo } from 'react';
 import { Plus, CheckCircle2, Circle, Trash2, Target } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Todo } from '../../types';
+import Modal from '../ui/Modal';
 
 const TodoList = memo(function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState('');
+  const [confirmAction, setConfirmAction] = useState<{ type: 'delete' | 'complete', id: number } | null>(null);
 
   const addTodo = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +22,29 @@ const TodoList = memo(function TodoList() {
 
   const deleteTodo = (id: number) => {
     setTodos(todos.filter(t => t.id !== id));
+  };
+
+  const handleToggleClick = (id: number) => {
+    const todo = todos.find(t => t.id === id);
+    if (todo && !todo.completed) {
+      setConfirmAction({ type: 'complete', id });
+    } else {
+      toggleTodo(id);
+    }
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setConfirmAction({ type: 'delete', id });
+  };
+
+  const confirmPendingAction = () => {
+    if (!confirmAction) return;
+    if (confirmAction.type === 'complete') {
+      toggleTodo(confirmAction.id);
+    } else if (confirmAction.type === 'delete') {
+      deleteTodo(confirmAction.id);
+    }
+    setConfirmAction(null);
   };
 
   return (
@@ -66,7 +91,7 @@ const TodoList = memo(function TodoList() {
             >
               <div 
                 className="flex items-center gap-6 flex-1 cursor-pointer"
-                onClick={() => toggleTodo(todo.id)}
+                onClick={() => handleToggleClick(todo.id)}
               >
                 {todo.completed ? (
                   <CheckCircle2 size={18} className="text-success" />
@@ -78,7 +103,7 @@ const TodoList = memo(function TodoList() {
                 </span>
               </div>
               <button
-                onClick={() => deleteTodo(todo.id)}
+                onClick={() => handleDeleteClick(todo.id)}
                 className="opacity-0 group-hover:opacity-100 p-2 text-slate-300 hover:text-danger transition-all"
               >
                 <Trash2 size={14} />
@@ -93,6 +118,38 @@ const TodoList = memo(function TodoList() {
           </div>
         )}
       </div>
+
+      <Modal 
+        isOpen={confirmAction !== null} 
+        onClose={() => setConfirmAction(null)}
+        title={confirmAction?.type === 'delete' ? 'تأكيد الحذف' : 'تأكيد الإنجاز'}
+      >
+        <div className="text-center">
+          <p className="text-white mb-8">
+            {confirmAction?.type === 'delete' 
+              ? 'هل أنت متأكد من حذف هذا التكتيك نهائياً؟' 
+              : 'هل أنت متأكد من إنجاز هذا التكتيك؟'}
+          </p>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={() => setConfirmAction(null)}
+              className="px-6 py-2 rounded-lg font-bold text-xs uppercase tracking-widest bg-white/10 text-white hover:bg-white/20 transition-colors"
+            >
+              إلغاء
+            </button>
+            <button
+              onClick={confirmPendingAction}
+              className={`px-6 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-colors ${
+                confirmAction?.type === 'delete' 
+                  ? 'bg-mario-red text-white hover:bg-mario-red/80' 
+                  : 'bg-mario-emerald text-black hover:bg-mario-emerald/80'
+              }`}
+            >
+              تأكيد
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 });

@@ -18,7 +18,7 @@ import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
 import { INTERVALS, STORAGE_KEYS, RECOVERY_VIDEOS } from "../constants";
-import { playChime } from "../utils/audio";
+import { playChime, initAudio } from "../utils/audio";
 import { Score, TimerState } from "../types";
 
 const TimerPage = () => {
@@ -174,6 +174,7 @@ const TimerPage = () => {
   }, [isWarmup, warmupIntervalIndex, isActive, isPaused, toast]);
 
   const handleStart = useCallback(() => {
+    initAudio();
     baseStart();
   }, [baseStart]);
 
@@ -351,6 +352,7 @@ const TimerPage = () => {
                   onPause={handlePause}
                   onStop={handleReset}
                   onSkip={() => { 
+                    initAudio();
                     playChime('mandatory', volume); 
                     if (isWarmup) {
                       skipAllWarmup();
@@ -358,7 +360,11 @@ const TimerPage = () => {
                       handleSkip();
                     }
                   }}
-                  onBack={handleBack}
+                  onBack={() => {
+                    initAudio();
+                    playChime('mandatory', volume);
+                    handleBack();
+                  }}
                   isBreakTime={isBreakTime}
                   isWarmup={isWarmup}
                 />
@@ -375,7 +381,11 @@ const TimerPage = () => {
                 {INTERVALS.map((mins, tIdx) => (
                   <button
                     key={tIdx}
-                    onClick={() => handleTimeEdit(mins * 60)}
+                    onClick={() => {
+                      initAudio();
+                      playChime('interval', volume);
+                      handleTimeEdit(mins * 60);
+                    }}
                     className="h-10 bg-broadcast-yellow text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-black text-xs flex items-center justify-center active:shadow-none active:translate-x-0.5 active:translate-y-0.5 hover:bg-[#ffe000] transition-all"
                   >
                     {mins}
@@ -391,7 +401,11 @@ const TimerPage = () => {
               isBreakTime={isBreakTime}
               isWarmup={isWarmup}
               warmupIntervalIndex={warmupIntervalIndex}
-              onJumpToInterval={jumpToInterval}
+              onJumpToInterval={(idx) => {
+                initAudio();
+                playChime('mandatory', volume);
+                jumpToInterval(idx);
+              }}
             />
           </div>
 
