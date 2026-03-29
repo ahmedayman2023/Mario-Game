@@ -137,6 +137,16 @@ const TimerPage = () => {
     jumpToInterval
   } = useTimer(onIntervalComplete, onSessionComplete, onBreakComplete, onWarmupComplete, onWarmupIntervalComplete);
 
+  // Calculate overall progress
+  const totalPhases = INTERVALS.length * 2 - 1;
+  let overallProgress = 0;
+  if (isSessionComplete) {
+    overallProgress = 100;
+  } else if (!isWarmup) {
+    const currentPhase = currentIntervalIndex * 2 + (isBreakTime ? 1 : 0);
+    overallProgress = ((currentPhase + progress / 100) / totalPhases) * 100;
+  }
+
   // Warmup Steps Logic
   useEffect(() => {
     if (isWarmup && isActive && !isPaused) {
@@ -293,7 +303,7 @@ const TimerPage = () => {
       <div className="relative p-6 md:p-10">
         <Toaster />
         
-        <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+        <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-4">
           <div className="flex items-center gap-4">
             <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
             
@@ -324,6 +334,22 @@ const TimerPage = () => {
             <span>التعلم العميق</span>
             <div className="w-1 h-1 bg-slate-600 rounded-full" />
             <span>تقنية فاينمان</span>
+          </div>
+        </div>
+
+        {/* Overall Progress Bar */}
+        <div className="mb-8">
+          <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+            <span>التقدم الإجمالي</span>
+            <span>{Math.round(overallProgress)}%</span>
+          </div>
+          <div className="h-2 bg-black/40 rounded-full overflow-hidden border border-white/5">
+            <motion.div 
+              className="h-full bg-gradient-to-r from-mario-emerald to-emerald-400"
+              initial={{ width: 0 }}
+              animate={{ width: `${overallProgress}%` }}
+              transition={{ duration: 0.5 }}
+            />
           </div>
         </div>
 
