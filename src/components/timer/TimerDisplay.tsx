@@ -12,6 +12,8 @@ interface TimerDisplayProps {
   isWarmup: boolean;
   warmupIntervalIndex: number;
   progress: number;
+  isStopwatch: boolean;
+  onToggleMode: () => void;
 }
 
 const TimerDisplay = memo(function TimerDisplay({ 
@@ -23,7 +25,9 @@ const TimerDisplay = memo(function TimerDisplay({
   isBreakTime,
   isWarmup,
   warmupIntervalIndex,
-  progress
+  progress,
+  isStopwatch,
+  onToggleMode
 }: TimerDisplayProps) {
   const getWarmupLabel = () => {
     switch (warmupIntervalIndex) {
@@ -69,7 +73,7 @@ const TimerDisplay = memo(function TimerDisplay({
         </motion.div>
       </AnimatePresence>
 
-      <div className="flex flex-row items-center justify-center gap-4 sm:gap-8 md:gap-12">
+      <div className="flex flex-row items-center justify-center gap-4 sm:gap-8 md:gap-12 relative">
         <motion.div 
           className={`text-[5rem] sm:text-[8rem] md:text-[10rem] font-black scoreboard-font tracking-tighter leading-none select-none cursor-pointer transition-colors ${isWarmup ? 'text-amber-500' : isBreakTime ? 'text-broadcast-yellow' : 'text-white'}`}
           onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
@@ -80,6 +84,20 @@ const TimerDisplay = memo(function TimerDisplay({
         >
           {String(minutes).padStart(2, '0')}<span className="animate-pulse">:</span>{String(seconds).padStart(2, '0')}
         </motion.div>
+
+        {/* Stopwatch Toggle Button */}
+        <div className="absolute -top-8 right-0 sm:-right-12">
+          <button
+            onClick={onToggleMode}
+            className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border transition-all ${
+              isStopwatch 
+                ? 'bg-broadcast-yellow text-black border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' 
+                : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'
+            }`}
+          >
+            {isStopwatch ? 'Stopwatch' : 'Timer'}
+          </button>
+        </div>
 
         {!isWarmup && Number(currentInterval) > 0 && (
           <motion.div 

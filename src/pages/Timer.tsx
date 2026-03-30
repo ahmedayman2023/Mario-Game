@@ -126,6 +126,8 @@ const TimerPage = () => {
     isBreakTime,
     isWarmup,
     isSessionComplete,
+    isStopwatch,
+    toggleMode,
     handleStart: baseStart,
     handlePause,
     handleReset: baseReset,
@@ -369,6 +371,8 @@ const TimerPage = () => {
                   isWarmup={isWarmup}
                   warmupIntervalIndex={warmupIntervalIndex}
                   progress={progress}
+                  isStopwatch={isStopwatch}
+                  onToggleMode={toggleMode}
                 />
                 
                 <TimerControls 
@@ -393,6 +397,7 @@ const TimerPage = () => {
                   }}
                   isBreakTime={isBreakTime}
                   isWarmup={isWarmup}
+                  isStopwatch={isStopwatch}
                 />
               </div>
             </div>

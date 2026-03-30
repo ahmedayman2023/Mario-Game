@@ -5,6 +5,7 @@ export interface TimerState {
   isBreakTime: boolean;
   isWarmup: boolean;
   isSessionComplete: boolean;
+  isStopwatch: boolean;
   totalStudyTime: number;
   completedIntervals: number;
   currentTopic: string;

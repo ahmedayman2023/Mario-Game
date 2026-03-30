@@ -12,6 +12,7 @@ interface TimerControlsProps {
   onBack: () => void;
   isBreakTime: boolean;
   isWarmup: boolean;
+  isStopwatch: boolean;
 }
 
 const TimerControls = memo(function TimerControls({ 
@@ -23,7 +24,8 @@ const TimerControls = memo(function TimerControls({
   onSkip, 
   onBack,
   isBreakTime,
-  isWarmup
+  isWarmup,
+  isStopwatch
 }: TimerControlsProps) {
   const buttonBase = "flex items-center justify-center gap-3 px-8 py-4 rounded-2xl transition-all font-black text-[10px] disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-[0.2em] border scoreboard-font shadow-xl";
 
@@ -62,7 +64,7 @@ const TimerControls = memo(function TimerControls({
         className={`${buttonBase} bg-white/10 text-white border-white/10 hover:bg-white/20`}
       >
         <SkipForward size={14} strokeWidth={3} />
-        <span>تخطي</span>
+        <span>{isStopwatch ? 'التالي' : 'تخطي'}</span>
       </button>
 
       <button 
