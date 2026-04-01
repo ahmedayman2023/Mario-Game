@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "./utils";
-import { Clock, BarChart3, BookOpen, Brain } from "lucide-react";
+import { Clock, BarChart3, BookOpen, Brain, Zap } from "lucide-react";
 
 export default function Layout({ children, currentPageName }: { children: React.ReactNode, currentPageName: string }) {
   const location = useLocation();
@@ -34,6 +34,15 @@ export default function Layout({ children, currentPageName }: { children: React.
             <Clock size={24} />
           </div>
           <span className="text-[9px] font-black uppercase tracking-[0.2em] scoreboard-font">المؤقت</span>
+        </Link>
+        <Link 
+          to="/Nutrition" 
+          className={`flex flex-col items-center gap-2 transition-all group ${currentPageName === 'Nutrition' ? 'text-mario-emerald scale-110' : 'text-slate-500 hover:text-slate-300'}`}
+        >
+          <div className={`p-2 rounded-xl transition-colors ${currentPageName === 'Nutrition' ? 'bg-mario-emerald/20' : 'group-hover:bg-white/5'}`}>
+            <Zap size={24} />
+          </div>
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] scoreboard-font">التغذية</span>
         </Link>
         <Link 
           to="/SRS" 
