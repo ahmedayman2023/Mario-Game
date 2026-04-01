@@ -20,9 +20,11 @@ import { useTimer } from "../hooks/useTimer";
 import { INTERVALS, STORAGE_KEYS, RECOVERY_VIDEOS } from "../constants";
 import { playChime, initAudio } from "../utils/audio";
 import { Score, TimerState } from "../types";
+import { useAuth } from "../lib/AuthContext";
 
 const TimerPage = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   
   // Stats State
   const [score, setScore] = useState<Score>({ me: 0, time: 0 });
@@ -57,14 +59,16 @@ const TimerPage = () => {
         setCurrentTopic(state.currentTopic || "");
       }
 
-      const userData = await User.getMyUserData();
-      if (userData?.current_study_topic) {
-        setCurrentTopic(userData.current_study_topic || "");
+      if (user) {
+        const userData = await User.getMyUserData();
+        if (userData?.current_study_topic) {
+          setCurrentTopic(userData.current_study_topic || "");
+        }
       }
     } catch (e) {
       console.error("Failed to load initial data", e);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     loadInitialData();

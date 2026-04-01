@@ -1,0 +1,83 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function uidUnchanged() {
+      return !('userId' in request.resource.data) || request.resource.data.userId == request.auth.uid;
+    }
+
+    function uidNotModified() {
+      return !('userId' in request.resource.data) || request.resource.data.userId == resource.data.userId;
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function validStringLength(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+        request.resource.data[field].size() >= minLen &&
+        request.resource.data[field].size() <= maxLen;
+    }
+
+    function isValidOptionalString(field, minLen, maxLen) {
+      return !(field in request.resource.data) ||
+             (request.resource.data[field] is string &&
+              request.resource.data[field].size() >= minLen &&
+              request.resource.data[field].size() <= maxLen);
+    }
+
+    function isValidOptionalNumberOrNull(field) {
+      return !(field in request.resource.data) || request.resource.data[field] is number || request.resource.data[field] == null;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    function isValidUser() {
+      return isValidOptionalString('current_study_topic', 0, 200) &&
+             isValidOptionalNumberOrNull('cooldownEndTime');
+    }
+
+    function isValidNutritionItem() {
+      return hasRequiredFields(['text', 'completed', 'iconType', 'userId', 'createdAt']) &&
+             validStringLength('text', 1, 200) &&
+             request.resource.data.completed is bool &&
+             request.resource.data.iconType in ['drink', 'food', 'energy'] &&
+             request.resource.data.userId == request.auth.uid &&
+             request.resource.data.createdAt is number;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser();
+      allow update: if isOwner(userId) && isValidUser();
+      allow delete: if isOwner(userId);
+    }
+
+    match /nutritionItems/{itemId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && isValidNutritionItem() && uidUnchanged();
+      allow update: if isDocOwner() && isValidNutritionItem() && uidNotModified();
+      allow delete: if isDocOwner();
+    }
+  }
+}

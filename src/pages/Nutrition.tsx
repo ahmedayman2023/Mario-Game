@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Zap, Plus, Trash2, Flame, Droplets, Carrot, Battery, BatteryCharging, Check, Activity, Pencil, X, Timer } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { collection, query, where, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { useAuth } from '../lib/AuthContext';
 
 interface NutritionItem {
   id: string;
   text: string;
   completed: boolean;
   iconType: 'drink' | 'food' | 'energy';
+  userId: string;
+  createdAt: number;
 }
-
-const initialItems: NutritionItem[] = [
-  { id: '1', text: 'عصير رمان', completed: false, iconType: 'drink' },
-  { id: '2', text: 'مياه فوارة', completed: false, iconType: 'drink' },
-  { id: '3', text: 'جزر وخيار مع جبنة وعصرة ليمون', completed: false, iconType: 'food' },
-  { id: '4', text: 'وجبة خفيفة لطاقة ممتدة', completed: false, iconType: 'energy' },
-];
 
 const getIcon = (type: string, completed: boolean) => {
   const size = 20;
@@ -51,7 +49,8 @@ const formatTime = (ms: number) => {
 };
 
 export default function Nutrition() {
-  const [items, setItems] = useState<NutritionItem[]>(initialItems);
+  const { user } = useAuth();
+  const [items, setItems] = useState<NutritionItem[]>([]);
   const [newItemText, setNewItemText] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
@@ -60,31 +59,77 @@ export default function Nutrition() {
   const [cooldownEndTime, setCooldownEndTime] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
+  // Fetch items from Firestore
+  useEffect(() => {
+    if (!user) return;
+
+    const q = query(collection(db, 'nutritionItems'), where('userId', '==', user.uid));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const fetchedItems: NutritionItem[] = [];
+      snapshot.forEach((doc) => {
+        fetchedItems.push({ id: doc.id, ...doc.data() } as NutritionItem);
+      });
+      // Sort by createdAt descending
+      fetchedItems.sort((a, b) => b.createdAt - a.createdAt);
+      setItems(fetchedItems);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  // Fetch user cooldown state
+  useEffect(() => {
+    if (!user) return;
+
+    const userRef = doc(db, 'users', user.uid);
+    const unsubscribe = onSnapshot(userRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setCooldownEndTime(data.cooldownEndTime || null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
   const allCompleted = items.length > 0 && items.every(item => item.completed);
 
   // Effect to start/stop cooldown when all items are completed
   useEffect(() => {
+    if (!user) return;
+    
+    const updateUserCooldown = async (time: number | null) => {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { cooldownEndTime: time });
+    };
+
     if (allCompleted && !cooldownEndTime) {
       // Set timer for 2 hours (2 * 60 * 60 * 1000 ms)
-      setCooldownEndTime(Date.now() + 2 * 60 * 60 * 1000);
+      updateUserCooldown(Date.now() + 2 * 60 * 60 * 1000);
     } else if (!allCompleted && cooldownEndTime) {
       // Cancel timer if an item is unchecked or added
-      setCooldownEndTime(null);
+      updateUserCooldown(null);
     }
-  }, [allCompleted, cooldownEndTime]);
+  }, [allCompleted, cooldownEndTime, user]);
 
   // Effect to handle the countdown tick
   useEffect(() => {
-    if (!cooldownEndTime) return;
+    if (!cooldownEndTime || !user) return;
 
-    const updateTimer = () => {
+    const updateTimer = async () => {
       const now = Date.now();
       const remaining = cooldownEndTime - now;
       
       if (remaining <= 0) {
         // Timer finished! Reset all tasks to uncompleted
-        setItems(prev => prev.map(item => ({ ...item, completed: false })));
-        setCooldownEndTime(null);
+        const batchPromises = items.map(item => 
+          updateDoc(doc(db, 'nutritionItems', item.id), { completed: false })
+        );
+        await Promise.all(batchPromises);
+        
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, { cooldownEndTime: null });
+        
         setTimeLeft(0);
       } else {
         setTimeLeft(remaining);
@@ -94,36 +139,60 @@ export default function Nutrition() {
     updateTimer(); // Initial call
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
-  }, [cooldownEndTime]);
+  }, [cooldownEndTime, items, user]);
 
-  const toggleItem = (id: string) => {
-    setItems(items.map(item => 
-      item.id === id ? { ...item, completed: !item.completed } : item
-    ));
+  const toggleItem = async (id: string) => {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    
+    // Optimistic update
+    setItems(items.map(i => i.id === id ? { ...i, completed: !i.completed } : i));
+    
+    try {
+      await updateDoc(doc(db, 'nutritionItems', id), { completed: !item.completed });
+    } catch (error) {
+      console.error("Error toggling item", error);
+      // Revert on error
+      setItems(items.map(i => i.id === id ? { ...i, completed: item.completed } : i));
+    }
   };
 
-  const addItem = (e: React.FormEvent) => {
+  const addItem = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newItemText.trim()) return;
+    if (!newItemText.trim() || !user) return;
     
     let iconType: 'drink' | 'food' | 'energy' = 'energy';
     if (newItemText.includes('ماء') || newItemText.includes('عصير') || newItemText.includes('قهوة')) iconType = 'drink';
     else if (newItemText.includes('تفاح') || newItemText.includes('موز') || newItemText.includes('وجبة') || newItemText.includes('جزر') || newItemText.includes('خيار') || newItemText.includes('جبنة')) iconType = 'food';
 
-    const newItem: NutritionItem = {
-      id: Date.now().toString(),
+    const newItemData = {
       text: newItemText,
       completed: false,
       iconType,
+      userId: user.uid,
+      createdAt: Date.now()
     };
     
-    // Add to top for immediate feedback
-    setItems([newItem, ...items]);
     setNewItemText('');
+    
+    try {
+      await addDoc(collection(db, 'nutritionItems'), newItemData);
+    } catch (error) {
+      console.error("Error adding item", error);
+    }
   };
 
-  const deleteItem = (id: string) => {
+  const deleteItem = async (id: string) => {
+    // Optimistic update
+    const previousItems = [...items];
     setItems(items.filter(item => item.id !== id));
+    
+    try {
+      await deleteDoc(doc(db, 'nutritionItems', id));
+    } catch (error) {
+      console.error("Error deleting item", error);
+      setItems(previousItems); // Revert on error
+    }
   };
 
   const startEditing = (item: NutritionItem) => {
@@ -131,7 +200,7 @@ export default function Nutrition() {
     setEditValue(item.text);
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     if (!editValue.trim() || !editingId) {
       setEditingId(null);
       return;
@@ -141,10 +210,21 @@ export default function Nutrition() {
     if (editValue.includes('ماء') || editValue.includes('عصير') || editValue.includes('قهوة')) iconType = 'drink';
     else if (editValue.includes('تفاح') || editValue.includes('موز') || editValue.includes('وجبة') || editValue.includes('جزر') || editValue.includes('خيار') || editValue.includes('جبنة')) iconType = 'food';
 
+    const previousItems = [...items];
+    // Optimistic update
     setItems(items.map(item => 
       item.id === editingId ? { ...item, text: editValue, iconType } : item
     ));
+    
+    const idToUpdate = editingId;
     setEditingId(null);
+    
+    try {
+      await updateDoc(doc(db, 'nutritionItems', idToUpdate), { text: editValue, iconType });
+    } catch (error) {
+      console.error("Error updating item", error);
+      setItems(previousItems); // Revert on error
+    }
   };
 
   const cancelEdit = () => {
