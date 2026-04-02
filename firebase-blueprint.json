@@ -17,21 +17,24 @@
     },
     "NutritionItem": {
       "title": "NutritionItem",
-      "description": "A nutrition task for the user",
+      "description": "A nutrition product item for the user",
       "type": "object",
       "properties": {
-        "text": {
+        "product": {
           "type": "string",
-          "description": "The text of the nutrition item"
+          "description": "The name of the product"
         },
-        "completed": {
-          "type": "boolean",
-          "description": "Whether the item is completed"
+        "cost": {
+          "type": "number",
+          "description": "The cost of the product"
         },
-        "iconType": {
+        "quantity": {
           "type": "string",
-          "description": "The type of icon to display",
-          "enum": ["drink", "food", "energy"]
+          "description": "The quantity per week"
+        },
+        "time": {
+          "type": "string",
+          "description": "The time to eat the product"
         },
         "userId": {
           "type": "string",
@@ -42,7 +45,7 @@
           "description": "Timestamp when the item was created"
         }
       },
-      "required": ["text", "completed", "iconType", "userId", "createdAt"]
+      "required": ["product", "cost", "quantity", "userId", "createdAt"]
     }
   },
   "firestore": {

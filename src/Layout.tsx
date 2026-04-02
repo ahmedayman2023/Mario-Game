@@ -25,33 +25,33 @@ export default function Layout({ children, currentPageName }: { children: React.
       </main>
 
       {/* Navigation Bar */}
-      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 glass px-8 py-5 rounded-[2.5rem] border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 flex items-center gap-16">
+      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 glass px-6 py-4 rounded-[2.5rem] border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 flex items-center gap-12">
         <Link 
           to="/" 
-          className={`flex flex-col items-center gap-2 transition-all group ${currentPageName === 'Timer' ? 'text-mario-emerald scale-110' : 'text-slate-500 hover:text-slate-300'}`}
+          className={`flex flex-col items-center gap-1.5 transition-all group ${currentPageName === 'Timer' ? 'text-mario-emerald scale-110' : 'text-slate-500 hover:text-slate-300'}`}
         >
-          <div className={`p-2 rounded-xl transition-colors ${currentPageName === 'Timer' ? 'bg-mario-emerald/20' : 'group-hover:bg-white/5'}`}>
-            <Clock size={24} />
+          <div className={`p-1.5 rounded-xl transition-colors ${currentPageName === 'Timer' ? 'bg-mario-emerald/20' : 'group-hover:bg-white/5'}`}>
+            <Clock size={20} />
           </div>
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] scoreboard-font">المؤقت</span>
+          <span className="text-[8px] font-black uppercase tracking-[0.2em] scoreboard-font">المؤقت</span>
         </Link>
         <Link 
           to="/Nutrition" 
-          className={`flex flex-col items-center gap-2 transition-all group ${currentPageName === 'Nutrition' ? 'text-mario-emerald scale-110' : 'text-slate-500 hover:text-slate-300'}`}
+          className={`flex flex-col items-center gap-1.5 transition-all group ${currentPageName === 'Nutrition' ? 'text-mario-emerald scale-110' : 'text-slate-500 hover:text-slate-300'}`}
         >
-          <div className={`p-2 rounded-xl transition-colors ${currentPageName === 'Nutrition' ? 'bg-mario-emerald/20' : 'group-hover:bg-white/5'}`}>
-            <Zap size={24} />
+          <div className={`p-1.5 rounded-xl transition-colors ${currentPageName === 'Nutrition' ? 'bg-mario-emerald/20' : 'group-hover:bg-white/5'}`}>
+            <Zap size={20} />
           </div>
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] scoreboard-font">التغذية</span>
+          <span className="text-[8px] font-black uppercase tracking-[0.2em] scoreboard-font">التغذية</span>
         </Link>
         <Link 
           to="/SRS" 
-          className={`flex flex-col items-center gap-2 transition-all group ${currentPageName === 'SRS' ? 'text-mario-emerald scale-110' : 'text-slate-500 hover:text-slate-300'}`}
+          className={`flex flex-col items-center gap-1.5 transition-all group ${currentPageName === 'SRS' ? 'text-mario-emerald scale-110' : 'text-slate-500 hover:text-slate-300'}`}
         >
-          <div className={`p-2 rounded-xl transition-colors ${currentPageName === 'SRS' ? 'bg-mario-emerald/20' : 'group-hover:bg-white/5'}`}>
-            <Brain size={24} />
+          <div className={`p-1.5 rounded-xl transition-colors ${currentPageName === 'SRS' ? 'bg-mario-emerald/20' : 'group-hover:bg-white/5'}`}>
+            <Brain size={20} />
           </div>
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] scoreboard-font">التكرار</span>
+          <span className="text-[8px] font-black uppercase tracking-[0.2em] scoreboard-font">التكرار</span>
         </Link>
       </nav>
     </div>

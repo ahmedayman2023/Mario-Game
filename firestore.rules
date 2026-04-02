@@ -55,10 +55,11 @@ service cloud.firestore {
     }
 
     function isValidNutritionItem() {
-      return hasRequiredFields(['text', 'completed', 'iconType', 'userId', 'createdAt']) &&
-             validStringLength('text', 1, 200) &&
-             request.resource.data.completed is bool &&
-             request.resource.data.iconType in ['drink', 'food', 'energy'] &&
+      return hasRequiredFields(['product', 'cost', 'quantity', 'userId', 'createdAt']) &&
+             validStringLength('product', 1, 200) &&
+             request.resource.data.cost is number &&
+             validStringLength('quantity', 1, 100) &&
+             (!( 'time' in request.resource.data ) || validStringLength('time', 0, 50)) &&
              request.resource.data.userId == request.auth.uid &&
              request.resource.data.createdAt is number;
     }
