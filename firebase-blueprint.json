@@ -36,6 +36,14 @@
           "type": "string",
           "description": "The time to eat the product"
         },
+        "sugarLevel": {
+          "type": "string",
+          "description": "The blood sugar level or curve"
+        },
+        "isCompleted": {
+          "type": "boolean",
+          "description": "Whether the nutrition item has been consumed/completed"
+        },
         "userId": {
           "type": "string",
           "description": "The ID of the user who owns this item"

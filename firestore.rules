@@ -60,6 +60,8 @@ service cloud.firestore {
              request.resource.data.cost is number &&
              validStringLength('quantity', 1, 100) &&
              (!( 'time' in request.resource.data ) || validStringLength('time', 0, 50)) &&
+             (!( 'sugarLevel' in request.resource.data ) || validStringLength('sugarLevel', 0, 100)) &&
+             (!( 'isCompleted' in request.resource.data ) || request.resource.data.isCompleted is bool) &&
              request.resource.data.userId == request.auth.uid &&
              request.resource.data.createdAt is number;
     }
