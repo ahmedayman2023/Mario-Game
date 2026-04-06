@@ -166,7 +166,10 @@ const SpacedRepetition = () => {
       12 * 60 * 60 * 1000,      // 1st Review: 12 hours
       2 * 24 * 60 * 60 * 1000,  // 2nd Review: 2 days
       7 * 24 * 60 * 60 * 1000,  // 3rd Review: 1 week
-      30 * 24 * 60 * 60 * 1000  // 4th Review: 1 month
+      30 * 24 * 60 * 60 * 1000, // 4th Review: 1 month
+      90 * 24 * 60 * 60 * 1000, // 5th Review: 3 months
+      180 * 24 * 60 * 60 * 1000, // 6th Review: 6 months (Testing between topics)
+      365 * 24 * 60 * 60 * 1000 // 7th Review: 1 year (Test previous with current)
     ];
 
     let nextReviewDelay = 0;
@@ -288,12 +291,15 @@ const SpacedRepetition = () => {
               <Sparkles size={16} className="text-[#FBD000]" />
               جدول المراجعة (POWER-UP SCHEDULE)
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
               {[
                 { label: 'المراجعة 1', time: '12 ساعة', color: 'bg-[#5C94FC]' },
                 { label: 'المراجعة 2', time: 'يومين', color: 'bg-[#FBD000]' },
                 { label: 'المراجعة 3', time: 'أسبوع', color: 'bg-[#43B047]' },
                 { label: 'المراجعة 4', time: 'شهر', color: 'bg-[#E52521]' },
+                { label: 'المراجعة 5', time: '3 أشهر', color: 'bg-[#9C27B0]' },
+                { label: 'اختبار مواضيع', time: '6 أشهر', color: 'bg-[#FF9800]' },
+                { label: 'ربط المواضيع', time: 'سنة', color: 'bg-[#00BCD4]' },
               ].map((item, idx) => (
                 <div key={idx} className={`${item.color} p-4 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center`}>
                   <div className="text-[8px] font-pixel text-black/60 mb-2 uppercase">{item.label}</div>
@@ -366,9 +372,9 @@ const SpacedRepetition = () => {
                       <div className="text-white font-bold truncate text-lg mb-4">{card.question}</div>
                       
                       {/* Review Stages Timeline */}
-                      <div className="grid grid-cols-4 gap-2 mb-4">
-                        {[0, 1, 2, 3].map((idx) => {
-                          const intervals = [12 * 60 * 60 * 1000, 2 * 24 * 60 * 60 * 1000, 7 * 24 * 60 * 60 * 1000, 30 * 24 * 60 * 60 * 1000];
+                      <div className="grid grid-cols-3 sm:grid-cols-7 gap-2 mb-4">
+                        {[0, 1, 2, 3, 4, 5, 6].map((idx) => {
+                          const intervals = [12 * 60 * 60 * 1000, 2 * 24 * 60 * 60 * 1000, 7 * 24 * 60 * 60 * 1000, 30 * 24 * 60 * 60 * 1000, 90 * 24 * 60 * 60 * 1000, 180 * 24 * 60 * 60 * 1000, 365 * 24 * 60 * 60 * 1000];
                           const isCompleted = card.step > idx;
                           const isNext = card.step === idx;
                           

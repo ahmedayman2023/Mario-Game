@@ -32,6 +32,10 @@
           "type": "string",
           "description": "The quantity per week"
         },
+        "unit": {
+          "type": "string",
+          "description": "The unit of measurement (e.g., ml, piece, gram)"
+        },
         "time": {
           "type": "string",
           "description": "The time to eat the product"
@@ -39,6 +43,30 @@
         "sugarLevel": {
           "type": "string",
           "description": "The blood sugar level or curve"
+        },
+        "complexCarbs": {
+          "type": "string",
+          "description": "Complex carbohydrates per 100 units"
+        },
+        "fiber": {
+          "type": "string",
+          "description": "Fiber per 100 units"
+        },
+        "protein": {
+          "type": "string",
+          "description": "Protein per 100 units"
+        },
+        "goal": {
+          "type": "string",
+          "description": "The goal or purpose of the item"
+        },
+        "dayOfWeek": {
+          "type": "string",
+          "description": "The day of the week this item belongs to"
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the item (protein, fiber, complexCarbs, sugarLevel, general)"
         },
         "isCompleted": {
           "type": "boolean",
@@ -54,6 +82,35 @@
         }
       },
       "required": ["product", "cost", "quantity", "userId", "createdAt"]
+    },
+    "Meal": {
+      "title": "Meal",
+      "description": "A combination of multiple nutrition items",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the meal"
+        },
+        "itemIds": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of nutrition item IDs included in this meal"
+        },
+        "dayOfWeek": {
+          "type": "string",
+          "description": "The day of the week this meal belongs to"
+        },
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who owns this meal"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Timestamp when the meal was created"
+        }
+      },
+      "required": ["name", "itemIds", "dayOfWeek", "userId", "createdAt"]
     }
   },
   "firestore": {
@@ -68,6 +125,12 @@
         "$ref": "#/entities/NutritionItem"
       },
       "description": "Nutrition items for users"
+    },
+    "meals/{mealId}": {
+      "schema": {
+        "$ref": "#/entities/Meal"
+      },
+      "description": "Meals combining multiple nutrition items"
     }
   }
 }

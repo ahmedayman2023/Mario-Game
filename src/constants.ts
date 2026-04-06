@@ -1,4 +1,4 @@
-export const INTERVALS = [1, 1, 1, 1, 2, 5, 1, 1, 2, 2, 10, 1, 1, 1, 2, 5, 10, 1, 1, 2, 1, 1, 10]; 
+export const INTERVALS = [1, 1, 1, 1, 2, 5, 1, 1, 2, 2, 10, 1, 1, 1, 2, 5, 10, 1, 1, 2, 1, 1, 10, 10, 10, 10]; 
 
 export const FEYNMAN_STEPS = [
   { title: " الاستماع فقط بدون تركيز و يفضل عند النوم", duration: 1 },
@@ -23,7 +23,10 @@ export const FEYNMAN_STEPS = [
   { title: "حاول تشرح او تسمع المعلومة", duration: 2 },
   { title: " الكتابة بدون مشاهدة", duration: 1 },
   { title: "الكتابة بدون مشاهدة", duration: 1 },
-  { title: "الكتابة بدون مشاهدة", duration: 10 }
+  { title: "الكتابة بدون مشاهدة", duration: 10 },
+  { title: "المرحلة الخامسة للمذاكرة", duration: 10 },
+  { title: "الاختبار بين مواضيع مختلفة", duration: 10 },
+  { title: "اختبر نفسك في مواضيع سابقة مع الموضوع ده حاليا", duration: 10 }
 ];
 
 // 3-step warmup sequence:

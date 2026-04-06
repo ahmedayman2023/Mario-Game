@@ -13,7 +13,7 @@ import BoxBreathing from "../components/timer/BoxBreathing";
 import MentalWarmup from "../components/timer/MentalWarmup";
 import RecoveryVideos from "../components/timer/RecoveryVideos";
 import Modal from "../components/ui/Modal";
-import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell, Zap } from 'lucide-react';
+import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell, Zap, Brain } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
@@ -554,6 +554,32 @@ const TimerPage = () => {
                 isActive={isActive}
                 isPaused={isPaused} 
               />
+            </div>
+
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Brain size={14} className="text-broadcast-yellow" />
+                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">مراحل المذاكرة الستة</h3>
+              </div>
+              <div className="space-y-2">
+                {[
+                  "الاستماع فقط بدون تركيز (يفضل عند النوم)",
+                  "مشاهدة بدون توقف وبدون كتابة (فقط فهم)",
+                  "المشاهدة بدون توقف مع الكتابة",
+                  "المشاهدة والتوقف والكتابة",
+                  "محاولة الشرح أو تسميع المعلومة",
+                  "الكتابة بدون مشاهدة"
+                ].map((stage, idx) => (
+                  <div key={idx} className="flex items-center justify-between bg-white/5 p-2 rounded-lg border border-white/5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-mario-emerald/20 text-mario-emerald flex items-center justify-center text-[10px] font-bold shrink-0">
+                        {idx + 1}
+                      </div>
+                      <span className="text-[10px] font-bold text-white leading-relaxed">{stage}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="flex justify-center pt-4">

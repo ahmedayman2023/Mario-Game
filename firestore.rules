@@ -59,9 +59,26 @@ service cloud.firestore {
              validStringLength('product', 1, 200) &&
              request.resource.data.cost is number &&
              validStringLength('quantity', 1, 100) &&
+             (!( 'unit' in request.resource.data ) || validStringLength('unit', 0, 50)) &&
              (!( 'time' in request.resource.data ) || validStringLength('time', 0, 50)) &&
              (!( 'sugarLevel' in request.resource.data ) || validStringLength('sugarLevel', 0, 100)) &&
+             (!( 'complexCarbs' in request.resource.data ) || validStringLength('complexCarbs', 0, 100)) &&
+             (!( 'fiber' in request.resource.data ) || validStringLength('fiber', 0, 100)) &&
+             (!( 'protein' in request.resource.data ) || validStringLength('protein', 0, 100)) &&
+             (!( 'goal' in request.resource.data ) || validStringLength('goal', 0, 100)) &&
+             (!( 'dayOfWeek' in request.resource.data ) || validStringLength('dayOfWeek', 0, 50)) &&
+             (!( 'category' in request.resource.data ) || validStringLength('category', 0, 50)) &&
              (!( 'isCompleted' in request.resource.data ) || request.resource.data.isCompleted is bool) &&
+             request.resource.data.userId == request.auth.uid &&
+             request.resource.data.createdAt is number;
+    }
+
+    function isValidMeal() {
+      return hasRequiredFields(['name', 'itemIds', 'dayOfWeek', 'userId', 'createdAt']) &&
+             validStringLength('name', 1, 200) &&
+             request.resource.data.itemIds is list &&
+             request.resource.data.itemIds.size() <= 50 &&
+             validStringLength('dayOfWeek', 1, 50) &&
              request.resource.data.userId == request.auth.uid &&
              request.resource.data.createdAt is number;
     }
@@ -80,6 +97,13 @@ service cloud.firestore {
       allow read: if isDocOwner();
       allow create: if isAuthenticated() && isValidNutritionItem() && uidUnchanged();
       allow update: if isDocOwner() && isValidNutritionItem() && uidNotModified();
+      allow delete: if isDocOwner();
+    }
+
+    match /meals/{mealId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && isValidMeal() && uidUnchanged();
+      allow update: if isDocOwner() && isValidMeal() && uidNotModified();
       allow delete: if isDocOwner();
     }
   }
