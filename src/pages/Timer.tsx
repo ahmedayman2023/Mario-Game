@@ -559,16 +559,17 @@ const TimerPage = () => {
             <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
               <div className="flex items-center gap-2 mb-4">
                 <Brain size={14} className="text-broadcast-yellow" />
-                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">مراحل المذاكرة الستة</h3>
+                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">مراحل المذاكرة السبعة</h3>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 mb-4">
                 {[
                   "الاستماع فقط بدون تركيز (يفضل عند النوم)",
                   "مشاهدة بدون توقف وبدون كتابة (فقط فهم)",
                   "المشاهدة بدون توقف مع الكتابة",
                   "المشاهدة والتوقف والكتابة",
                   "محاولة الشرح أو تسميع المعلومة",
-                  "الكتابة بدون مشاهدة"
+                  "الكتابة بدون مشاهدة",
+                  "ربط المواضيع ببعضها (اختبار شامل)"
                 ].map((stage, idx) => (
                   <div key={idx} className="flex items-center justify-between bg-white/5 p-2 rounded-lg border border-white/5">
                     <div className="flex items-center gap-3">
@@ -579,6 +580,11 @@ const TimerPage = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+              <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg">
+                <p className="text-[9px] font-bold text-amber-200 leading-relaxed">
+                  💡 <span className="underline">ملاحظة ذكية:</span> لا تطبق هذه المراحل على كل فيديو على حدة. بدلاً من ذلك، اختر 5 فيديوهات ومررها جميعاً عبر كل مرحلة (مثلاً: شاهد الـ 5 فيديوهات في المرحلة الأولى، ثم انتقل للمرحلة الثانية للـ 5 فيديوهات، وهكذا). هذا يعزز الربط الذهني!
+                </p>
               </div>
             </div>
 
