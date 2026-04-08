@@ -3,28 +3,32 @@ import { Check, Video, RotateCcw } from 'lucide-react';
 
 const STORAGE_KEY = 'smart_study_videos';
 
-export default function SmartStudyChecklist() {
-  const [videos, setVideos] = useState<{ id: string; title: string; completed: boolean }[]>([]);
+const defaultVideos = Array.from({ length: 10 }, (_, i) => ({
+  id: (i + 1).toString(),
+  title: `الفيديو ${i + 1}`,
+  completed: false
+}));
 
-  useEffect(() => {
+export default function SmartStudyChecklist() {
+  const [videos, setVideos] = useState<{ id: string; title: string; completed: boolean }[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
-      setVideos(JSON.parse(saved));
-    } else {
-      setVideos([
-        { id: '1', title: 'الفيديو الأول', completed: false },
-        { id: '2', title: 'الفيديو الثاني', completed: false },
-        { id: '3', title: 'الفيديو الثالث', completed: false },
-        { id: '4', title: 'الفيديو الرابع', completed: false },
-        { id: '5', title: 'الفيديو الخامس', completed: false },
-      ]);
+      try {
+        let parsed = JSON.parse(saved);
+        if (parsed.length < 10) {
+          const missing = defaultVideos.slice(parsed.length);
+          parsed = [...parsed, ...missing];
+        }
+        return parsed.slice(0, 10); // Ensure exactly 10
+      } catch (e) {
+        return defaultVideos;
+      }
     }
-  }, []);
+    return defaultVideos;
+  });
 
   useEffect(() => {
-    if (videos.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
   }, [videos]);
 
   const toggleVideo = (id: string) => {
@@ -57,10 +61,10 @@ export default function SmartStudyChecklist() {
       </div>
       
       <p className="text-[9px] text-amber-200/70 mb-4 leading-relaxed font-bold">
-        💡 اكتب أسماء 5 فيديوهات، ومررها جميعاً عبر المرحلة الحالية قبل الانتقال للمرحلة التالية.
+        💡 اكتب أسماء 10 فيديوهات، ومررها جميعاً عبر المرحلة الحالية قبل الانتقال للمرحلة التالية. يمكنك النقر على الاسم لتعديله.
       </p>
 
-      <div className="space-y-2">
+      <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
         {videos.map((video, idx) => (
           <div key={video.id} className="flex items-center gap-3 bg-black/20 p-2 rounded-md border border-amber-500/10 focus-within:border-amber-500/30 transition-colors">
             <button 
@@ -78,8 +82,8 @@ export default function SmartStudyChecklist() {
               value={video.title}
               onChange={(e) => updateTitle(video.id, e.target.value)}
               placeholder={`اسم الفيديو ${idx + 1}`}
-              className={`flex-1 bg-transparent border-none outline-none text-[11px] font-bold transition-colors placeholder:text-amber-500/30 ${
-                video.completed ? 'text-amber-200/40 line-through' : 'text-amber-100'
+              className={`flex-1 bg-transparent border-none outline-none text-[11px] font-bold transition-all px-2 py-1 rounded focus:bg-black/40 focus:ring-1 focus:ring-amber-500/50 focus:no-underline focus:text-amber-100 placeholder:text-amber-500/30 ${
+                video.completed ? 'text-amber-200/40 line-through' : 'text-amber-100 hover:bg-white/5'
               }`}
             />
           </div>
