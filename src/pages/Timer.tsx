@@ -12,6 +12,7 @@ import StudyTopicInput from "../components/timer/StudyTopicInput";
 import BoxBreathing from "../components/timer/BoxBreathing";
 import MentalWarmup from "../components/timer/MentalWarmup";
 import RecoveryVideos from "../components/timer/RecoveryVideos";
+import SmartStudyChecklist from "../components/timer/SmartStudyChecklist";
 import Modal from "../components/ui/Modal";
 import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell, Zap, Brain } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
@@ -581,11 +582,8 @@ const TimerPage = () => {
                   </div>
                 ))}
               </div>
-              <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg">
-                <p className="text-[9px] font-bold text-amber-200 leading-relaxed">
-                  💡 <span className="underline">ملاحظة ذكية:</span> لا تطبق هذه المراحل على كل فيديو على حدة. بدلاً من ذلك، اختر 5 فيديوهات ومررها جميعاً عبر كل مرحلة (مثلاً: شاهد الـ 5 فيديوهات في المرحلة الأولى، ثم انتقل للمرحلة الثانية للـ 5 فيديوهات، وهكذا). هذا يعزز الربط الذهني!
-                </p>
-              </div>
+              
+              <SmartStudyChecklist />
             </div>
 
             <div className="flex justify-center pt-4">
