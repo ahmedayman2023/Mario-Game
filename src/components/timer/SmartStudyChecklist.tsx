@@ -3,7 +3,7 @@ import { Check, Video, RotateCcw } from 'lucide-react';
 
 const STORAGE_KEY = 'smart_study_videos';
 
-const defaultVideos = Array.from({ length: 10 }, (_, i) => ({
+const defaultVideos = Array.from({ length: 20 }, (_, i) => ({
   id: (i + 1).toString(),
   title: `الفيديو ${i + 1}`,
   completed: false
@@ -15,11 +15,11 @@ export default function SmartStudyChecklist() {
     if (saved) {
       try {
         let parsed = JSON.parse(saved);
-        if (parsed.length < 10) {
+        if (parsed.length < 20) {
           const missing = defaultVideos.slice(parsed.length);
           parsed = [...parsed, ...missing];
         }
-        return parsed.slice(0, 10); // Ensure exactly 10
+        return parsed.slice(0, 20); // Ensure exactly 20
       } catch (e) {
         return defaultVideos;
       }
@@ -61,29 +61,29 @@ export default function SmartStudyChecklist() {
       </div>
       
       <p className="text-[9px] text-amber-200/70 mb-4 leading-relaxed font-bold">
-        💡 اكتب أسماء 10 فيديوهات، ومررها جميعاً عبر المرحلة الحالية قبل الانتقال للمرحلة التالية. يمكنك النقر على الاسم لتعديله.
+        💡 اكتب أسماء 20 فيديو، ومررها جميعاً عبر المرحلة الحالية قبل الانتقال للمرحلة التالية. يمكنك النقر على الاسم لتعديله.
       </p>
 
-      <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+      <div className="space-y-2 pr-2">
         {videos.map((video, idx) => (
-          <div key={video.id} className="flex items-center gap-3 bg-black/20 p-2 rounded-md border border-amber-500/10 focus-within:border-amber-500/30 transition-colors">
+          <div key={video.id} className="flex items-center gap-3 bg-black/30 p-3 rounded-xl border border-amber-500/10 focus-within:border-amber-500/40 transition-all hover:bg-black/40">
             <button 
               onClick={() => toggleVideo(video.id)}
-              className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border-2 transition-all ${
+              className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 border-2 transition-all ${
                 video.completed 
-                  ? 'bg-mario-emerald border-mario-emerald text-black scale-110' 
-                  : 'border-amber-500/30 hover:border-amber-500/60 text-transparent'
+                  ? 'bg-mario-emerald border-mario-emerald text-black scale-105 shadow-[0_0_10px_rgba(0,255,136,0.3)]' 
+                  : 'border-amber-500/20 hover:border-amber-500/50 text-transparent'
               }`}
             >
-              <Check size={12} strokeWidth={4} />
+              <Check size={14} strokeWidth={4} />
             </button>
             <input 
               type="text"
               value={video.title}
               onChange={(e) => updateTitle(video.id, e.target.value)}
               placeholder={`اسم الفيديو ${idx + 1}`}
-              className={`flex-1 bg-transparent border-none outline-none text-[11px] font-bold transition-all px-2 py-1 rounded focus:bg-black/40 focus:ring-1 focus:ring-amber-500/50 focus:no-underline focus:text-amber-100 placeholder:text-amber-500/30 ${
-                video.completed ? 'text-amber-200/40 line-through' : 'text-amber-100 hover:bg-white/5'
+              className={`flex-1 bg-transparent border-none outline-none text-[12px] font-bold transition-all px-2 py-1 rounded focus:bg-black/20 focus:text-amber-100 placeholder:text-amber-500/20 ${
+                video.completed ? 'text-amber-200/30 line-through' : 'text-amber-100'
               }`}
             />
           </div>
