@@ -25,31 +25,31 @@ const TimerControls = memo(function TimerControls({
   isBreakTime,
   isWarmup
 }: TimerControlsProps) {
-  const buttonBase = "flex items-center justify-center gap-3 px-8 py-4 rounded-lg transition-all font-bold text-[10px] disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-[0.2em] border ink-border paper-shadow";
+  const buttonBase = "flex items-center justify-center gap-3 px-8 py-4 rounded-full transition-all font-black text-[10px] disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-[0.2em] border scoreboard-font shadow-lg";
 
   return (
-    <div className="flex flex-wrap justify-center items-center gap-6 mb-16">
+    <div className="flex flex-wrap justify-center items-center gap-4 mb-16">
       <AnimatePresence mode="wait">
         {isActive ? (
-          <motion.button 
+          <motion.button
             key="pause"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             onClick={onPause}
-            className={`${buttonBase} bg-warning text-white hover:bg-warning/90`}
+            className={`${buttonBase} bg-amber-500 text-black border-amber-400 hover:bg-amber-400`}
           >
             <Pause size={14} strokeWidth={3} />
             <span>توقف مؤقت</span>
           </motion.button>
         ) : (
-          <motion.button 
+          <motion.button
             key="play"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             onClick={onStart}
-            className={`${buttonBase} bg-primary text-white hover:bg-primary/90`}
+            className={`${buttonBase} bg-mario-emerald text-black border-mario-emerald hover:brightness-110`}
           >
             <Play size={14} strokeWidth={3} />
             <span>{isPaused ? 'استئناف' : isWarmup ? 'بدء' : 'ابدأ الآن'}</span>
@@ -57,26 +57,26 @@ const TimerControls = memo(function TimerControls({
         )}
       </AnimatePresence>
 
-      <button 
+      <button
         onClick={onSkip}
-        className={`${buttonBase} bg-white text-ink hover:bg-paper`}
+        className={`${buttonBase} glass text-white border-white/10 hover:bg-white/10`}
       >
         <SkipForward size={14} strokeWidth={3} />
         <span>تخطي</span>
       </button>
 
-      <button 
+      <button
         onClick={onBack}
-        className={`${buttonBase} bg-white text-ink hover:bg-paper`}
+        className={`${buttonBase} glass text-white border-white/10 hover:bg-white/10`}
       >
         <SkipBack size={14} strokeWidth={3} />
         <span>رجوع</span>
       </button>
 
-      <button 
+      <button
         onClick={onStop}
         disabled={!isActive && !isPaused}
-        className={`${buttonBase} bg-danger/5 text-danger hover:bg-danger hover:text-white border-danger/20`}
+        className={`${buttonBase} bg-mario-red/10 text-mario-red border-mario-red/30 hover:bg-mario-red hover:text-white`}
       >
         <Square size={14} strokeWidth={3} />
         <span>إلغاء</span>
