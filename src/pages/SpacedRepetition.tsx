@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Check, RotateCcw, Calendar, Brain, Sparkles, Star, Trophy, Layers, Pencil, Zap } from 'lucide-react';
+import { Plus, Trash2, Check, Calendar, Brain, Sparkles, Star, Trophy, Layers, Pencil, Zap } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import Modal from "../components/ui/Modal";
 import MentalWarmup from "../components/timer/MentalWarmup";
@@ -30,12 +30,13 @@ const REVIEW_STAGE_INTERVALS = [
   180 * 24 * 60 * 60 * 1000,
   365 * 24 * 60 * 60 * 1000
 ];
+const STAGE_COLORS = ['bg-mario-sky', 'bg-mario-yellow', 'bg-mario-emerald', 'bg-mario-red', 'bg-mario-brown', 'bg-mario-sky', 'bg-mario-yellow'];
 
 const RATING_OPTIONS = [
-  { label: 'مرة أخرى', rating: 1, className: 'bg-mario-red/10 text-mario-red border-mario-red/30 hover:bg-mario-red hover:text-white' },
-  { label: 'صعب', rating: 2, className: 'bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500 hover:text-black' },
-  { label: 'جيد', rating: 3, className: 'bg-sky-500/10 text-sky-300 border-sky-500/30 hover:bg-sky-500 hover:text-black' },
-  { label: 'سهل', rating: 4, className: 'bg-mario-emerald/10 text-mario-emerald border-mario-emerald/30 hover:bg-mario-emerald hover:text-black' },
+  { label: 'مرة أخرى', rating: 1, className: 'bg-mario-red text-white' },
+  { label: 'صعب', rating: 2, className: 'bg-mario-yellow text-black' },
+  { label: 'جيد', rating: 3, className: 'bg-mario-sky text-white' },
+  { label: 'سهل', rating: 4, className: 'bg-mario-emerald text-white' },
 ];
 
 const SpacedRepetition = () => {
@@ -242,19 +243,19 @@ const SpacedRepetition = () => {
   return (
     <div className="p-4 sm:p-8 max-w-4xl mx-auto min-h-screen">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-6 scoreboard-panel rounded-2xl p-6">
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-6 bg-black mario-block p-6">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-broadcast-yellow/20 flex items-center justify-center text-broadcast-yellow">
+          <div className="w-12 h-12 rounded-full bg-mario-yellow border-2 border-white flex items-center justify-center text-black">
             <Brain size={24} />
           </div>
           <div>
             <h1 className="text-xl font-black text-white uppercase tracking-tight scoreboard-font">التكرار المتباعد</h1>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-1">تقنية فاينمان للمراجعة</p>
+            <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mt-1">تقنية فاينمان للمراجعة</p>
           </div>
         </div>
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="bg-mario-emerald text-black w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:brightness-110 active:scale-95 transition-all"
+          className="mario-btn bg-mario-emerald text-white w-12 h-12 rounded-full flex items-center justify-center"
         >
           <Plus size={22} strokeWidth={3} />
         </button>
@@ -264,48 +265,48 @@ const SpacedRepetition = () => {
         <div className="space-y-8">
           {/* Stats Summary */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="glass border-white/10 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden">
-              <Layers size={28} className="text-broadcast-yellow mb-3" />
-              <div className="text-3xl font-black text-white scoreboard-font mb-1">{cards.length}</div>
-              <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest">إجمالي البطاقات</div>
+            <div className="bg-mario-yellow mario-block p-6 flex flex-col items-center text-center">
+              <Layers size={28} className="text-black mb-3" />
+              <div className="text-3xl font-pixel text-black mb-1">{cards.length}</div>
+              <div className="text-[9px] font-black text-black/60 uppercase tracking-widest">إجمالي البطاقات</div>
             </div>
 
-            <div className="glass border-white/10 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden">
-              <Calendar size={28} className="text-mario-red mb-3" />
-              <div className="text-3xl font-black text-white scoreboard-font mb-1">{dueCount}</div>
-              <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest">مستحق للمراجعة</div>
+            <div className="bg-mario-red mario-block p-6 flex flex-col items-center text-center">
+              <Calendar size={28} className="text-white mb-3" />
+              <div className="text-3xl font-pixel text-white mb-1">{dueCount}</div>
+              <div className="text-[9px] font-black text-white/70 uppercase tracking-widest">مستحق للمراجعة</div>
             </div>
 
-            <div className="glass border-white/10 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden">
-              <Trophy size={28} className="text-mario-emerald mb-3" />
-              <div className="text-3xl font-black text-white scoreboard-font mb-1">
+            <div className="bg-mario-emerald mario-block p-6 flex flex-col items-center text-center">
+              <Trophy size={28} className="text-white mb-3" />
+              <div className="text-3xl font-pixel text-white mb-1">
                 {cards.filter(c => c.status === 'reviewing').length}
               </div>
-              <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest">بطاقات متقنة</div>
+              <div className="text-[9px] font-black text-white/70 uppercase tracking-widest">بطاقات متقنة</div>
             </div>
           </div>
 
           {/* Review Schedule */}
-          <div className="glass border-white/10 rounded-2xl p-6">
-            <h2 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-5 flex items-center gap-2 scoreboard-font">
-              <Sparkles size={14} className="text-broadcast-yellow" />
+          <div className="bg-white mario-block p-6">
+            <h2 className="text-[10px] font-black text-black/50 uppercase tracking-[0.3em] mb-5 flex items-center gap-2 scoreboard-font">
+              <Sparkles size={14} className="text-mario-sky" />
               جدول المراجعة
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
               {REVIEW_STAGE_LABELS.map((time, idx) => (
-                <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-3 text-center">
-                  <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">مراجعة {idx + 1}</div>
-                  <div className="text-xs font-bold text-white">{time}</div>
+                <div key={idx} className={`${STAGE_COLORS[idx]} mario-block-sm p-3 text-center`}>
+                  <div className="text-[8px] font-black text-black/50 uppercase tracking-widest mb-1">مراجعة {idx + 1}</div>
+                  <div className="text-xs font-black text-black">{time}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Quick Timers Bar - Global */}
-          <div className="glass border-white/10 rounded-2xl p-6">
+          <div className="bg-white mario-block p-6">
             <div className="flex items-center gap-2 mb-4">
-              <Zap size={14} className="text-broadcast-yellow" />
-              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">مؤقتات سريعة (دقائق)</h3>
+              <Zap size={14} className="text-mario-sky" />
+              <h3 className="text-[10px] font-black text-black/50 uppercase tracking-[0.3em] scoreboard-font">مؤقتات سريعة (دقائق)</h3>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
               {INTERVALS.map((mins, tIdx) => (
@@ -317,7 +318,7 @@ const SpacedRepetition = () => {
                       description: "تم اختيار المؤقت السريع.",
                     });
                   }}
-                  className="flex-shrink-0 min-w-[44px] h-10 bg-white/5 text-broadcast-yellow border border-white/10 rounded-lg font-black text-xs flex items-center justify-center active:scale-95 hover:bg-broadcast-yellow hover:text-black hover:border-broadcast-yellow transition-all scoreboard-font"
+                  className="mario-btn flex-shrink-0 min-w-[44px] h-10 bg-white text-black font-pixel text-[10px] flex items-center justify-center"
                 >
                   {mins}
                 </button>
@@ -329,18 +330,18 @@ const SpacedRepetition = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => setIsMentalWarmupOpen(true)}
-              className="flex-1 py-5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-black scoreboard-font text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-3 text-white"
+              className="mario-btn flex-1 py-5 bg-white text-black font-black scoreboard-font text-sm uppercase tracking-widest flex items-center justify-center gap-3"
             >
-              <Sparkles size={20} className="text-broadcast-yellow" />
+              <Sparkles size={20} className="text-mario-sky" />
               تسخين ذهني
             </button>
             <button
               onClick={startReview}
               disabled={dueCount === 0}
-              className={`flex-[2] py-5 rounded-full font-black scoreboard-font text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-lg ${
+              className={`mario-btn flex-[2] py-5 font-black scoreboard-font text-sm uppercase tracking-widest flex items-center justify-center gap-3 ${
                 dueCount > 0
-                  ? 'bg-mario-emerald text-black hover:brightness-110'
-                  : 'bg-white/5 text-slate-600 cursor-not-allowed border border-white/5'
+                  ? 'bg-mario-emerald text-white'
+                  : 'bg-black/10 text-black/30'
               }`}
             >
               <Brain size={20} strokeWidth={3} />
@@ -350,30 +351,30 @@ const SpacedRepetition = () => {
 
           {/* Cards List */}
           <div className="space-y-4">
-            <h2 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font flex items-center gap-2">
-              <Layers size={14} className="text-broadcast-yellow" />
+            <h2 className="text-[10px] font-black text-black/50 uppercase tracking-[0.3em] scoreboard-font flex items-center gap-2">
+              <Layers size={14} className="text-mario-sky" />
               قائمة البطاقات
             </h2>
             <div className="grid grid-cols-1 gap-4">
               {cards.length === 0 ? (
-                <div className="text-center py-16 glass border-dashed border-white/10 rounded-2xl">
-                  <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">لا توجد بطاقات بعد. أضف أول بطاقة للبدء.</p>
+                <div className="text-center py-16 bg-white mario-block-sm border-dashed">
+                  <p className="text-black/40 text-xs font-black uppercase tracking-widest">لا توجد بطاقات بعد. أضف أول بطاقة للبدء.</p>
                 </div>
               ) : (
                 cards.map(card => (
-                  <div key={card.id} className="glass border-white/10 rounded-2xl p-5 hover:border-white/20 transition-colors">
+                  <div key={card.id} className="bg-white mario-block-sm p-5">
                     <div className="flex items-start justify-between mb-4 gap-3">
-                      <div className="text-white font-bold text-base flex-1">{card.question}</div>
+                      <div className="text-black font-bold text-base flex-1">{card.question}</div>
                       <div className="flex items-center gap-1 shrink-0">
                         <button
                           onClick={() => editCard(card)}
-                          className="text-slate-500 hover:text-broadcast-yellow p-2 rounded-lg hover:bg-white/5 transition-colors"
+                          className="text-black/40 hover:text-mario-sky p-2 transition-colors"
                         >
                           <Pencil size={16} />
                         </button>
                         <button
                           onClick={() => deleteCard(card.id)}
-                          className="text-slate-500 hover:text-mario-red p-2 rounded-lg hover:bg-white/5 transition-colors"
+                          className="text-black/40 hover:text-mario-red p-2 transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -409,21 +410,21 @@ const SpacedRepetition = () => {
                                 e.stopPropagation();
                                 if (isNext) handleRating(3, card);
                               }}
-                              className={`w-full h-8 rounded-lg border transition-all flex items-center justify-center ${
-                                isCompleted ? 'bg-mario-emerald/20 border-mario-emerald/40 text-mario-emerald' :
-                                isNext ? 'bg-broadcast-yellow/20 border-broadcast-yellow/50 text-broadcast-yellow animate-pulse' :
-                                'bg-white/5 border-white/10 text-slate-600'
+                              className={`w-full h-8 border-2 border-black flex items-center justify-center transition-all ${
+                                isCompleted ? 'bg-mario-emerald text-white' :
+                                isNext ? 'bg-mario-yellow text-black animate-pulse' :
+                                'bg-black/5 text-black/30'
                               }`}
                             >
                               {isCompleted ? <Check size={14} strokeWidth={3} /> : isNext ? <Brain size={12} /> : <span className="text-[9px] font-bold">{idx + 1}</span>}
                             </button>
-                            <div className="text-[8px] font-bold text-slate-500 leading-tight text-center min-h-[24px] flex flex-col justify-center">
+                            <div className="text-[8px] font-bold text-black/50 leading-tight text-center min-h-[24px] flex flex-col justify-center">
                               {isCompleted ? (
-                                <span className="text-mario-emerald">تم</span>
+                                <span className="text-mario-emerald font-black">تم</span>
                               ) : (
                                 <div>
                                   <div>{dateObj.toLocaleDateString('ar-EG', { month: 'numeric', day: 'numeric' })}</div>
-                                  {isToday && <div className="text-broadcast-yellow">{dateObj.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</div>}
+                                  {isToday && <div className="text-mario-red">{dateObj.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</div>}
                                 </div>
                               )}
                             </div>
@@ -445,12 +446,12 @@ const SpacedRepetition = () => {
                                         startTimer(card.id, idx, mins);
                                       }
                                     }}
-                                    className={`text-[7px] font-bold py-1 rounded border transition-all ${
+                                    className={`text-[7px] font-bold py-1 border transition-all ${
                                       isThisTimerActive
-                                        ? 'bg-mario-red text-white border-mario-red animate-pulse'
+                                        ? 'bg-mario-red text-white border-black animate-pulse'
                                         : isAnyTimerActiveInThisStage
-                                          ? 'bg-white/5 text-slate-700 border-white/5 cursor-not-allowed'
-                                          : 'bg-white/5 text-slate-400 border-white/10 hover:bg-broadcast-yellow/20 hover:text-broadcast-yellow'
+                                          ? 'bg-black/5 text-black/20 border-black/10 cursor-not-allowed'
+                                          : 'bg-black/5 text-black/60 border-black/20 hover:bg-mario-yellow/30'
                                     }`}
                                     disabled={isAnyTimerActiveInThisStage && !isThisTimerActive}
                                   >
@@ -467,10 +468,10 @@ const SpacedRepetition = () => {
                       })}
                     </div>
 
-                    <span className={`inline-block px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
-                      card.status === 'new' ? 'bg-sky-500/10 text-sky-300 border-sky-500/30' :
-                      card.status === 'learning' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' :
-                      'bg-mario-emerald/10 text-mario-emerald border-mario-emerald/30'
+                    <span className={`inline-block px-3 py-1 border-2 border-black text-[9px] font-black uppercase tracking-widest ${
+                      card.status === 'new' ? 'bg-mario-sky text-white' :
+                      card.status === 'learning' ? 'bg-mario-yellow text-black' :
+                      'bg-mario-emerald text-white'
                     }`}>
                       {card.status === 'new' ? 'جديد' : card.status === 'learning' ? 'تعلم' : 'مراجعة'}
                     </span>
@@ -481,11 +482,11 @@ const SpacedRepetition = () => {
           </div>
         </div>
       ) : (
-        /* Review Mode */
+        /* Review Mode - Question Block Style */
         <div className="flex flex-col items-center justify-center py-8">
           <div className="w-full max-w-2xl">
             <div className="flex justify-between items-center mb-6 px-2">
-              <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-[10px] font-black text-white scoreboard-font">
+              <div className="bg-black px-4 py-2 text-[10px] font-black text-white scoreboard-font border-2 border-black">
                 البطاقة {currentCardIndex + 1} / {reviewQueue.length}
               </div>
             </div>
@@ -496,41 +497,47 @@ const SpacedRepetition = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.05 }}
-                className="glass border-2 border-broadcast-yellow/30 rounded-3xl p-8 sm:p-12 min-h-[400px] flex flex-col items-center justify-center text-center relative overflow-hidden shadow-2xl"
+                className="bg-mario-yellow mario-block p-8 sm:p-12 min-h-[400px] flex flex-col items-center justify-center text-center relative overflow-hidden"
               >
+                {/* Decorative corner dots for Question Block */}
+                <div className="absolute top-4 left-4 w-3 h-3 bg-black/20 rounded-full" />
+                <div className="absolute top-4 right-4 w-3 h-3 bg-black/20 rounded-full" />
+                <div className="absolute bottom-4 left-4 w-3 h-3 bg-black/20 rounded-full" />
+                <div className="absolute bottom-4 right-4 w-3 h-3 bg-black/20 rounded-full" />
+
                 {!showAnswer ? (
                   <>
-                    <div className="text-[10px] font-black text-broadcast-yellow uppercase tracking-[0.3em] mb-8 scoreboard-font">السؤال</div>
-                    <div className="text-2xl sm:text-3xl font-black text-white leading-tight mb-12">
+                    <div className="text-2xl font-pixel text-black mb-8 animate-pulse">?</div>
+                    <div className="text-2xl sm:text-3xl font-black text-black leading-tight mb-12">
                       {reviewQueue[currentCardIndex].question}
                     </div>
                     <button
                       onClick={() => setShowAnswer(true)}
-                      className="bg-broadcast-yellow text-black px-10 py-3 rounded-full font-black scoreboard-font text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-lg"
+                      className="mario-btn bg-black text-white px-10 py-4 font-black scoreboard-font text-xs uppercase tracking-widest"
                     >
                       إظهار الإجابة
                     </button>
                   </>
                 ) : (
                   <>
-                    <div className="text-[10px] font-black text-mario-emerald uppercase tracking-[0.3em] mb-6 scoreboard-font">الإجابة</div>
-                    <div className="text-xl sm:text-2xl font-bold text-white leading-relaxed mb-8">
+                    <div className="text-[10px] font-black text-black/40 mb-6 scoreboard-font uppercase tracking-widest">تم إيجاد الإجابة!</div>
+                    <div className="text-xl sm:text-2xl font-bold text-black leading-relaxed mb-8">
                       {reviewQueue[currentCardIndex].answer}
                     </div>
 
                     {/* Checklist in Review Mode */}
-                    <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-2xl p-4 mb-10 space-y-2">
-                      <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2 text-right">خطوات فاينمان</div>
+                    <div className="w-full max-w-md bg-black/5 border-2 border-black mb-10 p-4 space-y-2">
+                      <div className="text-[9px] font-black text-black/50 uppercase tracking-widest mb-2 text-right scoreboard-font">خطوات فاينمان</div>
                       {reviewQueue[currentCardIndex].checklist.map((item, idx) => (
                         <button
                           key={idx}
                           onClick={() => toggleChecklistItem(reviewQueue[currentCardIndex].id, idx)}
                           className="w-full flex items-center gap-3 text-right group"
                         >
-                          <div className={`w-5 h-5 rounded-md flex-shrink-0 border flex items-center justify-center transition-colors ${item.completed ? 'bg-mario-emerald border-mario-emerald' : 'bg-transparent border-white/20'}`}>
-                            {item.completed && <Check size={12} className="text-black" strokeWidth={3} />}
+                          <div className={`w-5 h-5 flex-shrink-0 border-2 border-black flex items-center justify-center transition-colors ${item.completed ? 'bg-mario-emerald' : 'bg-white'}`}>
+                            {item.completed && <Check size={12} className="text-white" strokeWidth={3} />}
                           </div>
-                          <span className={`text-sm font-bold text-white ${item.completed ? 'line-through opacity-40' : ''}`}>
+                          <span className={`text-sm font-bold text-black ${item.completed ? 'line-through opacity-40' : ''}`}>
                             {item.text}
                           </span>
                         </button>
@@ -542,7 +549,7 @@ const SpacedRepetition = () => {
                         <button
                           key={btn.rating}
                           onClick={() => handleRating(btn.rating as any)}
-                          className={`${btn.className} border rounded-full py-3 font-black text-[10px] uppercase tracking-widest transition-all scoreboard-font`}
+                          className={`${btn.className} mario-btn py-3 font-black text-[10px] uppercase tracking-widest scoreboard-font`}
                         >
                           {btn.label}
                         </button>
@@ -568,31 +575,31 @@ const SpacedRepetition = () => {
       >
         <div className="space-y-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">السؤال</label>
+            <label className="text-[10px] font-black text-black/60 uppercase tracking-widest">السؤال</label>
             <textarea
               value={newCard.question}
               onChange={(e) => setNewCard({ ...newCard, question: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white font-bold focus:outline-none focus:border-broadcast-yellow/50 min-h-[100px] transition-all"
+              className="w-full bg-white border-2 border-black p-4 text-black font-bold focus:outline-none focus:border-mario-sky min-h-[100px] transition-all"
               placeholder="ما الذي تريد تذكره؟"
             />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">الإجابة</label>
+            <label className="text-[10px] font-black text-black/60 uppercase tracking-widest">الإجابة</label>
             <textarea
               value={newCard.answer}
               onChange={(e) => setNewCard({ ...newCard, answer: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white font-bold focus:outline-none focus:border-broadcast-yellow/50 min-h-[80px] transition-all"
+              className="w-full bg-white border-2 border-black p-4 text-black font-bold focus:outline-none focus:border-mario-sky min-h-[80px] transition-all"
               placeholder="اكتب الإجابة هنا..."
             />
           </div>
 
           {/* Checklist Inputs */}
           <div className="space-y-3">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">خطوات المراجعة</label>
+            <label className="text-[10px] font-black text-black/60 uppercase tracking-widest">خطوات المراجعة</label>
             <div className="grid grid-cols-1 gap-2">
               {newCard.checklist.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-white/5 border border-white/10 rounded-lg text-white font-black text-[10px] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 bg-mario-yellow border-2 border-black text-black font-black text-[10px] flex items-center justify-center shrink-0">
                     {idx + 1}
                   </div>
                   <input
@@ -603,7 +610,7 @@ const SpacedRepetition = () => {
                       newList[idx] = e.target.value;
                       setNewCard({ ...newCard, checklist: newList });
                     }}
-                    className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm font-bold text-white focus:outline-none focus:border-broadcast-yellow/50 transition-all"
+                    className="flex-1 bg-white border-2 border-black px-3 py-2 text-sm font-bold text-black focus:outline-none focus:border-mario-sky transition-all"
                     placeholder={`الخطوة ${idx + 1}...`}
                   />
                 </div>
@@ -612,7 +619,7 @@ const SpacedRepetition = () => {
           </div>
           <button
             onClick={addCard}
-            className="w-full bg-mario-emerald text-black py-4 rounded-full font-black scoreboard-font text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-lg"
+            className="mario-btn w-full bg-mario-emerald text-white py-4 font-black scoreboard-font text-sm uppercase tracking-widest"
           >
             {editingId ? "تحديث البطاقة" : "حفظ البطاقة"}
           </button>

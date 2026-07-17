@@ -54,15 +54,15 @@ const TimerDisplay = memo(function TimerDisplay({
     ((Number(currentInterval) - 1 + (isBreakTime ? 1 : progress / 100)) / FEYNMAN_STEPS.length) * 100;
   const displayPercentage = Math.min(100, Math.round(overallProgress));
 
-  const digitColorClass = isWarmup ? 'text-amber-400' : isBreakTime ? 'text-mario-emerald' : 'text-white';
+  const digitColorClass = isWarmup ? 'text-mario-yellow' : isBreakTime ? 'text-mario-emerald' : 'text-white';
   const badgeClass = isWarmup
-    ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+    ? 'bg-mario-yellow text-black'
     : isBreakTime
-      ? 'bg-mario-emerald/10 text-mario-emerald border-mario-emerald/30'
-      : 'bg-sky-500/10 text-sky-300 border-sky-500/30';
+      ? 'bg-mario-emerald text-white'
+      : 'bg-mario-sky text-white';
 
   return (
-    <div className="flex flex-col items-center justify-center py-12 px-4 w-full">
+    <div className="flex flex-col items-center justify-center py-10 px-4 w-full">
       <AnimatePresence mode="wait">
         <motion.div
           key={isWarmup ? `warmup-${warmupIntervalIndex}` : isBreakTime ? 'break' : 'study'}
@@ -71,10 +71,10 @@ const TimerDisplay = memo(function TimerDisplay({
           exit={{ opacity: 0, y: -10 }}
           className="flex flex-col items-center gap-3 mb-6 text-center"
         >
-          <div className={`px-6 py-2 text-[10px] font-black uppercase rounded-full tracking-[0.2em] border scoreboard-font ${badgeClass}`}>
+          <div className={`mario-block-sm px-5 py-2 text-[10px] font-black uppercase tracking-[0.1em] scoreboard-font ${badgeClass}`}>
             {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : (currentStep?.title || `المرحلة ${currentInterval}`)}
           </div>
-          <div className="text-xs font-bold text-slate-400 tracking-wide max-w-[320px] leading-relaxed">
+          <div className="text-xs font-black text-black/70 tracking-wide max-w-[320px] leading-relaxed">
             {isWarmup ? getWarmupSubLabel() : isBreakTime ? 'إعادة شحن الطاقة' : `الخطوة ${currentInterval} من ${FEYNMAN_STEPS.length}`}
           </div>
         </motion.div>
@@ -83,39 +83,39 @@ const TimerDisplay = memo(function TimerDisplay({
       {!isWarmup && (
         <button
           onClick={onToggleMode}
-          className={`mb-8 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all scoreboard-font ${
-            isStopwatch
-              ? 'bg-broadcast-yellow text-black border-broadcast-yellow'
-              : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'
+          className={`mario-btn mb-8 px-4 py-1.5 text-[9px] font-black uppercase tracking-widest scoreboard-font ${
+            isStopwatch ? 'bg-mario-yellow text-black' : 'bg-white text-black'
           }`}
         >
           {isStopwatch ? 'ساعة إيقاف' : 'مؤقت تنازلي'}
         </button>
       )}
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-10 md:gap-16">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-14">
         <motion.div
-          className={`text-[6rem] sm:text-[8rem] md:text-[10rem] font-mono font-medium tracking-tight leading-none select-none cursor-pointer transition-colors scoreboard-font ${digitColorClass}`}
           onClick={() => !isActive && onTimeEdit(minutes * 60 + seconds)}
+          className="bg-black border-4 border-black rounded-lg px-6 py-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.3)] cursor-pointer"
           animate={isActive && !isBreakTime && !isWarmup ? {
             scale: [1, 1.01, 1],
             transition: { duration: 1, repeat: Infinity }
           } : {}}
         >
-          {String(minutes).padStart(2, '0')}<span className="opacity-20">:</span>{String(seconds).padStart(2, '0')}
+          <div className={`text-[3.2rem] sm:text-[4.5rem] md:text-[5.5rem] font-pixel leading-none select-none transition-colors ${digitColorClass}`}>
+            {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+          </div>
         </motion.div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-5">
           <motion.div
             className="flex flex-col items-center"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 scoreboard-font">التقدم</span>
-            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl">
+            <span className="text-[9px] font-black text-black/60 uppercase tracking-widest mb-2 scoreboard-font">التقدم</span>
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-mario-sky mario-block-sm rounded-full flex items-center justify-center">
               <motion.span
-                className="text-xl sm:text-2xl font-black text-white scoreboard-font"
+                className="text-base sm:text-lg font-black text-white font-pixel"
                 key={Math.round(progress)}
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
@@ -130,47 +130,27 @@ const TimerDisplay = memo(function TimerDisplay({
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="flex-shrink-0"
+              className="flex-shrink-0 flex flex-col items-center"
             >
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
-                <div className="absolute inset-2 rounded-full glass border-2 border-mario-emerald/40 flex flex-col items-center justify-center">
-                  <div className="text-[8px] font-black text-mario-emerald uppercase tracking-widest mb-1 scoreboard-font">إنجاز</div>
-                  <div className="text-lg sm:text-xl font-black text-white scoreboard-font">
+              <span className="text-[9px] font-black text-black/60 uppercase tracking-widest mb-2 scoreboard-font">إنجاز</span>
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+                <div className="absolute inset-0 bg-mario-yellow mario-block-sm rounded-full flex items-center justify-center">
+                  <span className="text-base sm:text-lg font-black text-black font-pixel">
                     {displayPercentage}%
-                  </div>
+                  </span>
                 </div>
-                <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    strokeDasharray="283"
-                    strokeDashoffset={283 - (283 * displayPercentage) / 100}
-                    className="text-mario-emerald transition-all duration-1000 ease-out"
-                  />
-                </svg>
               </div>
             </motion.div>
           )}
         </div>
       </div>
 
-      <div className="mt-14 flex items-center gap-10 sm:gap-16">
-        <div className="flex flex-col items-center">
-          <div className="text-[9px] font-black uppercase text-slate-500 mb-3 tracking-widest scoreboard-font">الحالة</div>
-          <div className={`text-[9px] font-black uppercase px-5 py-2 rounded-full tracking-widest border scoreboard-font ${isActive ? 'bg-mario-emerald/10 text-mario-emerald border-mario-emerald/30' : 'bg-mario-red/10 text-mario-red border-mario-red/30'}`}>
-            {isActive ? 'جاري' : 'متوقف'}
-          </div>
+      <div className="mt-12 flex items-center gap-6 sm:gap-10">
+        <div className={`mario-block-sm px-4 py-2 text-[9px] font-black uppercase tracking-widest scoreboard-font ${isActive ? 'bg-mario-emerald text-white' : 'bg-mario-red text-white'}`}>
+          {isActive ? 'جاري' : 'متوقف'}
         </div>
-        <div className="w-[1px] h-10 bg-white/10" />
-        <div className="flex flex-col items-center">
-          <div className="text-[9px] font-black uppercase text-slate-500 mb-3 tracking-widest scoreboard-font">التركيز</div>
-          <div className="text-[9px] font-black uppercase px-5 py-2 bg-white/5 text-broadcast-yellow rounded-full border border-white/10 tracking-widest scoreboard-font">
-            مرتفع
-          </div>
+        <div className="mario-block-sm px-4 py-2 text-[9px] font-black uppercase tracking-widest scoreboard-font bg-white text-black">
+          تركيز مرتفع
         </div>
       </div>
     </div>

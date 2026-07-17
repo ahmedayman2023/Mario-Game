@@ -27,15 +27,21 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4 z-[101]"
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4 z-[101] max-h-[90vh] flex flex-col"
           >
-            <div className="bg-stadium-blue border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
-              <div className="flex items-center justify-between p-6 border-b border-white/5">
-                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 scoreboard-font">
+            <div className="bg-[#e8f1ff] mario-block flex flex-col overflow-hidden max-h-[85vh]">
+              <div className="flex items-center justify-between px-5 py-3 bg-mario-yellow border-b-4 border-black shrink-0">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-black scoreboard-font">
                   {title || 'نافذة'}
                 </h3>
+                <button
+                  onClick={onClose}
+                  className="w-6 h-6 flex items-center justify-center bg-mario-red text-white text-xs font-black border-2 border-black active:translate-y-0.5"
+                >
+                  ×
+                </button>
               </div>
-              <div className="p-6">
+              <div className="p-5 overflow-y-auto">
                 {children}
               </div>
             </div>

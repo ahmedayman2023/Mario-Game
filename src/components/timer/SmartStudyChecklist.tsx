@@ -44,46 +44,46 @@ export default function SmartStudyChecklist() {
   };
 
   return (
-    <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-lg mt-4 shadow-inner">
+    <div className="border-2 border-black bg-mario-yellow/10 p-4 mt-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Video size={14} className="text-amber-400" />
-          <h4 className="text-[10px] font-black text-amber-200 uppercase tracking-widest">قائمة الفيديوهات (الربط الذهني)</h4>
+          <Video size={14} className="text-black" />
+          <h4 className="text-[10px] font-black text-black/70 uppercase tracking-widest">قائمة الفيديوهات (الربط الذهني)</h4>
         </div>
-        <button 
+        <button
           onClick={resetChecklist}
-          className="flex items-center gap-1 text-[9px] font-bold bg-amber-500/20 text-amber-300 px-2 py-1.5 rounded hover:bg-amber-500/40 transition-colors active:scale-95"
+          className="mario-btn flex items-center gap-1 text-[9px] font-black bg-mario-yellow text-black px-2 py-1.5"
           title="إعادة تعيين للمرحلة التالية"
         >
           <RotateCcw size={10} />
           تصفير للمرحلة التالية
         </button>
       </div>
-      
-      <p className="text-[9px] text-amber-200/70 mb-4 leading-relaxed font-bold">
+
+      <p className="text-[9px] text-black/60 mb-4 leading-relaxed font-bold">
         💡 اكتب أسماء 20 فيديو، ومررها جميعاً عبر المرحلة الحالية قبل الانتقال للمرحلة التالية. يمكنك النقر على الاسم لتعديله.
       </p>
 
       <div className="space-y-2 pr-2">
         {videos.map((video, idx) => (
-          <div key={video.id} className="flex items-center gap-3 bg-black/30 p-3 rounded-xl border border-amber-500/10 focus-within:border-amber-500/40 transition-all hover:bg-black/40">
-            <button 
+          <div key={video.id} className="flex items-center gap-3 bg-white p-2.5 border-2 border-black/20 focus-within:border-black transition-all">
+            <button
               onClick={() => toggleVideo(video.id)}
-              className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 border-2 transition-all ${
-                video.completed 
-                  ? 'bg-mario-emerald border-mario-emerald text-black scale-105 shadow-[0_0_10px_rgba(0,255,136,0.3)]' 
-                  : 'border-amber-500/20 hover:border-amber-500/50 text-transparent'
+              className={`w-6 h-6 flex items-center justify-center shrink-0 border-2 border-black transition-all ${
+                video.completed
+                  ? 'bg-mario-emerald text-white'
+                  : 'bg-white text-transparent hover:bg-mario-emerald/10'
               }`}
             >
               <Check size={14} strokeWidth={4} />
             </button>
-            <input 
+            <input
               type="text"
               value={video.title}
               onChange={(e) => updateTitle(video.id, e.target.value)}
               placeholder={`اسم الفيديو ${idx + 1}`}
-              className={`flex-1 bg-transparent border-none outline-none text-[12px] font-bold transition-all px-2 py-1 rounded focus:bg-black/20 focus:text-amber-100 placeholder:text-amber-500/20 ${
-                video.completed ? 'text-amber-200/30 line-through' : 'text-amber-100'
+              className={`flex-1 bg-transparent border-none outline-none text-[12px] font-bold transition-all px-2 py-1 rounded focus:bg-black/5 placeholder:text-black/20 ${
+                video.completed ? 'text-black/30 line-through' : 'text-black'
               }`}
             />
           </div>

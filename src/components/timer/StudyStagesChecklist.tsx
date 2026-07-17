@@ -41,12 +41,12 @@ export default function StudyStagesChecklist() {
     <>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Brain size={14} className="text-broadcast-yellow" />
-          <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">مراحل المذاكرة السبعة</h3>
+          <Brain size={14} className="text-mario-sky" />
+          <h3 className="text-[10px] font-black text-black/60 uppercase tracking-[0.3em] scoreboard-font">مراحل المذاكرة السبعة</h3>
         </div>
-        <button 
+        <button
           onClick={resetStages}
-          className="flex items-center gap-1 text-[9px] font-bold bg-white/5 text-slate-400 px-2 py-1 rounded hover:bg-white/10 transition-colors active:scale-95"
+          className="mario-btn flex items-center gap-1 text-[9px] font-black bg-white text-black px-2 py-1"
           title="إعادة تعيين المراحل"
         >
           <RotateCcw size={10} />
@@ -55,24 +55,24 @@ export default function StudyStagesChecklist() {
       </div>
       <div className="space-y-2 mb-4">
         {STAGES.map((stage, idx) => (
-          <div 
-            key={idx} 
+          <div
+            key={idx}
             onClick={() => toggleStage(idx)}
-            className={`flex items-center gap-3 p-2 rounded-lg border transition-all cursor-pointer ${
-              completedStages[idx] 
-                ? 'bg-mario-emerald/10 border-mario-emerald/30' 
-                : 'bg-white/5 border-white/5 hover:border-white/20'
+            className={`flex items-center gap-3 p-2.5 border-2 border-black cursor-pointer transition-colors ${
+              completedStages[idx]
+                ? 'bg-mario-emerald/20'
+                : 'bg-white hover:bg-mario-sky/10'
             }`}
           >
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 transition-colors ${
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 border-2 border-black transition-colors ${
               completedStages[idx]
-                ? 'bg-mario-emerald text-black shadow-[0_0_10px_rgba(46,204,113,0.4)]'
-                : 'bg-mario-emerald/20 text-mario-emerald'
+                ? 'bg-mario-emerald text-white'
+                : 'bg-mario-yellow text-black'
             }`}>
               {completedStages[idx] ? <Check size={12} strokeWidth={4} /> : idx + 1}
             </div>
             <span className={`text-[10px] font-bold leading-relaxed transition-colors ${
-              completedStages[idx] ? 'text-mario-emerald/70 line-through' : 'text-white'
+              completedStages[idx] ? 'text-black/40 line-through' : 'text-black'
             }`}>
               {stage}
             </span>

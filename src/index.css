@@ -7,12 +7,16 @@
   --font-cairo: "Cairo", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-pixel: "Press Start 2P", cursive;
-  
+
   --color-pitch-green: #1a472a;
   --color-stadium-blue: #001229;
   --color-broadcast-yellow: #eaff00;
-  --color-mario-red: #ff3e3e;
-  --color-mario-emerald: #00ff88;
+  --color-mario-red: #e52521;
+  --color-mario-emerald: #43b047;
+  --color-mario-sky: #5c94fc;
+  --color-mario-yellow: #fbd000;
+  --color-mario-brown: #ac7339;
+  --color-mario-brick: #c84c0c;
 }
 
 @layer base {
@@ -32,7 +36,7 @@
   }
 
   body {
-    background-color: #000814;
+    background-color: #5c94fc;
     color: white;
     font-family: "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -48,7 +52,7 @@
 }
 
 .glass {
-  @apply bg-white/5 backdrop-blur-md border border-white/10;
+  @apply bg-white/10 backdrop-blur-md border border-white/10;
 }
 
 .stadium-gradient {
@@ -57,6 +61,48 @@
 
 .scoreboard-panel {
   @apply bg-[#001229] border-b-2 border-broadcast-yellow/50 shadow-2xl;
+}
+
+/* Mario World theme */
+.mario-sky {
+  background:
+    radial-gradient(circle 40px at 15% 15%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 60%, transparent 62%),
+    radial-gradient(circle 30px at 22% 18%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 60%, transparent 62%),
+    radial-gradient(circle 35px at 80% 10%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 60%, transparent 62%),
+    radial-gradient(circle 25px at 87% 13%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 60%, transparent 62%),
+    linear-gradient(180deg, #5c94fc 0%, #7ba6ff 55%, #a4c4ff 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.mario-ground {
+  background-image: repeating-linear-gradient(90deg, #ac7339 0, #ac7339 38px, #8b5a2b 38px, #8b5a2b 40px),
+    repeating-linear-gradient(0deg, transparent 0, transparent 18px, rgba(0,0,0,0.15) 18px, rgba(0,0,0,0.15) 20px);
+  border-top: 6px solid #6b4423;
+}
+
+.mario-block {
+  border: 4px solid #000;
+  box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+}
+
+.mario-block-sm {
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+}
+
+.mario-btn {
+  border: 4px solid #000;
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+  transition: all 0.1s ease;
+}
+.mario-btn:active:not(:disabled) {
+  box-shadow: none;
+  transform: translate(4px, 4px);
+}
+.mario-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .scrollbar-hide::-webkit-scrollbar {

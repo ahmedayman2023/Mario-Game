@@ -74,32 +74,30 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 glass rounded-2xl border-white/10 min-h-[420px] relative overflow-hidden">
-      <div className="absolute top-6 left-6 opacity-10"><Brain size={56} className="text-white" /></div>
-
+    <div className="flex flex-col items-center justify-center p-4 min-h-[380px] relative overflow-hidden">
       {!isActive && timeLeft === 120 ? (
         <div className="text-center space-y-6 relative z-10">
-          <div className="w-16 h-16 rounded-full bg-amber-500/20 flex items-center justify-center mx-auto">
-            <Brain size={32} className="text-amber-400" />
+          <div className="w-16 h-16 rounded-full bg-mario-yellow mario-block-sm flex items-center justify-center mx-auto">
+            <Brain size={30} className="text-black" />
           </div>
-          <h2 className="text-lg font-black text-white uppercase tracking-widest scoreboard-font">تسخين ذهني</h2>
-          <p className="text-slate-400 text-xs max-w-xs mx-auto leading-relaxed font-bold">
+          <h2 className="text-lg font-black text-black uppercase tracking-widest scoreboard-font">تسخين ذهني</h2>
+          <p className="text-black/60 text-xs max-w-xs mx-auto leading-relaxed font-bold">
             استعد لتنشيط عقلك! لديك دقيقتان لحل أكبر عدد ممكن من المسائل الرياضية البسيطة.
           </p>
           <button
             onClick={startWarmup}
-            className="bg-mario-emerald text-black px-10 py-3 rounded-full font-black scoreboard-font text-xs uppercase tracking-widest shadow-lg hover:brightness-110 transition-all"
+            className="mario-btn bg-mario-emerald text-white px-10 py-3 font-black scoreboard-font text-xs uppercase tracking-widest"
           >
             ابدأ التسخين
           </button>
         </div>
       ) : timeLeft > 0 ? (
-        <div className="w-full max-w-md space-y-8 text-center relative z-10">
+        <div className="w-full max-w-md space-y-6 text-center relative z-10">
           <div className="flex justify-between items-center">
-            <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-white text-[10px] font-black scoreboard-font">
+            <div className="mario-block-sm bg-black px-4 py-2 text-white text-[10px] font-black scoreboard-font">
               الوقت: {formatTime(timeLeft)}
             </div>
-            <div className="bg-broadcast-yellow px-4 py-2 rounded-full text-black text-[10px] font-black scoreboard-font">
+            <div className="mario-block-sm bg-mario-yellow px-4 py-2 text-black text-[10px] font-black scoreboard-font">
               النتيجة: {score}
             </div>
           </div>
@@ -110,9 +108,9 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="glass border-white/10 rounded-2xl p-10 relative"
+              className="bg-white mario-block p-8 relative"
             >
-              <div className="text-4xl font-black text-white mb-8 scoreboard-font">
+              <div className="text-4xl font-black text-black mb-8 scoreboard-font">
                 {problem.a} {problem.op === '*' ? '×' : problem.op} {problem.b} = ?
               </div>
 
@@ -122,7 +120,7 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
                   autoFocus
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-2xl text-center font-black text-white focus:outline-none focus:border-broadcast-yellow/50 transition-all"
+                  className="w-full bg-white border-2 border-black rounded-none p-4 text-2xl text-center font-black text-black focus:outline-none focus:border-mario-sky transition-all"
                   placeholder="..."
                 />
 
@@ -152,21 +150,21 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
             </motion.div>
           </AnimatePresence>
 
-          <p className="text-slate-500 text-[9px] uppercase tracking-widest font-bold">اضغط Enter للإرسال</p>
+          <p className="text-black/50 text-[9px] uppercase tracking-widest font-black">اضغط Enter للإرسال</p>
         </div>
       ) : (
         <div className="text-center space-y-6 relative z-10">
-          <div className="w-16 h-16 rounded-full bg-mario-emerald/20 flex items-center justify-center mx-auto">
-            <Trophy size={32} className="text-mario-emerald" />
+          <div className="w-16 h-16 rounded-full bg-mario-emerald mario-block-sm flex items-center justify-center mx-auto">
+            <Trophy size={30} className="text-white" />
           </div>
-          <h2 className="text-lg font-black text-white uppercase tracking-widest scoreboard-font">انتهى الوقت!</h2>
-          <div className="glass border-white/10 rounded-2xl p-6">
-            <div className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-2">النتيجة النهائية</div>
-            <div className="text-4xl font-black text-white scoreboard-font">{score}</div>
+          <h2 className="text-lg font-black text-black uppercase tracking-widest scoreboard-font">انتهى الوقت!</h2>
+          <div className="bg-white mario-block-sm p-6">
+            <div className="text-[10px] text-black/50 uppercase tracking-widest font-black mb-2">النتيجة النهائية</div>
+            <div className="text-4xl font-pixel text-black">{score}</div>
           </div>
           <button
             onClick={startWarmup}
-            className="bg-broadcast-yellow text-black px-10 py-3 rounded-full font-black scoreboard-font text-xs uppercase tracking-widest shadow-lg hover:brightness-110 transition-all flex items-center gap-2 mx-auto"
+            className="mario-btn bg-mario-yellow text-black px-10 py-3 font-black scoreboard-font text-xs uppercase tracking-widest flex items-center gap-2 mx-auto"
           >
             <RefreshCcw size={16} />
             إعادة المحاولة
