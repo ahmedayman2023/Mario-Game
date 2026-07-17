@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Brain, Check, X, RefreshCcw, Trophy, Star } from 'lucide-react';
+import { Brain, Check, X, RefreshCcw, Trophy } from 'lucide-react';
 
 const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
   const [timeLeft, setTimeLeft] = useState(120); // 2 minutes
@@ -74,35 +74,33 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 bg-[#5C94FC] rounded-[3rem] border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] min-h-[500px] relative overflow-hidden font-pixel">
-      {/* Background elements */}
-      <div className="absolute top-10 left-10 opacity-20"><Star size={48} className="text-white fill-white" /></div>
-      <div className="absolute bottom-10 right-10 opacity-20"><Brain size={64} className="text-white" /></div>
+    <div className="flex flex-col items-center justify-center p-8 glass rounded-2xl border-white/10 min-h-[420px] relative overflow-hidden">
+      <div className="absolute top-6 left-6 opacity-10"><Brain size={56} className="text-white" /></div>
 
       {!isActive && timeLeft === 120 ? (
-        <div className="text-center space-y-8">
-          <div className="bg-[#FBD000] p-6 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] inline-block animate-bounce">
-            <Brain size={64} className="text-black" />
+        <div className="text-center space-y-6 relative z-10">
+          <div className="w-16 h-16 rounded-full bg-amber-500/20 flex items-center justify-center mx-auto">
+            <Brain size={32} className="text-amber-400" />
           </div>
-          <h2 className="text-3xl text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] uppercase">تسخين ذهني</h2>
-          <p className="text-black/70 text-xs max-w-xs mx-auto leading-relaxed">
+          <h2 className="text-lg font-black text-white uppercase tracking-widest scoreboard-font">تسخين ذهني</h2>
+          <p className="text-slate-400 text-xs max-w-xs mx-auto leading-relaxed font-bold">
             استعد لتنشيط عقلك! لديك دقيقتان لحل أكبر عدد ممكن من المسائل الرياضية البسيطة.
           </p>
           <button
             onClick={startWarmup}
-            className="bg-[#E52521] hover:bg-[#ff3e3e] text-white px-10 py-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all text-sm uppercase"
+            className="bg-mario-emerald text-black px-10 py-3 rounded-full font-black scoreboard-font text-xs uppercase tracking-widest shadow-lg hover:brightness-110 transition-all"
           >
             ابدأ التسخين
           </button>
         </div>
       ) : timeLeft > 0 ? (
-        <div className="w-full max-w-md space-y-8 text-center">
-          <div className="flex justify-between items-center mb-12">
-            <div className="bg-black/40 px-4 py-2 border-2 border-white/20 text-white text-xs">
-              TIME: {formatTime(timeLeft)}
+        <div className="w-full max-w-md space-y-8 text-center relative z-10">
+          <div className="flex justify-between items-center">
+            <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-white text-[10px] font-black scoreboard-font">
+              الوقت: {formatTime(timeLeft)}
             </div>
-            <div className="bg-[#FBD000] px-4 py-2 border-2 border-black text-black text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              SCORE: {score}
+            <div className="bg-broadcast-yellow px-4 py-2 rounded-full text-black text-[10px] font-black scoreboard-font">
+              النتيجة: {score}
             </div>
           </div>
 
@@ -112,9 +110,9 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="bg-white p-10 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative"
+              className="glass border-white/10 rounded-2xl p-10 relative"
             >
-              <div className="text-4xl font-black text-black mb-8">
+              <div className="text-4xl font-black text-white mb-8 scoreboard-font">
                 {problem.a} {problem.op === '*' ? '×' : problem.op} {problem.b} = ?
               </div>
 
@@ -124,19 +122,19 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
                   autoFocus
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
-                  className="w-full bg-slate-100 border-4 border-black p-4 text-2xl text-center font-black focus:ring-0 outline-none text-[#e80000]"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-2xl text-center font-black text-white focus:outline-none focus:border-broadcast-yellow/50 transition-all"
                   placeholder="..."
                 />
-                
+
                 <AnimatePresence>
                   {feedback === 'correct' && (
                     <motion.div
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1.5, opacity: 1 }}
                       exit={{ scale: 2, opacity: 0 }}
-                      className="absolute -top-10 -right-10 text-[#43B047]"
+                      className="absolute -top-10 -right-6 text-mario-emerald"
                     >
-                      <Check size={48} strokeWidth={4} />
+                      <Check size={40} strokeWidth={4} />
                     </motion.div>
                   )}
                   {feedback === 'wrong' && (
@@ -144,9 +142,9 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1.5, opacity: 1 }}
                       exit={{ scale: 2, opacity: 0 }}
-                      className="absolute -top-10 -right-10 text-[#E52521]"
+                      className="absolute -top-10 -right-6 text-mario-red"
                     >
-                      <X size={48} strokeWidth={4} />
+                      <X size={40} strokeWidth={4} />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -154,23 +152,23 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
             </motion.div>
           </AnimatePresence>
 
-          <p className="text-white/60 text-[8px] uppercase tracking-widest">اضغط ENTER للإرسال</p>
+          <p className="text-slate-500 text-[9px] uppercase tracking-widest font-bold">اضغط Enter للإرسال</p>
         </div>
       ) : (
-        <div className="text-center space-y-8">
-          <div className="bg-[#43B047] p-6 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] inline-block">
-            <Trophy size={64} className="text-white" />
+        <div className="text-center space-y-6 relative z-10">
+          <div className="w-16 h-16 rounded-full bg-mario-emerald/20 flex items-center justify-center mx-auto">
+            <Trophy size={32} className="text-mario-emerald" />
           </div>
-          <h2 className="text-3xl text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] uppercase">انتهى الوقت!</h2>
-          <div className="bg-white p-6 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-            <div className="text-[10px] text-black/40 uppercase mb-2">النتيجة النهائية</div>
-            <div className="text-4xl font-black text-black">{score}</div>
+          <h2 className="text-lg font-black text-white uppercase tracking-widest scoreboard-font">انتهى الوقت!</h2>
+          <div className="glass border-white/10 rounded-2xl p-6">
+            <div className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-2">النتيجة النهائية</div>
+            <div className="text-4xl font-black text-white scoreboard-font">{score}</div>
           </div>
           <button
             onClick={startWarmup}
-            className="bg-[#FBD000] hover:bg-[#ffe04d] text-black px-10 py-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all text-sm uppercase flex items-center gap-3 mx-auto"
+            className="bg-broadcast-yellow text-black px-10 py-3 rounded-full font-black scoreboard-font text-xs uppercase tracking-widest shadow-lg hover:brightness-110 transition-all flex items-center gap-2 mx-auto"
           >
-            <RefreshCcw size={20} />
+            <RefreshCcw size={16} />
             إعادة المحاولة
           </button>
         </div>

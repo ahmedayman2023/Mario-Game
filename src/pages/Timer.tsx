@@ -423,7 +423,7 @@ const TimerPage = () => {
                       playChime('interval', volume);
                       handleTimeEdit(mins * 60);
                     }}
-                    className="h-10 bg-broadcast-yellow text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-black text-xs flex items-center justify-center active:shadow-none active:translate-x-0.5 active:translate-y-0.5 hover:bg-[#ffe000] transition-all"
+                    className="h-10 bg-white/5 text-broadcast-yellow border border-white/10 rounded-lg font-black text-xs flex items-center justify-center active:scale-95 hover:bg-broadcast-yellow hover:text-black hover:border-broadcast-yellow transition-all scoreboard-font"
                   >
                     {mins}
                   </button>
