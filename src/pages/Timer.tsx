@@ -10,18 +10,23 @@ import IntervalProgress from "../components/timer/IntervalProgress";
 import ScoreBar from "../components/timer/ScoreBar";
 import StudyTopicInput from "../components/timer/StudyTopicInput";
 import BoxBreathing from "../components/timer/BoxBreathing";
+import MentalWarmup from "../components/timer/MentalWarmup";
 import RecoveryVideos from "../components/timer/RecoveryVideos";
+import SmartStudyChecklist from "../components/timer/SmartStudyChecklist";
+import StudyStagesChecklist from "../components/timer/StudyStagesChecklist";
 import Modal from "../components/ui/Modal";
-import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell } from 'lucide-react';
+import { Trophy, Sparkles, Volume2, VolumeX, ExternalLink, Wind, Dumbbell, Zap, Brain } from 'lucide-react';
 import { useToast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useTimer } from "../hooks/useTimer";
 import { INTERVALS, STORAGE_KEYS, RECOVERY_VIDEOS } from "../constants";
-import { playChime } from "../utils/audio";
+import { playChime, initAudio } from "../utils/audio";
 import { Score, TimerState } from "../types";
+import { useAuth } from "../lib/AuthContext";
 
 const TimerPage = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   
   // Stats State
   const [score, setScore] = useState<Score>({ me: 0, time: 0 });
@@ -30,6 +35,7 @@ const TimerPage = () => {
   const [currentTopic, setCurrentTopic] = useState("");
   const [showCompletedMessage, setShowCompletedMessage] = useState(false);
   const [isBreathingOpen, setIsBreathingOpen] = useState(false);
+  const [isMentalWarmupOpen, setIsMentalWarmupOpen] = useState(false);
   const [isExercisesOpen, setIsExercisesOpen] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [winner, setWinner] = useState<'me' | 'time' | null>(null);
@@ -55,14 +61,16 @@ const TimerPage = () => {
         setCurrentTopic(state.currentTopic || "");
       }
 
-      const userData = await User.getMyUserData();
-      if (userData?.current_study_topic) {
-        setCurrentTopic(userData.current_study_topic || "");
+      if (user) {
+        const userData = await User.getMyUserData();
+        if (userData?.current_study_topic) {
+          setCurrentTopic(userData.current_study_topic || "");
+        }
       }
     } catch (e) {
       console.error("Failed to load initial data", e);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     loadInitialData();
@@ -73,7 +81,7 @@ const TimerPage = () => {
     setScore(prev => {
       const next = { ...prev, me: prev.me + 1 };
       localStorage.setItem(STORAGE_KEYS.SCORE, JSON.stringify(next));
-      if (next.me >= 10 && !isGameOver) {
+      if (next.me >= 20 && !isGameOver) {
         setIsGameOver(true);
         setWinner('me');
       }
@@ -124,6 +132,8 @@ const TimerPage = () => {
     isBreakTime,
     isWarmup,
     isSessionComplete,
+    isStopwatch,
+    toggleMode,
     handleStart: baseStart,
     handlePause,
     handleReset: baseReset,
@@ -131,8 +141,19 @@ const TimerPage = () => {
     handleBack,
     skipAllWarmup,
     setTimeLeft,
-    progress
+    progress,
+    jumpToInterval
   } = useTimer(onIntervalComplete, onSessionComplete, onBreakComplete, onWarmupComplete, onWarmupIntervalComplete);
+
+  // Calculate overall progress
+  const totalPhases = INTERVALS.length * 2 - 1;
+  let overallProgress = 0;
+  if (isSessionComplete) {
+    overallProgress = 100;
+  } else if (!isWarmup) {
+    const currentPhase = currentIntervalIndex * 2 + (isBreakTime ? 1 : 0);
+    overallProgress = ((currentPhase + progress / 100) / totalPhases) * 100;
+  }
 
   // Warmup Steps Logic
   useEffect(() => {
@@ -159,18 +180,11 @@ const TimerPage = () => {
             description: "ركز على تنفسك لمدة دقيقتين.",
           });
           break;
-        case 2: // Lumosity
+        case 2: // Mental Warmup
+          setIsMentalWarmupOpen(true);
           toast({
             title: "الخطوة الثالثة: تسخين ذهني",
-            description: "افتح Lumosity لتنشيط عقلك.",
-            action: (
-              <button 
-                onClick={() => window.open('https://www.lumosity.com/', '_blank')}
-                className="bg-white text-black px-3 py-1 rounded-md text-xs font-bold"
-              >
-                فتح الموقع
-              </button>
-            ),
+            description: "قم بحل المسائل الرياضية لتنشيط عقلك.",
           });
           break;
       }
@@ -178,6 +192,7 @@ const TimerPage = () => {
   }, [isWarmup, warmupIntervalIndex, isActive, isPaused, toast]);
 
   const handleStart = useCallback(() => {
+    initAudio();
     baseStart();
   }, [baseStart]);
 
@@ -189,7 +204,7 @@ const TimerPage = () => {
         setScore(prev => {
           const next = { ...prev, time: prev.time + 1 };
           localStorage.setItem(STORAGE_KEYS.SCORE, JSON.stringify(next));
-          if (next.time >= 10 && !isGameOver) {
+          if (next.time >= 20 && !isGameOver) {
             setIsGameOver(true);
             setWinner('time');
           }
@@ -296,7 +311,7 @@ const TimerPage = () => {
       <div className="relative p-6 md:p-10">
         <Toaster />
         
-        <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+        <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-4">
           <div className="flex items-center gap-4">
             <div className="bg-mario-red px-2 py-1 text-[10px] font-black uppercase tracking-tighter">مباشر</div>
             
@@ -330,6 +345,22 @@ const TimerPage = () => {
           </div>
         </div>
 
+        {/* Overall Progress Bar */}
+        <div className="mb-8">
+          <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+            <span>التقدم الإجمالي</span>
+            <span>{Math.round(overallProgress)}%</span>
+          </div>
+          <div className="h-2 bg-black/40 rounded-full overflow-hidden border border-white/5">
+            <motion.div 
+              className="h-full bg-gradient-to-r from-mario-emerald to-emerald-400"
+              initial={{ width: 0 }}
+              animate={{ width: `${overallProgress}%` }}
+              transition={{ duration: 0.5 }}
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
           <div className="lg:col-span-8 flex flex-col">
             <ScoreBar me={score.me} time={score.time} onReset={handleReset} />
@@ -340,12 +371,14 @@ const TimerPage = () => {
                   minutes={Math.floor(timeLeft / 60)} 
                   seconds={timeLeft % 60} 
                   isActive={isActive}
-                  progress={progress}
                   currentInterval={currentIntervalIndex + 1}
                   onTimeEdit={handleTimeEdit}
                   isBreakTime={isBreakTime}
                   isWarmup={isWarmup}
                   warmupIntervalIndex={warmupIntervalIndex}
+                  progress={progress}
+                  isStopwatch={isStopwatch}
+                  onToggleMode={toggleMode}
                 />
                 
                 <TimerControls 
@@ -355,6 +388,7 @@ const TimerPage = () => {
                   onPause={handlePause}
                   onStop={handleReset}
                   onSkip={() => { 
+                    initAudio();
                     playChime('mandatory', volume); 
                     if (isWarmup) {
                       skipAllWarmup();
@@ -362,10 +396,38 @@ const TimerPage = () => {
                       handleSkip();
                     }
                   }}
-                  onBack={handleBack}
+                  onBack={() => {
+                    initAudio();
+                    playChime('mandatory', volume);
+                    handleBack();
+                  }}
                   isBreakTime={isBreakTime}
                   isWarmup={isWarmup}
+                  isStopwatch={isStopwatch}
                 />
+              </div>
+            </div>
+
+            {/* Quick Timers Bar */}
+            <div className="mb-6 bg-black/20 p-6 rounded-2xl border border-white/5">
+              <div className="flex items-center gap-2 mb-4">
+                <Zap size={14} className="text-broadcast-yellow" />
+                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] scoreboard-font">مؤقتات سريعة (دقائق)</h3>
+              </div>
+              <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                {INTERVALS.map((mins, tIdx) => (
+                  <button
+                    key={tIdx}
+                    onClick={() => {
+                      initAudio();
+                      playChime('interval', volume);
+                      handleTimeEdit(mins * 60);
+                    }}
+                    className="h-10 bg-broadcast-yellow text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-black text-xs flex items-center justify-center active:shadow-none active:translate-x-0.5 active:translate-y-0.5 hover:bg-[#ffe000] transition-all"
+                  >
+                    {mins}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -376,6 +438,11 @@ const TimerPage = () => {
               isBreakTime={isBreakTime}
               isWarmup={isWarmup}
               warmupIntervalIndex={warmupIntervalIndex}
+              onJumpToInterval={(idx) => {
+                initAudio();
+                playChime('mandatory', volume);
+                jumpToInterval(idx);
+              }}
             />
           </div>
 
@@ -491,6 +558,11 @@ const TimerPage = () => {
               />
             </div>
 
+            <div className="bg-stadium-blue/80 border border-white/10 rounded-lg p-6 shadow-xl">
+              <StudyStagesChecklist />
+              <SmartStudyChecklist />
+            </div>
+
             <div className="flex justify-center pt-4">
               <button
                 onClick={handleReset}
@@ -509,6 +581,14 @@ const TimerPage = () => {
         title="استعادة التركيز"
       >
         <BoxBreathing />
+      </Modal>
+
+      <Modal 
+        isOpen={isMentalWarmupOpen} 
+        onClose={() => setIsMentalWarmupOpen(false)}
+        title="تسخين ذهني"
+      >
+        <MentalWarmup onComplete={() => setIsMentalWarmupOpen(false)} />
       </Modal>
 
       <Modal 

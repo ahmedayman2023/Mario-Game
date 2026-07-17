@@ -20,17 +20,25 @@ const LayoutWrapper = ({ children, currentPageName }: { children: React.ReactNod
   : <>{children}</>;
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { user, isLoadingAuth, login } = useAuth();
 
-  // Handle authentication errors
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
-    }
+  if (isLoadingAuth) {
+    return <div className="min-h-screen flex items-center justify-center bg-black text-white">جاري التحميل...</div>;
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6">
+        <h1 className="text-4xl font-black mb-6 text-broadcast-yellow">وقود المباراة</h1>
+        <p className="text-slate-400 mb-8 text-center max-w-md">سجل دخولك لحفظ بياناتك ومتابعة تكتيكات الطاقة الخاصة بك.</p>
+        <button 
+          onClick={login}
+          className="bg-mario-emerald text-black px-8 py-3 rounded-xl font-bold hover:bg-emerald-400 transition-colors"
+        >
+          تسجيل الدخول باستخدام Google
+        </button>
+      </div>
+    );
   }
 
   // Render the main app

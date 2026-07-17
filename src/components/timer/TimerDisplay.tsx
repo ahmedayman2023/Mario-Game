@@ -12,6 +12,8 @@ interface TimerDisplayProps {
   isBreakTime: boolean;
   isWarmup: boolean;
   warmupIntervalIndex: number;
+  isStopwatch: boolean;
+  onToggleMode: () => void;
 }
 
 const TimerDisplay = memo(function TimerDisplay({
@@ -23,7 +25,9 @@ const TimerDisplay = memo(function TimerDisplay({
   onTimeEdit,
   isBreakTime,
   isWarmup,
-  warmupIntervalIndex
+  warmupIntervalIndex,
+  isStopwatch,
+  onToggleMode
 }: TimerDisplayProps) {
   const getWarmupLabel = () => {
     switch (warmupIntervalIndex) {
@@ -45,11 +49,11 @@ const TimerDisplay = memo(function TimerDisplay({
     }
   };
 
-  const completionPercentage = isBreakTime
-    ? (FEYNMAN_STEPS[Number(currentInterval) - 1]?.completionPercentage || 0)
-    : (FEYNMAN_STEPS[Number(currentInterval) - 2]?.completionPercentage || 0);
+  const currentStep = !isWarmup && !isBreakTime ? FEYNMAN_STEPS[Number(currentInterval) - 1] : null;
+  const overallProgress = isWarmup ? 0 :
+    ((Number(currentInterval) - 1 + (isBreakTime ? 1 : progress / 100)) / FEYNMAN_STEPS.length) * 100;
+  const displayPercentage = Math.min(100, Math.round(overallProgress));
 
-  const stateColor = isWarmup ? 'amber-400' : isBreakTime ? 'mario-emerald' : 'sky-400';
   const digitColorClass = isWarmup ? 'text-amber-400' : isBreakTime ? 'text-mario-emerald' : 'text-white';
   const badgeClass = isWarmup
     ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
@@ -65,16 +69,29 @@ const TimerDisplay = memo(function TimerDisplay({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="flex flex-col items-center gap-3 mb-10 text-center"
+          className="flex flex-col items-center gap-3 mb-6 text-center"
         >
           <div className={`px-6 py-2 text-[10px] font-black uppercase rounded-full tracking-[0.2em] border scoreboard-font ${badgeClass}`}>
-            {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.title || `المرحلة ${currentInterval}`)}
+            {isWarmup ? getWarmupLabel() : isBreakTime ? 'استراحة' : (currentStep?.title || `المرحلة ${currentInterval}`)}
           </div>
           <div className="text-xs font-bold text-slate-400 tracking-wide max-w-[320px] leading-relaxed">
-            {isWarmup ? getWarmupSubLabel() : isBreakTime ? 'إعادة شحن الطاقة' : (FEYNMAN_STEPS[Number(currentInterval) - 1]?.description || 'الجلسة جارية')}
+            {isWarmup ? getWarmupSubLabel() : isBreakTime ? 'إعادة شحن الطاقة' : `الخطوة ${currentInterval} من ${FEYNMAN_STEPS.length}`}
           </div>
         </motion.div>
       </AnimatePresence>
+
+      {!isWarmup && (
+        <button
+          onClick={onToggleMode}
+          className={`mb-8 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all scoreboard-font ${
+            isStopwatch
+              ? 'bg-broadcast-yellow text-black border-broadcast-yellow'
+              : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'
+          }`}
+        >
+          {isStopwatch ? 'ساعة إيقاف' : 'مؤقت تنازلي'}
+        </button>
+      )}
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-10 md:gap-16">
         <motion.div
@@ -115,11 +132,26 @@ const TimerDisplay = memo(function TimerDisplay({
               animate={{ scale: 1, opacity: 1 }}
               className="flex-shrink-0"
             >
-              <div className={`relative w-20 h-20 sm:w-24 sm:h-24 glass border-2 rounded-full flex flex-col items-center justify-center overflow-hidden border-${stateColor}/40`}>
-                <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 scoreboard-font">إنجاز</div>
-                <div className="text-lg sm:text-xl font-black text-white scoreboard-font">
-                  {completionPercentage}%
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
+                <div className="absolute inset-2 rounded-full glass border-2 border-mario-emerald/40 flex flex-col items-center justify-center">
+                  <div className="text-[8px] font-black text-mario-emerald uppercase tracking-widest mb-1 scoreboard-font">إنجاز</div>
+                  <div className="text-lg sm:text-xl font-black text-white scoreboard-font">
+                    {displayPercentage}%
+                  </div>
                 </div>
+                <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeDasharray="283"
+                    strokeDashoffset={283 - (283 * displayPercentage) / 100}
+                    className="text-mario-emerald transition-all duration-1000 ease-out"
+                  />
+                </svg>
               </div>
             </motion.div>
           )}

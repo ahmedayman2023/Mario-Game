@@ -1,33 +1,39 @@
-export const INTERVALS = [5, 10, 24, 20]; 
+export const INTERVALS = [1, 1, 1, 1, 2, 5, 1, 1, 2, 2, 10, 1, 1, 1, 2, 5, 10, 1, 1, 2, 1, 1, 10, 10, 10, 10]; 
 
 export const FEYNMAN_STEPS = [
-  {
-    title: "مشاهدة بدون توقف بدون كتابة فقط فهم",
-    description: "شاهد المقطع بتركيز كامل بدون تدوين أي ملاحظات أو توقف. الهدف هو استيعاب الفكرة العامة للموضوع.",
-    completionPercentage: 20
-  },
-  {
-    title: "المذاكرة النشطة: المشاهدة الأولى",
-    description: "شاهد مقطع مدته 10 دقائق بتركيز عالي، واكتب فقط 'كلمات مفتاحية' (Keywords). تجنب التوقف الطويل أثناء المشاهدة.",
-    completionPercentage: 50
-  },
-  {
-    title: "المشاهدة والتوقف والكتابة",
-    description: "شاهد المقطع بتركيز، وتوقف كل 3 دقائق لتدوين الملاحظات وتلخيص ما شاهدته. استمر في هذه الدورة لمدة 24 دقيقة.",
-    completionPercentage: 70
-  },
-  {
-    title: "مراجعة لما سبق عن طريق الكتابة زي أيام زمان",
-    description: "قم بمراجعة كل ما دونته وشاهدته حتى الآن عن طريق كتابته مرة أخرى بأسلوبك الخاص على الورق، لترسيخ المعلومات في ذاكرتك.",
-    completionPercentage: 100
-  }
+  { title: " الاستماع فقط بدون تركيز و يفضل عند النوم", duration: 1 },
+  { title: "مشاهدة بدون توقف بدون كتابة فقط فهم", duration: 1 },
+  { title: "مشاهدة بدون توقف بدون كتابة فقط فهم", duration: 1 },
+  { title: "مشاهدة بدون توقف بدون كتابة فقط فهم", duration: 1 },
+  { title: "مشاهدة بدون توقف بدون كتابة فقط فهم", duration: 2 },
+  { title: "مشاهدة بدون توقف بدون كتابة فقط فهم", duration: 5 },
+  { title: "المشاهدة بدون توقف مع كتابة", duration: 1 },
+  { title: "المشاهدة بدون توقف مع كتابة", duration: 1 },
+  { title: "المشاهدة بدون توقف مع كتابة", duration: 2 },
+  { title: "المشاهدة بدون توقف مع كتابة", duration: 2 },
+  { title: "المشاهدة بدون توقف مع كتابة", duration: 10 },
+  { title: "المشاهدة والتوقف والكتابة", duration: 1 },
+  { title: "المشاهدة والتوقف والكتابة", duration: 1 },
+  { title: "المشاهدة والتوقف والكتابة", duration: 1 },
+  { title: "المشاهدة والتوقف والكتابة", duration: 2 },
+  { title: "المشاهدة والتوقف والكتابة", duration: 5 },
+  { title: "المشاهدة والتوقف والكتابة", duration: 10 },
+  { title: " حاول تشرح او تسمع المعلومة", duration: 1 },
+  { title: "حاول تشرح او تسمع المعلومة", duration: 1 },
+  { title: "حاول تشرح او تسمع المعلومة", duration: 2 },
+  { title: " الكتابة بدون مشاهدة", duration: 1 },
+  { title: "الكتابة بدون مشاهدة", duration: 1 },
+  { title: "الكتابة بدون مشاهدة", duration: 10 },
+  { title: "المرحلة الخامسة للمذاكرة", duration: 10 },
+  { title: "الاختبار بين مواضيع مختلفة", duration: 10 },
+  { title: "اختبر نفسك في مواضيع سابقة مع الموضوع ده حاليا", duration: 10 }
 ];
 
 // 3-step warmup sequence:
 // 1. YouTube (10 seconds for setup)
 // 2. Breathing (2 mins)
 // 3. Lumosity (5 mins)
-export const WARMUP_INTERVALS = [10/60, 2, 5]; 
+export const WARMUP_INTERVALS = [1, 1, 1]; 
 export const BREAK_DURATION = 2; // 2 minutes break between intervals
 
 export const STORAGE_KEYS = {

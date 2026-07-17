@@ -1,33 +1,51 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { auth, googleProvider } from '../firebase';
+import { onAuthStateChanged, signInWithPopup, signOut, User as FirebaseUser } from 'firebase/auth';
+import { User } from '../entities/User';
 
 interface AuthContextType {
-  user: any;
+  user: FirebaseUser | null;
   isLoadingAuth: boolean;
   isLoadingPublicSettings: boolean;
   authError: { type: string } | null;
-  navigateToLogin: () => void;
-  logout: () => void;
+  login: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any>(null);
-  const [isLoadingAuth, setIsLoadingAuth] = useState(false);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
   const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(false);
   const [authError, setAuthError] = useState<{ type: string } | null>(null);
 
   useEffect(() => {
-    // No simulation needed as we start as "ready"
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        // Initialize user data in Firestore if it doesn't exist
+        await User.getMyUserData();
+      }
+      setIsLoadingAuth(false);
+    });
+    return () => unsubscribe();
   }, []);
 
-  const navigateToLogin = () => {
-    console.log('Navigating to login...');
-    // In a real app, this might use window.location or a router navigate
+  const login = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   };
 
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   return (
@@ -36,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoadingAuth, 
       isLoadingPublicSettings, 
       authError, 
-      navigateToLogin,
+      login,
       logout 
     }}>
       {children}
