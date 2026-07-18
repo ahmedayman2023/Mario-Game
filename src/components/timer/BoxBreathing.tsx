@@ -34,14 +34,14 @@ const BoxBreathing = () => {
     <div className="flex flex-col items-center justify-center p-8 sm:p-10">
       <div className="flex items-center gap-3 mb-10">
         <Wind className="text-mario-sky animate-pulse" size={16} />
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-black scoreboard-font">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-white scoreboard-font">
           تقنية صندوق التنفس
         </h3>
       </div>
 
       <div className="relative w-56 h-56 flex items-center justify-center">
         {/* Outer Ring */}
-        <div className="absolute inset-0 border-4 border-black/10 rounded-full" />
+        <div className="absolute inset-0 border-4 border-white/10 rounded-full" />
 
         <motion.div
           animate={{
@@ -82,10 +82,10 @@ const BoxBreathing = () => {
           exit={{ opacity: 0, y: -10 }}
           className="mt-16 text-center"
         >
-          <span className="text-3xl font-black text-black scoreboard-font">
+          <span className="text-3xl font-black text-white scoreboard-font">
             {currentPhase.name}
           </span>
-          <p className="text-[10px] text-black/50 mt-4 font-black uppercase tracking-[0.2em]">
+          <p className="text-[10px] text-white/50 mt-4 font-black uppercase tracking-[0.2em]">
             {phaseIndex === 0 ? 'خذ نفساً عميقاً' :
              phaseIndex === 1 ? 'احبس أنفاسك' :
              phaseIndex === 2 ? 'أخرج الهواء ببطء' : 'استعد للمرة القادمة'}

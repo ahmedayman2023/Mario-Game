@@ -18,7 +18,7 @@ const StudyTopicInput = memo(function StudyTopicInput({
 }: StudyTopicInputProps) {
   return (
     <div className="relative group">
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40">
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40">
         <BookOpen size={18} />
       </div>
       <input
@@ -26,7 +26,7 @@ const StudyTopicInput = memo(function StudyTopicInput({
         value={topic || ""}
         onChange={(e) => onTopicChange(e.target.value)}
         placeholder="ما هي مهمتك اليوم؟"
-        className="w-full bg-white border-2 border-black py-4 pr-12 pl-14 text-sm font-bold text-black placeholder:text-black/30 focus:outline-none focus:border-mario-sky transition-all"
+        className="w-full bg-panel-soft border-2 border-white/20 py-4 pr-12 pl-14 text-sm font-bold text-white placeholder:text-white/30 focus:outline-none focus:border-mario-sky transition-all"
         disabled={isActive && !isPaused}
       />
       <button

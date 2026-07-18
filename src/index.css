@@ -17,6 +17,9 @@
   --color-mario-yellow: #fbd000;
   --color-mario-brown: #ac7339;
   --color-mario-brick: #c84c0c;
+
+  --color-panel: #142a4d;
+  --color-panel-soft: #0c1830;
 }
 
 @layer base {
@@ -36,7 +39,7 @@
   }
 
   body {
-    background-color: #5c94fc;
+    background-color: #001229;
     color: white;
     font-family: "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -66,11 +69,12 @@
 /* Mario World theme */
 .mario-sky {
   background:
-    radial-gradient(circle 40px at 15% 15%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 60%, transparent 62%),
-    radial-gradient(circle 30px at 22% 18%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 60%, transparent 62%),
-    radial-gradient(circle 35px at 80% 10%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 60%, transparent 62%),
-    radial-gradient(circle 25px at 87% 13%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 60%, transparent 62%),
-    linear-gradient(180deg, #5c94fc 0%, #7ba6ff 55%, #a4c4ff 100%);
+    radial-gradient(circle 4px at 15% 15%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 60%, transparent 62%),
+    radial-gradient(circle 3px at 22% 28%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.7) 60%, transparent 62%),
+    radial-gradient(circle 3px at 80% 10%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.8) 60%, transparent 62%),
+    radial-gradient(circle 2px at 87% 22%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.6) 60%, transparent 62%),
+    radial-gradient(circle 30px at 85% 12%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.12) 60%, transparent 62%),
+    radial-gradient(circle at 50% -20%, #1a472a 0%, #001229 55%, #000814 100%);
   background-repeat: no-repeat;
   background-size: cover;
 }

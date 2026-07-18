@@ -29,7 +29,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4 z-[101] max-h-[90vh] flex flex-col"
           >
-            <div className="bg-[#e8f1ff] mario-block flex flex-col overflow-hidden max-h-[85vh]">
+            <div className="bg-panel mario-block flex flex-col overflow-hidden max-h-[85vh]">
               <div className="flex items-center justify-between px-5 py-3 bg-mario-yellow border-b-4 border-black shrink-0">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-black scoreboard-font">
                   {title || 'نافذة'}

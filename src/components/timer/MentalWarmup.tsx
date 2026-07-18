@@ -80,8 +80,8 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
           <div className="w-16 h-16 rounded-full bg-mario-yellow mario-block-sm flex items-center justify-center mx-auto">
             <Brain size={30} className="text-black" />
           </div>
-          <h2 className="text-lg font-black text-black uppercase tracking-widest scoreboard-font">تسخين ذهني</h2>
-          <p className="text-black/60 text-xs max-w-xs mx-auto leading-relaxed font-bold">
+          <h2 className="text-lg font-black text-white uppercase tracking-widest scoreboard-font">تسخين ذهني</h2>
+          <p className="text-white/60 text-xs max-w-xs mx-auto leading-relaxed font-bold">
             استعد لتنشيط عقلك! لديك دقيقتان لحل أكبر عدد ممكن من المسائل الرياضية البسيطة.
           </p>
           <button
@@ -108,9 +108,9 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="bg-white mario-block p-8 relative"
+              className="bg-panel mario-block p-8 relative"
             >
-              <div className="text-4xl font-black text-black mb-8 scoreboard-font">
+              <div className="text-4xl font-black text-white mb-8 scoreboard-font">
                 {problem.a} {problem.op === '*' ? '×' : problem.op} {problem.b} = ?
               </div>
 
@@ -120,7 +120,7 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
                   autoFocus
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
-                  className="w-full bg-white border-2 border-black rounded-none p-4 text-2xl text-center font-black text-black focus:outline-none focus:border-mario-sky transition-all"
+                  className="w-full bg-panel-soft border-2 border-white/20 rounded-none p-4 text-2xl text-center font-black text-white focus:outline-none focus:border-mario-sky transition-all"
                   placeholder="..."
                 />
 
@@ -150,17 +150,17 @@ const MentalWarmup = ({ onComplete }: { onComplete?: () => void }) => {
             </motion.div>
           </AnimatePresence>
 
-          <p className="text-black/50 text-[9px] uppercase tracking-widest font-black">اضغط Enter للإرسال</p>
+          <p className="text-white/50 text-[9px] uppercase tracking-widest font-black">اضغط Enter للإرسال</p>
         </div>
       ) : (
         <div className="text-center space-y-6 relative z-10">
           <div className="w-16 h-16 rounded-full bg-mario-emerald mario-block-sm flex items-center justify-center mx-auto">
             <Trophy size={30} className="text-white" />
           </div>
-          <h2 className="text-lg font-black text-black uppercase tracking-widest scoreboard-font">انتهى الوقت!</h2>
-          <div className="bg-white mario-block-sm p-6">
-            <div className="text-[10px] text-black/50 uppercase tracking-widest font-black mb-2">النتيجة النهائية</div>
-            <div className="text-4xl font-pixel text-black">{score}</div>
+          <h2 className="text-lg font-black text-white uppercase tracking-widest scoreboard-font">انتهى الوقت!</h2>
+          <div className="bg-panel mario-block-sm p-6">
+            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black mb-2">النتيجة النهائية</div>
+            <div className="text-4xl font-pixel text-white">{score}</div>
           </div>
           <button
             onClick={startWarmup}

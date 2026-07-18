@@ -42,11 +42,11 @@ export default function StudyStagesChecklist() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Brain size={14} className="text-mario-sky" />
-          <h3 className="text-[10px] font-black text-black/60 uppercase tracking-[0.3em] scoreboard-font">مراحل المذاكرة السبعة</h3>
+          <h3 className="text-[10px] font-black text-white/60 uppercase tracking-[0.3em] scoreboard-font">مراحل المذاكرة السبعة</h3>
         </div>
         <button
           onClick={resetStages}
-          className="mario-btn flex items-center gap-1 text-[9px] font-black bg-white text-black px-2 py-1"
+          className="mario-btn flex items-center gap-1 text-[9px] font-black bg-panel text-white px-2 py-1"
           title="إعادة تعيين المراحل"
         >
           <RotateCcw size={10} />
@@ -61,7 +61,7 @@ export default function StudyStagesChecklist() {
             className={`flex items-center gap-3 p-2.5 border-2 border-black cursor-pointer transition-colors ${
               completedStages[idx]
                 ? 'bg-mario-emerald/20'
-                : 'bg-white hover:bg-mario-sky/10'
+                : 'bg-panel hover:bg-mario-sky/10'
             }`}
           >
             <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 border-2 border-black transition-colors ${
@@ -72,7 +72,7 @@ export default function StudyStagesChecklist() {
               {completedStages[idx] ? <Check size={12} strokeWidth={4} /> : idx + 1}
             </div>
             <span className={`text-[10px] font-bold leading-relaxed transition-colors ${
-              completedStages[idx] ? 'text-black/40 line-through' : 'text-black'
+              completedStages[idx] ? 'text-white/40 line-through' : 'text-white'
             }`}>
               {stage}
             </span>

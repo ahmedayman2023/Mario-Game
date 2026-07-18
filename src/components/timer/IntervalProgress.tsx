@@ -38,7 +38,7 @@ const IntervalProgress = memo(function IntervalProgress({
     return (
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-black/50 scoreboard-font">{title}</div>
+          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 scoreboard-font">{title}</div>
           {isPhaseActive && (
             <div className="flex items-center gap-1 text-[10px] font-black text-mario-emerald uppercase tracking-widest animate-pulse">
               <span>الجلسة الحالية</span>
@@ -47,7 +47,7 @@ const IntervalProgress = memo(function IntervalProgress({
           )}
         </div>
 
-        <div className="overflow-hidden mario-block-sm bg-white">
+        <div className="overflow-hidden mario-block-sm bg-panel">
           <table className="w-full text-right border-collapse">
             <thead>
               <tr className="bg-black text-white">
@@ -69,27 +69,27 @@ const IntervalProgress = memo(function IntervalProgress({
                     data-active={isActive}
                     onClick={() => onJumpToInterval?.(idx)}
                     className={`
-                      border-b-2 border-black/10 transition-colors cursor-pointer
+                      border-b-2 border-white/10 transition-colors cursor-pointer
                       ${isActive ? 'bg-mario-yellow' :
                         isCompleted ? 'bg-mario-emerald/10' :
-                        idx % 2 === 0 ? 'bg-black/[0.03]' : 'bg-transparent'}
+                        idx % 2 === 0 ? 'bg-white/[0.03]' : 'bg-transparent'}
                       hover:bg-mario-sky/10
                     `}
                   >
-                    <td className={`p-2 text-[10px] font-pixel border-l-2 border-black/10 text-center ${isActive ? 'text-black' : 'text-black/50'}`}>
+                    <td className={`p-2 text-[10px] font-pixel border-l-2 border-white/10 text-center ${isActive ? 'text-black' : 'text-white/50'}`}>
                       {idx + 1}
                     </td>
-                    <td className="p-2 border-l-2 border-black/10">
+                    <td className="p-2 border-l-2 border-white/10">
                       <div className="flex items-center gap-2">
                         {isActive && <Zap size={10} className="text-black" fill="currentColor" />}
-                        <span className={`text-[10px] font-bold leading-tight ${isActive ? 'text-black font-black' : 'text-black/70'}`}>
+                        <span className={`text-[10px] font-bold leading-tight ${isActive ? 'text-black font-black' : 'text-white/70'}`}>
                           {step?.title || `جلسة ${idx + 1}`}
                         </span>
                         {isCompleted && <Star size={10} className="text-mario-emerald fill-mario-emerald ml-auto" />}
                       </div>
                     </td>
                     <td className="p-2 text-center">
-                      <span className={`text-[10px] font-pixel ${isActive ? 'text-black' : 'text-black/60'}`}>
+                      <span className={`text-[10px] font-pixel ${isActive ? 'text-black' : 'text-white/60'}`}>
                         {duration}
                       </span>
                     </td>
@@ -104,13 +104,13 @@ const IntervalProgress = memo(function IntervalProgress({
   };
 
   return (
-    <div className="space-y-8 mt-8 bg-white mario-block p-5">
+    <div className="space-y-8 mt-8 bg-panel mario-block p-5">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-mario-emerald border-2 border-black rounded-full flex items-center justify-center text-white">
             <Zap size={16} fill="currentColor" />
           </div>
-          <h3 className="text-xs font-black text-black uppercase tracking-[0.2em] scoreboard-font">خطوات تقنية فاينمان</h3>
+          <h3 className="text-xs font-black text-white uppercase tracking-[0.2em] scoreboard-font">خطوات تقنية فاينمان</h3>
         </div>
         <div className="mario-block-sm bg-black px-3 py-1.5 text-[10px] font-pixel text-white">
           {currentIntervalIndex} / {intervals.length}

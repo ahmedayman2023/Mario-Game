@@ -61,7 +61,7 @@ const TimerControls = memo(function TimerControls({
 
       <button
         onClick={onSkip}
-        className={`${buttonBase} bg-white text-black`}
+        className={`${buttonBase} bg-panel text-white`}
       >
         <SkipForward size={14} strokeWidth={3} />
         <span>{isStopwatch ? 'التالي' : 'تخطي'}</span>
@@ -69,7 +69,7 @@ const TimerControls = memo(function TimerControls({
 
       <button
         onClick={onBack}
-        className={`${buttonBase} bg-white text-black`}
+        className={`${buttonBase} bg-panel text-white`}
       >
         <SkipBack size={14} strokeWidth={3} />
         <span>رجوع</span>

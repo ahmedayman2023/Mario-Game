@@ -47,8 +47,8 @@ export default function SmartStudyChecklist() {
     <div className="border-2 border-black bg-mario-yellow/10 p-4 mt-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Video size={14} className="text-black" />
-          <h4 className="text-[10px] font-black text-black/70 uppercase tracking-widest">قائمة الفيديوهات (الربط الذهني)</h4>
+          <Video size={14} className="text-white" />
+          <h4 className="text-[10px] font-black text-white/70 uppercase tracking-widest">قائمة الفيديوهات (الربط الذهني)</h4>
         </div>
         <button
           onClick={resetChecklist}
@@ -60,19 +60,19 @@ export default function SmartStudyChecklist() {
         </button>
       </div>
 
-      <p className="text-[9px] text-black/60 mb-4 leading-relaxed font-bold">
+      <p className="text-[9px] text-white/60 mb-4 leading-relaxed font-bold">
         💡 اكتب أسماء 20 فيديو، ومررها جميعاً عبر المرحلة الحالية قبل الانتقال للمرحلة التالية. يمكنك النقر على الاسم لتعديله.
       </p>
 
       <div className="space-y-2 pr-2">
         {videos.map((video, idx) => (
-          <div key={video.id} className="flex items-center gap-3 bg-white p-2.5 border-2 border-black/20 focus-within:border-black transition-all">
+          <div key={video.id} className="flex items-center gap-3 bg-panel-soft p-2.5 border-2 border-white/20 focus-within:border-white transition-all">
             <button
               onClick={() => toggleVideo(video.id)}
-              className={`w-6 h-6 flex items-center justify-center shrink-0 border-2 border-black transition-all ${
+              className={`w-6 h-6 flex items-center justify-center shrink-0 border-2 border-white/30 transition-all ${
                 video.completed
                   ? 'bg-mario-emerald text-white'
-                  : 'bg-white text-transparent hover:bg-mario-emerald/10'
+                  : 'bg-panel-soft text-transparent hover:bg-mario-emerald/10'
               }`}
             >
               <Check size={14} strokeWidth={4} />
@@ -82,8 +82,8 @@ export default function SmartStudyChecklist() {
               value={video.title}
               onChange={(e) => updateTitle(video.id, e.target.value)}
               placeholder={`اسم الفيديو ${idx + 1}`}
-              className={`flex-1 bg-transparent border-none outline-none text-[12px] font-bold transition-all px-2 py-1 rounded focus:bg-black/5 placeholder:text-black/20 ${
-                video.completed ? 'text-black/30 line-through' : 'text-black'
+              className={`flex-1 bg-transparent border-none outline-none text-[12px] font-bold transition-all px-2 py-1 rounded focus:bg-white/5 placeholder:text-white/20 ${
+                video.completed ? 'text-white/30 line-through' : 'text-white'
               }`}
             />
           </div>

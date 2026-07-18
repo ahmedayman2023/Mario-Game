@@ -257,29 +257,29 @@ const TimerPage = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white mario-block p-8 max-w-md w-full mb-8"
+          className="bg-panel mario-block p-8 max-w-md w-full mb-8"
         >
-          <h2 className="text-4xl font-black text-black mb-2 uppercase tracking-tighter scoreboard-font">
+          <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-tighter scoreboard-font">
             {isMeWinner ? "انتصار!" : "هزيمة!"}
           </h2>
 
           <div className="flex justify-center items-center gap-8 my-6">
             <div className="text-center">
-              <div className="text-[10px] font-black text-black/50 uppercase tracking-widest mb-1">أنا</div>
-              <div className={`text-4xl font-pixel ${isMeWinner ? 'text-mario-emerald' : 'text-black/30'}`}>{score.me}</div>
+              <div className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-1">أنا</div>
+              <div className={`text-4xl font-pixel ${isMeWinner ? 'text-mario-emerald' : 'text-white/30'}`}>{score.me}</div>
             </div>
-            <div className="text-2xl font-black text-black/20 scoreboard-font">ضد</div>
+            <div className="text-2xl font-black text-white/20 scoreboard-font">ضد</div>
             <div className="text-center">
-              <div className="text-[10px] font-black text-black/50 uppercase tracking-widest mb-1">الوقت</div>
-              <div className={`text-4xl font-pixel ${!isMeWinner ? 'text-mario-red' : 'text-black/30'}`}>{score.time}</div>
+              <div className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-1">الوقت</div>
+              <div className={`text-4xl font-pixel ${!isMeWinner ? 'text-mario-red' : 'text-white/30'}`}>{score.time}</div>
             </div>
           </div>
 
           <div className="space-y-2">
-            <p className="text-black/70 font-black uppercase tracking-widest text-xs">
+            <p className="text-white/70 font-black uppercase tracking-widest text-xs">
               الفائز: <span className={isMeWinner ? 'text-mario-emerald' : 'text-mario-red'}>{isMeWinner ? 'أنا' : 'الوقت'}</span>
             </p>
-            <p className="text-black/50 text-[10px] uppercase tracking-widest font-bold">
+            <p className="text-white/50 text-[10px] uppercase tracking-widest font-bold">
               الخاسر: {isMeWinner ? 'الوقت' : 'أنا'}
             </p>
             {!isMeWinner && (
@@ -335,12 +335,12 @@ const TimerPage = () => {
         </div>
 
         {/* Overall Progress Bar */}
-        <div className="mb-6 bg-white mario-block-sm p-3">
-          <div className="flex justify-between text-[10px] font-black text-black/60 uppercase tracking-widest mb-2">
+        <div className="mb-6 bg-panel mario-block-sm p-3">
+          <div className="flex justify-between text-[10px] font-black text-white/60 uppercase tracking-widest mb-2">
             <span>التقدم الإجمالي</span>
             <span className="font-pixel text-[9px]">{Math.round(overallProgress)}%</span>
           </div>
-          <div className="h-3 bg-black/10 border-2 border-black overflow-hidden">
+          <div className="h-3 bg-white/10 border-2 border-black overflow-hidden">
             <motion.div
               className="h-full bg-mario-emerald"
               initial={{ width: 0 }}
@@ -354,7 +354,7 @@ const TimerPage = () => {
           <div className="lg:col-span-8 flex flex-col">
             <ScoreBar me={score.me} time={score.time} onReset={handleReset} />
 
-            <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px] bg-white mario-block mb-6 relative overflow-hidden">
+            <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px] bg-panel mario-block mb-6 relative overflow-hidden">
               <div className="flex flex-col items-center justify-center w-full h-full">
                 <TimerDisplay
                   minutes={Math.floor(timeLeft / 60)}
@@ -398,10 +398,10 @@ const TimerPage = () => {
             </div>
 
             {/* Quick Timers Bar */}
-            <div className="mb-6 bg-white mario-block p-5">
+            <div className="mb-6 bg-panel mario-block p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Zap size={14} className="text-mario-sky" />
-                <h3 className="text-[10px] font-black text-black/50 uppercase tracking-[0.3em] scoreboard-font">مؤقتات سريعة (دقائق)</h3>
+                <h3 className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em] scoreboard-font">مؤقتات سريعة (دقائق)</h3>
               </div>
               <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
                 {INTERVALS.map((mins, tIdx) => (
@@ -412,7 +412,7 @@ const TimerPage = () => {
                       playChime('interval', volume);
                       handleTimeEdit(mins * 60);
                     }}
-                    className="mario-btn h-10 bg-white text-black font-pixel text-[10px] flex items-center justify-center"
+                    className="mario-btn h-10 bg-panel-soft text-white font-pixel text-[10px] flex items-center justify-center"
                   >
                     {mins}
                   </button>
@@ -436,11 +436,11 @@ const TimerPage = () => {
           </div>
 
           <div className="lg:col-span-4 space-y-4 md:space-y-6">
-            <div className="bg-white mario-block p-5">
+            <div className="bg-panel mario-block p-5">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Wind size={14} className="text-mario-sky" />
-                  <h3 className="text-[10px] font-black text-black/50 uppercase tracking-[0.3em] scoreboard-font">أدوات الاستشفاء</h3>
+                  <h3 className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em] scoreboard-font">أدوات الاستشفاء</h3>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -451,7 +451,7 @@ const TimerPage = () => {
                   <div className="w-10 h-10 rounded-full bg-mario-emerald border-2 border-black flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Wind size={20} className="text-white" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-black scoreboard-font">تنفس الصندوق</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تنفس الصندوق</span>
                 </button>
 
                 {/* Individualized Exercises */}
@@ -469,7 +469,7 @@ const TimerPage = () => {
                         referrerPolicy="no-referrer"
                       />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-black scoreboard-font text-center px-2 line-clamp-1">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font text-center px-2 line-clamp-1">
                       {video.title}
                     </span>
                   </button>
@@ -477,11 +477,11 @@ const TimerPage = () => {
               </div>
             </div>
 
-            <div className="bg-white mario-block p-5 overflow-hidden">
+            <div className="bg-panel mario-block p-5 overflow-hidden">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <ExternalLink size={14} className="text-mario-sky" />
-                  <h3 className="text-[10px] font-black text-black/50 uppercase tracking-[0.3em] scoreboard-font">أجواء تحفيزية</h3>
+                  <h3 className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em] scoreboard-font">أجواء تحفيزية</h3>
                 </div>
               </div>
 
@@ -504,19 +504,19 @@ const TimerPage = () => {
                   <span className="text-[10px] font-black uppercase tracking-widest text-white scoreboard-font">تشغيل</span>
                 </div>
               </a>
-              <p className="text-[9px] text-black/50 mt-3 font-bold leading-relaxed">انقر لفتح فيديو تحفيزي في علامة تبويب جديدة.</p>
+              <p className="text-[9px] text-white/50 mt-3 font-bold leading-relaxed">انقر لفتح فيديو تحفيزي في علامة تبويب جديدة.</p>
             </div>
 
-            <div className="bg-white mario-block p-5">
+            <div className="bg-panel mario-block p-5">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Volume2 size={14} className="text-mario-sky" />
-                  <h3 className="text-[10px] font-black text-black/50 uppercase tracking-[0.3em] scoreboard-font">التحكم في الصوت</h3>
+                  <h3 className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em] scoreboard-font">التحكم في الصوت</h3>
                 </div>
-                <span className="text-[10px] font-pixel text-black">{Math.round(volume * 100)}%</span>
+                <span className="text-[10px] font-pixel text-white">{Math.round(volume * 100)}%</span>
               </div>
               <div className="flex items-center gap-3">
-                {volume === 0 ? <VolumeX size={16} className="text-black/40" /> : <Volume2 size={16} className="text-mario-sky" />}
+                {volume === 0 ? <VolumeX size={16} className="text-white/40" /> : <Volume2 size={16} className="text-mario-sky" />}
                 <input
                   type="range"
                   min="0"
@@ -528,15 +528,15 @@ const TimerPage = () => {
                     setVolume(val);
                     localStorage.setItem(STORAGE_KEYS.VOLUME, val.toString());
                   }}
-                  className="flex-1 h-2 bg-black/10 border border-black/20 rounded-lg appearance-none cursor-pointer accent-mario-red"
+                  className="flex-1 h-2 bg-white/10 border border-white/20 rounded-lg appearance-none cursor-pointer accent-mario-red"
                 />
               </div>
             </div>
 
-            <div className="bg-white mario-block p-5">
+            <div className="bg-panel mario-block p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles size={14} className="text-mario-sky" />
-                <h3 className="text-[10px] font-black text-black/50 uppercase tracking-[0.3em] scoreboard-font">التركيز الحالي</h3>
+                <h3 className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em] scoreboard-font">التركيز الحالي</h3>
               </div>
               <StudyTopicInput
                 topic={currentTopic}
@@ -547,7 +547,7 @@ const TimerPage = () => {
               />
             </div>
 
-            <div className="bg-white mario-block p-5">
+            <div className="bg-panel mario-block p-5">
               <StudyStagesChecklist />
               <SmartStudyChecklist />
             </div>
@@ -555,7 +555,7 @@ const TimerPage = () => {
             <div className="flex justify-center pt-4">
               <button
                 onClick={handleReset}
-                className="text-[10px] font-black uppercase tracking-widest text-black/40 hover:text-mario-red transition-colors disabled:opacity-30 scoreboard-font"
+                className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-mario-red transition-colors disabled:opacity-30 scoreboard-font"
                 disabled={isActive}>
                 إلغاء الحملة
               </button>
@@ -593,7 +593,7 @@ const TimerPage = () => {
           >
             بسم الله
           </motion.div>
-          <p className="text-black/60 text-sm font-bold">
+          <p className="text-white/60 text-sm font-bold">
             "وقل ربي زدني علماً"
           </p>
           <button
