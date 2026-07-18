@@ -111,7 +111,7 @@ const TimerDisplay = memo(function TimerDisplay({
         </button>
       )}
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-14">
+      <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-8 md:gap-14 min-w-0 max-w-full">
         {isEditing ? (
           <div className="bg-black border-4 border-black rounded-lg px-6 py-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.3)] flex items-center gap-2">
             <input

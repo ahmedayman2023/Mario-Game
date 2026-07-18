@@ -351,10 +351,10 @@ const TimerPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-          <div className="lg:col-span-8 flex flex-col">
+          <div className="lg:col-span-8 min-w-0 flex flex-col">
             <ScoreBar me={score.me} time={score.time} onReset={handleReset} />
 
-            <div className="flex-1 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px] bg-panel mario-block mb-6 relative overflow-hidden">
+            <div className="flex-1 min-w-0 flex flex-col items-center justify-center min-h-[280px] md:min-h-[400px] bg-panel mario-block mb-6 relative overflow-hidden">
               <div className="flex flex-col items-center justify-center w-full h-full">
                 <TimerDisplay
                   minutes={Math.floor(timeLeft / 60)}
@@ -435,7 +435,7 @@ const TimerPage = () => {
             />
           </div>
 
-          <div className="lg:col-span-4 space-y-4 md:space-y-6">
+          <div className="lg:col-span-4 min-w-0 space-y-4 md:space-y-6">
             <div className="bg-panel mario-block p-5">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
